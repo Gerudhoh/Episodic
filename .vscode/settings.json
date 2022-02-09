@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/43b7fa11-097e-42ca-a7a0-3762e44258bd/resourceGroups/episodicQS-rg/providers/Microsoft.Web/sites/episodic",
+    "appService.deploySubpath": "episodic"
+}
