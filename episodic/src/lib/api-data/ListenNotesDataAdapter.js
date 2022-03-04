@@ -1,5 +1,6 @@
 const DataAdapter = require("./DataAdapter.js");
 const Podcast = require("../Podcast.js");
+const Episode = require("../Episode.js");
 
 class ListNotesDataAdapter extends DataAdapter {
     adaptPodcasts(jsonInformation) {
@@ -29,8 +30,15 @@ class ListNotesDataAdapter extends DataAdapter {
             "N/A")
     }
 
-    adaptEpisode(jsonInformation) {
+    adaptEpisode(jsonInformation, podcastJson) {
         // Adapts episode information returned from a ListNotes API query into an Episode Object 
+        return new Episode(
+            jsonInformation.title_original,
+            jsonInformation.description_original,
+            jsonInformation.audio_length_sec,
+            jsonInformation.explicit_content,
+            this.adaptPodcast(podcastJson)
+        )
     }
 }
 
