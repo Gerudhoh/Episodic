@@ -1,5 +1,6 @@
-import DataAdapter from "./DataAdapter.mjs"
-export default class ListNotesDataAdapter extends DataAdapter {
+const DataAdapter = require("./DataAdapter.js");
+
+class ListNotesDataAdapter extends DataAdapter {
     adaptPodcasts(jsonInformation) {
         // Leverages the adaptPodcast method to adapt each podcast in the passed array to create a EpisodicList object 
     }
@@ -12,3 +13,5 @@ export default class ListNotesDataAdapter extends DataAdapter {
         // Adapts episode information returned from a ListNotes API query into an Episode Object 
     }
 }
+
+module.exports = ListNotesDataAdapter;

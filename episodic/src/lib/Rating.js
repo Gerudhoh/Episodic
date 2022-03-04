@@ -1,4 +1,4 @@
-export default class Rating {
+class Rating {
     constructor(stars, review) { 
         this.stars = stars; 
         this.review = review; 
@@ -17,3 +17,5 @@ export default class Rating {
         return this.creationDate;
     }
 }
+
+module.exports = Rating;
