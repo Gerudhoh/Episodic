@@ -6,8 +6,9 @@ class ListNotesDataAdapter extends DataAdapter {
     adaptPodcasts(jsonInformation) {
         // Leverages the adaptPodcast method to adapt each podcast in the passed array to create a EpisodicList object 
         let podcasts = []
-        console.log(jsonInformation);
-        for(let podcastInfo in jsonInformation) {
+        let length = jsonInformation.length;
+        for(let i = 0; i < length; i++) {
+            let podcastInfo = jsonInformation[i];
             let pod = this.adaptPodcast(podcastInfo);
             podcasts.push(pod);
         }
@@ -24,10 +25,24 @@ class ListNotesDataAdapter extends DataAdapter {
             jsonInformation.website,  
             jsonInformation.publisher_original,  
             "N/A",  
-            "Hard to Parse",  
+            "Genre needs to be its own user story",  
             jsonInformation.explicit_content, 
             jsonInformation.total_episodes,
-            "N/A")
+            "N/A",
+            jsonInformation.id
+        )
+    }
+
+    adaptEpisodes(jsonInformation) {
+        // Leverages the adaptEpisode method to adapt each episode in the passed array to create a EpisodicList object 
+        let episodes = []
+        let length = jsonInformation.length;
+        for(let i = 0; i < length; i++) {
+            let episodeInfo = jsonInformation[i];
+            let ep = this.adaptEpisode(episodeInfo);
+            episodes.push(ep);
+        }
+        return episodes;
     }
 
     adaptEpisode(jsonInformation, podcastJson) {
@@ -37,7 +52,8 @@ class ListNotesDataAdapter extends DataAdapter {
             jsonInformation.description_original,
             jsonInformation.audio_length_sec,
             jsonInformation.explicit_content,
-            this.adaptPodcast(podcastJson)
+            this.adaptPodcast(podcastJson),
+            jsonInformation.id
         )
     }
 }

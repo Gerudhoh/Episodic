@@ -10,7 +10,8 @@ class Podcast {
          genre,  
          explicit, 
          totalEpisodes,
-         platforms) { 
+         platforms,
+         listenNotesId) { 
             this.title = title;
             this.description = description;
             this.rss = rss;
@@ -24,6 +25,7 @@ class Podcast {
             this.episodes = [];
             this.totalEpisodes = totalEpisodes;
             this.platforms = platforms;
+            this.listenNotesId = listenNotesId;
       }
 
     updateRating(newRating) {
