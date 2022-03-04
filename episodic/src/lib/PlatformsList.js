@@ -1,4 +1,4 @@
-export default class PlatformsList {
+class PlatformsList {
     constructor(spotifyUrl, googleUrl, youtubeUrl, itunesID) { 
         this.spotifyUrl = spotifyUrl;
         this.googleUrl = googleUrl;
@@ -22,3 +22,5 @@ export default class PlatformsList {
           return this.itunesID;
       }
 }
+
+module.exports = PlatformsList;

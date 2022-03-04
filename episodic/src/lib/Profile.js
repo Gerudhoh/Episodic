@@ -1,5 +1,5 @@
 
-export default class Profile {
+class Profile {
     constructor(username, password, displayName) { 
         this.username = username; 
         this.password = password;     
@@ -44,3 +44,5 @@ export default class Profile {
         this.friendsList.pop(friendName);
     }
 }
+
+module.exports = Profile;

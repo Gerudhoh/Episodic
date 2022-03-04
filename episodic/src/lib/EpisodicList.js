@@ -1,4 +1,4 @@
-export default class EpisodicList {
+class EpisodicList {
     constructor(name) { 
         this.name = name; 
         this.podcasts = []; 
@@ -37,3 +37,5 @@ export default class EpisodicList {
           this.addEpisode(episode);
       }
 }
+
+module.exports = EpisodicList;

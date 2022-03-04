@@ -1,4 +1,4 @@
-export default class Podcast {
+class Podcast {
     
     constructor(title, 
          description,
@@ -64,3 +64,5 @@ export default class Podcast {
         this.platforms = platforms;
     }
 }
+
+module.exports = Podcast;

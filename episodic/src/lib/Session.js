@@ -1,11 +1,11 @@
-import User from "./User.mjs"
-import DataFetcher from "./api-data/DataFetcher.mjs"
-import DatabaseConnection from "./DatabaseConnection.mjs"
-import SpotifyAdapter from "./api-data/SpotifyDataAdapter"
-import PodcastIndexAdapter from "./api-data/PodcastIndexAdapter"
-import ListenNotesAdapter from "./api-data/ListenNotesAdapter"
+const User = require("./User.js");
+const DataFetcher = require("./api-data/DataFetcher.js");
+const DatabaseConnection = require("./DatabaseConnection.js");
+const SpotifyAdapter = require("./api-data/SpotifyDataAdapter.js");
+const PodcastIndexAdapter = require("./api-data/PodcastIndexAdapter.js");
+const ListenNotesAdapter = require("./api-data/ListenNotesAdapter.js");
 
-export default class Session {
+class Session {
     constructor() {
         this.user = null;
         this.DataFetcher = new DataFetcher(
@@ -102,3 +102,5 @@ export default class Session {
         // Queries the Spotify API using the corresponding DataFetcher method 
     }
 }
+
+module.exports = Session;
