@@ -5,8 +5,9 @@ class PodcastIndexDataAdapter extends DataAdapter {
     adaptPodcasts(jsonInformation) {
         // Leverages the adaptPodcast method to adapt each podcast in the passed array to create a EpisodicList object 
         let podcasts = []
-        console.log(jsonInformation);
-        for(let podcastInfo in jsonInformation) {
+        let length = jsonInformation.length;
+        for(let i = 0; i < length; i++) {
+            let podcastInfo = jsonInformation[i];
             let pod = this.adaptPodcast(podcastInfo);
             podcasts.push(pod);
         }
@@ -25,6 +26,7 @@ class PodcastIndexDataAdapter extends DataAdapter {
             jsonInformation.language,  
             jsonInformation.categories,  
             "N/A", 
+            "N/A",
             "N/A",
             "N/A")
     }

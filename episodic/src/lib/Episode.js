@@ -5,12 +5,14 @@ class Episode {
         description, 
         audioLengthSeconds, 
         explicit, 
-        podcast) { 
+        podcast,
+        listenNotesId) { 
             this.title = title;
             this.description = description;
             this.audioLengthSeconds = audioLengthSeconds;
             this.explicit = explicit;
             this.podcast = podcast;
+            this.listenNotesId = listenNotesId; 
             this.rating = null;
             this.id = id;
         }

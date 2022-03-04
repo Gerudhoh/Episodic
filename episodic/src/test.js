@@ -19,9 +19,9 @@ const fetcher = new DataFetcher(
 //   console.log(response.data);
 // })
 
-// fetcher.fetchListenNotesPodcast("Getting Literate");
+fetcher.fetchListenNotesPodcast("Getting Literate");
 // console.log(pod.stringify())
 
-// fetcher.fetchPodcastIndexPodcast("Getting Literate");
+fetcher.fetchPodcastIndexPodcast("Getting Literate");
 
 fetcher.fetchListenNotesEpisode("Getting Literate", "Getting Organized with Murder On The Orient Express");

@@ -11,7 +11,8 @@ class Podcast {
          genre,  
          explicit, 
          totalEpisodes,
-         platforms) { 
+         platforms,
+         listenNotesId) { 
             this.title = title;
             this.description = description;
             this.rss = rss;
@@ -25,7 +26,11 @@ class Podcast {
             this.episodes = [];
             this.totalEpisodes = totalEpisodes;
             this.platforms = platforms;
+<<<<<<< HEAD
             this.id = id;
+=======
+            this.listenNotesId = listenNotesId;
+>>>>>>> Added a bunch of listen notes fetches!
       }
 
 <<<<<<< HEAD
