@@ -28,6 +28,7 @@ class Podcast {
             this.id = id;
       }
 
+<<<<<<< HEAD
     get podcastTitle () { return this.title; }
 
     /*get description () { return this.description; }
@@ -54,6 +55,8 @@ class Podcast {
 
     get platforms () { return this.platforms; }*/
 
+=======
+>>>>>>> Got podcast search to work! Just need to hook it up to the frontend
     updateRating(newRating) {
         this.rating = newRating;
     }
@@ -64,6 +67,10 @@ class Podcast {
 
     updatePlatforms(platforms) {
         this.platforms = platforms;
+    }
+
+    stringify() {
+        return this.title + this.description + this.episodes + this.explicit + this.image + this.website + this.publisher;
     }
 }
 
