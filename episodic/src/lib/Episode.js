@@ -15,6 +15,7 @@ class Episode {
             this.id = id;
         }
 
+<<<<<<< HEAD
         /*get title () { return this.title; }
 
         get description () { return this.description; }
@@ -27,9 +28,16 @@ class Episode {
 
         get rating () { return this.rating; }*/
 
+=======
+>>>>>>> Got ListenNotes episode fetch to work!
         updateRating(newRating) {
             this.rating = newRating;
         }
+
+        stringify() {
+            return this.title + this.description + this.explicit + this.audioLengthSeconds + this.podcast.title
+        }
+        
 }
 
 module.exports = Episode;

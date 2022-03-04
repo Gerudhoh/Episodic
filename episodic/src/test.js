@@ -24,4 +24,4 @@ const fetcher = new DataFetcher(
 
 // fetcher.fetchPodcastIndexPodcast("Getting Literate");
 
-fetcher.fetchListenNotesEpisode("Getting Organized with Murder On The Orient Express");
+fetcher.fetchListenNotesEpisode("Getting Literate", "Getting Organized with Murder On The Orient Express");

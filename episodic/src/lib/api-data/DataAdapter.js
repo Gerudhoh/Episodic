@@ -8,7 +8,7 @@ class DataAdapter {
         // Adapts podcast information returned from an API query into a Podcast object 
     }
 
-    adaptEpisode(jsonInformation) {
+    adaptEpisode(jsonInformation, podcastJson) {
         // Adapts episode information returned from an API query into an Episode Object 
     }
 

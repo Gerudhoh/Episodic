@@ -75,18 +75,43 @@ class DataFetcher {
     
     
     fetchListenNotesEpisode(podcastName, episodeName) {
+        // Fetches a specified episode from ListenNotes
         this.listenNotesApi.search({
             q: episodeName,
             type: 'episode',
             only_in: 'title,description',
           }).then((response) => {
-            // Get response json data here
-            console.log(response);
+            let length = response.data.results.length;
+              let found = false;
+              for(let i = 0; i < length; i++) {
+                  let episode = response.data.results[i];
+                  if (episode.title_original === episodeName &&
+                    episode.podcast.title_original === podcastName) {
+                    found = true;
+                    let ep = this.listenNotesDataAdapter.adaptEpisode(episode, episode.podcast);
+                    console.log(ep.stringify());
+                    return ep;
+                  } 
+              }
+              if(found === false) {
+                  return null;
+              }
           });
+
     }
 
     fetchPodcastIndexEpisode(podcastName, episodeName) {
-        // Fetches a specified episode from ListenNotes 
+        // Fetches a specified episode from PodcastIndex
+        this.podcastIndexApi.search(episodeName).then((response) => {
+            // let length = response.feeds.length
+            // for(let i = 0; i < length; i++) {
+            //     let podcast = response.feeds[i];
+            //     if (podcast.title === podcastName) {
+            //         return this.podcastIndexDataAdapter.adaptPodcast(podcast);
+            //     } 
+            // }
+            }
+        ); 
         }
     
     fetchPodcastsRecommendations(listenedList) {

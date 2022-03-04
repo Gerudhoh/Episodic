@@ -29,7 +29,7 @@ class PodcastIndexDataAdapter extends DataAdapter {
             "N/A")
     }
 
-    adaptEpisode(jsonInformation) {
+    adaptEpisode(jsonInformation, podcastJson) {
         // Adapts episode information returned from a PodcastIndex API query into an Episode Object 
     }
 }
