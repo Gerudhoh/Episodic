@@ -26,32 +26,6 @@ class Podcast {
             this.platforms = platforms;
       }
 
-    get title () { return this.title; }
-
-    get description () { return this.description; }
-
-    get rss () { return this.rss; }
-
-    get image () { return this.image; }
-
-    get website () { return this.website; }
-
-    get publisher () { return this.publisher; }
-
-    get language () { return this.language; }
-
-    get genre () { return this.genre; }
-
-    get explicit () { return this.explicit; }
-
-    get episodes () { return this.episodes; }
-
-    get totalEpisodes () { return this.totalEpisodes; }
-
-    get rating () { return this.rating; }
-
-    get platforms () { return this.platforms; }
-
     updateRating(newRating) {
         this.rating = newRating;
     }
@@ -62,6 +36,10 @@ class Podcast {
 
     updatePlatforms(platforms) {
         this.platforms = platforms;
+    }
+
+    stringify() {
+        return this.title + this.description + this.episodes + this.explicit + this.image + this.website + this.publisher;
     }
 }
 
