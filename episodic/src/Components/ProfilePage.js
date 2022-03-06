@@ -14,13 +14,9 @@ import { styled } from '@mui/material/styles';
 
 //Custom Components
 import ListsHighlight from "./ListsHighlight.js";
-import FriendActivity from "./FriendActivity.js";
-import AllLists from "./AllLists.js";
-import EpisodeCard from "./EpisodeCard.js";
 import UserInfo from "./UserInfo.js";
-import FollowingList from "./FollowingList.js";
-import FriendList from "./FriendList.js";
 import UserReviews from "./UserReviews.js"
+import Achievement from "./Achievement.js"
 
 //Styling
 const Item = styled(Paper)(({ theme }) => ({
@@ -28,13 +24,6 @@ const Item = styled(Paper)(({ theme }) => ({
   textAlign: 'center',
   color: theme.palette.text.secondary,
 }));
-
-const UserDescriptionStyle = {
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "stretch",
-  justifyContent: "center"
-}
 
 const userInfo={
   name: "userName",
@@ -45,6 +34,48 @@ const userInfo={
   numReviews: 77,
   ratingAvg: 3.96
 }
+
+const following = [
+    {
+      name: "name1",
+      activityType: "newList"
+    },
+
+    {
+      name: "name2",
+      activityType: "newList"
+    },
+    {
+      name: "name3",
+      activityType: "newList"
+    },
+    {
+      name: "name4",
+      activityType: "listMove"
+    },
+];
+
+const friends = [
+    {
+      name: "name1",
+      activityType: "newList"
+    },
+
+    {
+      name: "name2",
+      activityType: "newList"
+    },
+    {
+      name: "name3",
+      activityType: "newList"
+    },
+    {
+      name: "name4",
+      activityType: "listMove"
+    },
+];
+
+const achievements = ['critic', 'socialbutterfly', 'organizer', 'closer'];
 
 const flag = "ownProfile";
 
@@ -58,65 +89,96 @@ function UserProfileButton(props){
   }
 }
 
-
-function UserDescription(props){
-  return(
-    <React.Fragment>
-    <Box sx={{display:"flex", flexDirection:"columns"}}>
-      <Avatar sx={{width: 80, height: 80}} alt={props.userName} src={props.profilePic}/>
-      <Box sx={{display:"flex", flexDirection:"column", spacing:2, padding: 2, justifyContent:"flex-start"}}>
-        <Typography> {props.userName} </Typography>
-        <Box sx={{display:"flex", flexDirection:"row"}} spacing={12}>
-          <Box sx={{padding: 0.5}}><Typography> {props.numPodsListened} Podcasts </Typography></Box>
-          <Box sx={{padding: 0.5}}><Typography> {props.numEpisListened} Episodes </Typography></Box>
-          <Box sx={{padding: 0.5}}><Typography> {props.numLists} Lists </Typography></Box>
-        </Box>
-        <Typography>{props.numReviews} Reviews ({props.ratingAvg} average)</Typography>
-      </Box>
-      <UserProfileButton />
+function FriendList(props) {
+  return (
+    <Box container>
+      <Typography>Friends</Typography>
+      <Stack spacing={2}>
+      {friends.map((item) => (
+        <UserInfo userName={item.name} avatarSize={props.userSize} fontSize={props.fontSize}/>
+      ))}
+      </Stack>
     </Box>
-    </React.Fragment>
   );
 }
 
-function FollowingRow(){
+function FollowingList(props) {
   return (
+    <Box container>
+      <Typography>Following</Typography>
+      <Stack spacing={2}>
+      {following.map((item) => (
+        <UserInfo userName={item.name} avatarSize={props.userSize} fontSize={props.fontSize}/>
+      ))}
+      </Stack>
+    </Box>
+  );
+};
+
+function UserDescription(props){
+
+  return(
+    <Stack direction="row" spacing={2} justifyContent="flex-start">
+      <Avatar sx={{width: 80, height: 80}} alt={props.userName} src={props.profilePic}/>
+      <Stack justifyContent="flex-start" alignItems="flex-start">
+        <Typography> {props.userName} </Typography>
+        <Stack direction="row" spacing={1} justifyContent="space-evenly">
+          <Typography>{props.numPodsListened} Podcasts </Typography>
+          <Typography>{props.numEpisListened} Episodes </Typography>
+          <Typography>{props.numLists} Lists </Typography>
+        </Stack>
+        <Typography>{props.numReviews} Reviews ({props.ratingAvg} average)</Typography>
+      </Stack>
+      <UserProfileButton />
+    </Stack>
+  );
+}
+
+function Achievements(){
+  return(
     <React.Fragment>
-      <Grid item lg={6}>
-        <Item><FriendList /></Item>
-      </Grid>
-      <Grid item lg={6}>
-        <Item><FollowingList /></Item>
-      </Grid>
+      <Typography>Achievements</Typography>
+      <Stack direction="row" spacing={2} alignItems="center" justifyContent="space-evenly">
+        <Stack spacing={2} alignItems="flex-start">
+          <Achievement achievement={achievements[0]} />
+          <Achievement achievement={achievements[1]} />
+        </Stack>
+        <Stack spacing={2} alignItems="flex-start">
+          <Achievement achievement={achievements[2]} />
+          <Achievement achievement={achievements[3]} />
+        </Stack>
+      </Stack>
     </React.Fragment>
+  )
+}
+
+function profileNormal(){
+  return(
+    <Stack flexWrap="wrap" direction="row" spacing={2} padding="20px" alignItems="flex-start" justifyContent="space-evenly">
+      <Stack spacing={2}>
+        <Item><UserDescription
+        userName={userInfo.name}
+        profilePic={userInfo.profilePic}
+        numPodsListened={userInfo.numPodsListened}
+        numEpisListened={userInfo.numEpisListened}
+        numLists={userInfo.numLists}
+        numReviews={userInfo.numReviews}
+        ratingAvg={userInfo.ratingAvg}
+        /></Item>
+        <Item>{Achievements()}</Item>
+        <Stack direction="row" spacing={2} justifyContent="center">
+          <Item sx={{width:"50%"}}><FollowingList userSize="small" fontSize={20}/></Item>
+          <Item sx={{width:"50%"}}><FriendList userSize="small" fontSize={20}/></Item>
+        </Stack>
+      </Stack>
+      <Item sx={{maxWidth:"35%"}}><UserReviews /></Item>
+      <ListsHighlight listSize="medium"/>
+    </Stack>
   );
 }
 
 export default function ProfilePage(){
   return (
-      <Grid container display="flex" spacing={2} justifyContent="center" alignItems="flex-start">
-        <Grid container style={UserDescriptionStyle} item lg={3} spacing={2} >
-          <Grid item lg={12} >
-              <Item> <UserDescription
-              userName={userInfo.name}
-              profilePic={userInfo.profilePic}
-              numPodsListened={userInfo.numPodsListened}
-              numEpisListened={userInfo.numEpisListened}
-              numLists={userInfo.numLists}
-              numReviews={userInfo.numReviews}
-              ratingAvg={userInfo.ratingAvg}
-              /> </Item>
-          </Grid>
-          <Grid container item lg={12} spacing={2}>
-            <FollowingRow />
-          </Grid>
-        </Grid>
-        <Grid item lg={4}>
-          <Item> <UserReviews /> </Item>
-        </Grid>
-        <Grid item lg={4}>
-          <Item> <ListsHighlight listSize="small"/> </Item>
-        </Grid>
-      </Grid>
+    profileNormal()
     );
 }
