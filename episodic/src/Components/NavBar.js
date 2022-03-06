@@ -1,19 +1,28 @@
 import * as React from 'react';
+<<<<<<< HEAD
 
 //Material UI Components
+=======
+>>>>>>> more components added
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
+<<<<<<< HEAD
 import InputBase from '@mui/material/InputBase';
 import Menu from '@mui/material/Menu';
+=======
+import Menu from '@mui/material/Menu';
+import MenuIcon from '@mui/icons-material/Menu';
+>>>>>>> more components added
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 
+<<<<<<< HEAD
 
 //Material UI Icons and Styles
 import { styled, alpha } from '@mui/material/styles';
@@ -64,6 +73,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
+=======
+const pages = ['Products', 'Pricing', 'Blog'];
+const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+>>>>>>> more components added
 
 const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -152,6 +165,7 @@ const ResponsiveAppBar = () => {
               </Button>
             ))}
           </Box>
+<<<<<<< HEAD
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -161,6 +175,8 @@ const ResponsiveAppBar = () => {
               inputProps={{ 'aria-label': 'search' }}
             />
           </Search>
+=======
+>>>>>>> more components added
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">

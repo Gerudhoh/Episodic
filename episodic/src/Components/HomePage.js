@@ -1,9 +1,10 @@
 import * as React from 'react';
+import MediaQuery  from 'react-responsive';
 
 //Material UI Components
-import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
+
 
 //Material UI Icons and Styling
 import { styled } from '@mui/material/styles';
@@ -13,8 +14,6 @@ import { styled } from '@mui/material/styles';
 import ListsHighlight from "./ListsHighlight.js";
 import FriendActivity from "./FriendActivity.js";
 import AllLists from "./AllLists.js";
-import EpisodeCard from "./EpisodeCard.js";
-import UserInfo from "./UserInfo.js";
 
 //Styling
 const Item = styled(Paper)(({ theme }) => ({
@@ -23,13 +22,23 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-const homePageGridStyles = {
-  display: "flex",
-  flexDirection: "row",
-  justifyContent: "flex-start",
-  alignItems: "center",
+
+function homePageStack(){
+  return(
+    <React.Fragment>
+    <Stack alignItems="flex-start" justifyContent="space-evenly" direction="row" spacing={2}>
+      <ListsHighlight listSize="large"/>
+      <Stack spacing={2}>
+        <FriendActivity activitySize="small" />
+        <FriendActivity activitySize="small" />
+        <AllLists />
+      </Stack>
+    </Stack>
+    </React.Fragment>
+  );
 }
 
+<<<<<<< HEAD
 
 
 class HomePage extends React.Component {
@@ -69,7 +78,32 @@ class HomePage extends React.Component {
       </Grid>
     );
   }
+=======
+function homePageNormal(){
+  return(
+
+    <Stack flexWrap="wrap" direction="row" spacing={2} columnSpacing={2} alignItems="flex-start" justifyContent="center" padding="10px">
+      <Stack sx={{maxWidth:"25%"}} spacing={2}>
+        <Item ><FriendActivity activitySize="large" /></Item>
+        <Item ><AllLists /></Item>
+      </Stack>
+      <Item sx={{maxWidth:"50%"}}><ListsHighlight listSize="large"/></Item>
+      <Item sx={{maxWidth:"25%"}}><FriendActivity activitySize="large" /></Item>
+    </Stack>
+  );
+>>>>>>> more components added
 }
 
+export default function HomePage(){
 
-export default HomePage;
+  return(
+    <React.Fragment>
+      <MediaQuery query='(min-width: 1225px)'>
+        {homePageNormal()}
+      </MediaQuery>
+      <MediaQuery query='(max-width: 1224px)'>
+        {homePageStack()}
+      </MediaQuery>
+    </React.Fragment>
+  );
+}

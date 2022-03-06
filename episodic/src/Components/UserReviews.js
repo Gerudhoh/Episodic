@@ -3,19 +3,13 @@ import * as React from 'react';
 //Material UI Components
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import Paper from '@mui/material/Paper';
-import Fab from '@mui/material/Paper';
-
-//Material UI Icons and Styling
-import { styled } from '@mui/material/styles';
 
 //Custom Components
 import ActivityCard from "./ActivityCard.js";
 
-const friends = [
+const reviews = [
     {
       name: "name1",
       activityType: "newReview",
@@ -55,20 +49,14 @@ const friends = [
     },
 ]
 
-//Styling
-const Item = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-}));
-
 export default function UserReviews() {
+
   return (
-    <Box container>
+    <Box container sx={{maxWidth:"90%"}}>
       <Typography>Friend Activity</Typography>
-      <Stack spacing={2}>
-      {friends.map((item) => (
-        <ActivityCard key={item.name} activityType={item.activityType} userName={item.name} activityInfo={item.activityInfo}/>
+      <Stack flexWrap="wrap" spacing={2} divider={<Divider orientation="horizontal" flexItem />} sx={{maxWidth:"100%"}}>
+      {reviews.map((item) => (
+        <ActivityCard key={item.name} activityType={item.activityType} userName={item.name} activityInfo={item.activityInfo} activitySize="large"/>
       ))}
       </Stack>
 
