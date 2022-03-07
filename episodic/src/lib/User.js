@@ -1,23 +1,31 @@
 const EpisodicList = require('./EpisodicList.js');
 
 class User {
-    constructor(profile) { 
+    constructor(profile, id, obj) { 
+        if (obj)
+        {
+            Object.assign(this, obj);
+            return;
+        }
         let listeningList = new EpisodicList("Listening") 
         let onDeckList = new EpisodicList("On Deck") 
         let finishedList = new EpisodicList("Finished") 
         this.episodicLists = [ listeningList, onDeckList, finishedList ] 
         this.activity = []
         this.profile = profile; 
+        this.id = id;
         this.achievements = [] 
       }     
 
-      get EpisodicLists () { return this.EpisodicLists; }
+      get userEpisodicLists () { return this.EpisodicLists; }
 
-      get activity () { return this.activity; }
+      get userActivity () { return this.activity; }
 
-      get profile () { return this.profile; }
+      get userProfile () { return this.profile; }
 
-      get achievements () { return this.achievements; }
+      get userAchievements () { return this.achievements; }
+      
+      get databaseId () { return this.id; }
 
       updateProfile(newProfile) {
           this.profile = newProfile;
@@ -67,4 +75,4 @@ class User {
       }
 }
 
-export default User;
+module.exports = User;

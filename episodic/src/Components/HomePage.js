@@ -30,10 +30,87 @@ const homePageGridStyles = {
   alignItems: "center",
 }
 
+
+
 class HomePage extends React.Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      listName: "",
+      list: {},
+      lists: []
+    };
+  }
+
+  handleStateChange = async(e) => {
+    await this.setState({ [e.target.id]: e.target.value });
+  }
+
+  componentDidMount() {
+    this.getUserLists();
+  }
+
+  createList = async e => {
+    e.preventDefault();
+    const response = await fetch('/api/v1/lists/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name: this.state.listName }),
+    });
+    const body = await response.json();
+    this.setState({ list: body.list }); 
+    await this.getUserLists();
+  };
+
+  addPodcastToList = async e => {
+    e.preventDefault();
+    const response = await fetch('/api/v1/lists/add/podcast', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ list: this.state.list }),
+    });
+    const body = await response.json();
+    //console.log(body);
+    //this.setState({ list: body.list });  
+  };
+
+  getUserLists = async e => {
+    //e.preventDefault();
+    const response = await fetch("/api/v1/lists/get/all");
+    const body = await response.json();
+    console.log(body);
+    this.setState({ lists: body.lists }); 
+  };
+
+
   render() {
     return (
+      
       <Grid container display="flex" spacing={2} justifyContent="center" alignItems="flex-start">
+        <Grid item lg={12} >
+        <form onSubmit={this.createList}>
+          <p>
+            <strong>Make a list :)</strong>
+          </p>
+          <input
+            type="text"
+            value={this.state.listName}
+            onChange={e => this.setState({ listName: e.target.value })}
+          />
+          <button type="submit">Submit</button>
+        </form>
+        </Grid>
+        <Grid item lg={12} >
+          Current user's lists:<br></br>
+        {JSON.stringify(this.state.lists)}
+        </Grid>
+
         <Grid container display="flex" flexDirection="column" item lg={3} spacing={2} alignItems="stretch" justifyContent="center">
           <Grid item lg={12} >
               <Item> <FriendActivity /> </Item>
