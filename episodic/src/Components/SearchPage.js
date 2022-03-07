@@ -11,8 +11,6 @@ import { styled } from '@mui/material/styles';
 
 
 //Custom Components
-import ListsHighlight from "./ListsHighlight.js";
-import FriendActivity from "./FriendActivity.js";
 import AllLists from "./AllLists.js";
 import NavBar from "./NavBar.js";
 
@@ -24,14 +22,11 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 
-function homePageStack(){
+function searchPageStack(){
   return(
     <React.Fragment>
     <Stack alignItems="flex-start" justifyContent="space-evenly" direction="row" spacing={2}>
-      <ListsHighlight listSize="large"/>
       <Stack spacing={2}>
-        <FriendActivity activitySize="small" />
-        <FriendActivity activitySize="small" />
         <AllLists />
       </Stack>
     </Stack>
@@ -39,30 +34,27 @@ function homePageStack(){
   );
 }
 
-function homePageNormal(){
+function searchPageNormal(){
   return(
 
     <Stack flexWrap="wrap" direction="row" spacing={2} columnSpacing={2} alignItems="flex-start" justifyContent="center" padding="10px">
       <Stack sx={{maxWidth:"25%"}} spacing={2}>
-        <Item ><FriendActivity activitySize="large" /></Item>
         <Item ><AllLists /></Item>
       </Stack>
-      <Item sx={{maxWidth:"50%"}}><ListsHighlight listSize="large"/></Item>
-      <Item sx={{maxWidth:"25%"}}><FriendActivity activitySize="large" /></Item>
     </Stack>
   );
 }
 
-export default function HomePage(){
-
+export default function SearchPage(route){
+  const { searchResults } = route.params;
   return(
     <React.Fragment>
-      <NavBar />
+    <NavBar />
       <MediaQuery query='(min-width: 1225px)'>
-        {homePageNormal()}
+        {searchPageNormal()}
       </MediaQuery>
       <MediaQuery query='(max-width: 1224px)'>
-        {homePageStack()}
+        {searchPageStack()}
       </MediaQuery>
     </React.Fragment>
   );
