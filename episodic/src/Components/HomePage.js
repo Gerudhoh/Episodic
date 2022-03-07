@@ -40,7 +40,9 @@ class HomePage extends React.Component {
     this.state = {
       listName: "",
       list: {},
-      lists: []
+      listId: 0,
+      lists: [],
+      formattedLists: ""
     };
   }
 
@@ -68,16 +70,40 @@ class HomePage extends React.Component {
 
   addPodcastToList = async e => {
     e.preventDefault();
+    console.log(e.target.id);
     const response = await fetch('/api/v1/lists/add/podcast', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ list: this.state.list }),
+      body: JSON.stringify({ list: this.state.lists[e.target.id] }),
     });
     const body = await response.json();
     //console.log(body);
-    //this.setState({ list: body.list });  
+    let tempLists = this.state.lists;
+    tempLists[e.target.id] = body.list;
+    this.setState({ lists: tempLists });  
+    const listMap = tempLists.map((list) =>  <li>{JSON.stringify(list)}</li>);
+    this.setState({formattedLists: listMap})
+  };
+
+  addEpisodeToList = async e => {
+    e.preventDefault();
+    console.log(e.target.id);
+    const response = await fetch('/api/v1/lists/add/episode', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ list: this.state.lists[e.target.id] }),
+    });
+    const body = await response.json();
+    //console.log(body);
+    let tempLists = this.state.lists;
+    tempLists[e.target.id] = body.list;
+    this.setState({ lists: tempLists });  
+    const listMap = tempLists.map((list) =>  <li>{JSON.stringify(list)}</li>);
+    this.setState({formattedLists: listMap})
   };
 
   getUserLists = async e => {
@@ -85,7 +111,8 @@ class HomePage extends React.Component {
     const response = await fetch("/api/v1/lists/get/all");
     const body = await response.json();
     const listMap = body.lists.map((list) =>  <li>{JSON.stringify(list)}</li>);
-    this.setState({ lists: listMap }); 
+    this.setState({ lists:body.lists }); 
+    this.setState({formattedLists: listMap})
   };
 
 
@@ -106,9 +133,17 @@ class HomePage extends React.Component {
           <button type="submit">Submit</button>
         </form>
         </Grid>
+        <Grid>
+          Add a podcast with dummy data to first list:<br></br>
+          <button id='1' onClick={this.addPodcastToList}>ADD</button>
+        </Grid>
+        <Grid>
+          Add an episode with dummy data to first list:<br></br>
+          <button id='1' onClick={this.addEpisodeToList}>ADD</button>
+        </Grid>
         <Grid item lg={12} >
           Current user's lists:<br></br>
-          <ul>{this.state.lists}</ul>
+          <ul>{this.state.formattedLists}</ul>
         </Grid>
 
         <Grid container display="flex" flexDirection="column" item lg={3} spacing={2} alignItems="stretch" justifyContent="center">

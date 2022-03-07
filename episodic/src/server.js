@@ -14,6 +14,8 @@ const promisePool = require('./repositories/mysql');
 // Import classes
 const users =  require("./lib/User")
 const lists = require("./lib/EpisodicList")
+const podcasts = require("./lib/Podcast")
+const episodes = require("./lib/Episode")
 
 // Expose the port specified in .env or port 5000
 const port = process.env.PORT || 5000;
@@ -61,12 +63,45 @@ app.post('/api/v1/lists/add/podcast', async function(req, res) {
   let podcast = req.body.podcast;
 
   list = new lists(list.name, list.id, list);
+  podcast = new podcasts("test", 1);
+  let podcastId = 1;
 
-  //let result = list.addPodcast(podcast);
-  /*
+  if (list.podcasts.some((element) => element.id == podcastId )){
+    res.send({
+      list: list
+    });
+    return;
+  }
+
+  list.addPodcast(podcast);
+  
   res.send({
     list: list
-  });*/
+  });
+
+});
+
+app.post('/api/v1/lists/add/episode', async function(req, res) {
+  let list = req.body.list;
+  let episode = req.body.episode;
+
+  list = new lists(list.name, list.id, list);
+  let episodeId = 1;
+
+  if (list.episodes.some((element) => element.id == episodeId )){
+    res.send({
+      list: list
+    });
+    return;
+  }
+
+  episode = new episodes("test", 1);
+
+  list.addEpisode(episode);
+  
+  res.send({
+    list: list
+  });
 
 });
 
@@ -77,11 +112,29 @@ app.get("/api/v1/lists/get/all", async function(req, res) {
   await new Promise(async (res, rej) => {
       try {
           let result = await promisePool.query(sql);
-          result[0].forEach(element => {
+          let i = 0;
+          result[0].forEach(async (element) => {
             let list = new lists(element.name, element.id);
+            sql = "select * from lists_podcasts_link where listsId = " + list.id + "";
+            let newResult = await promisePool.query(sql);
+            newResult[0].forEach(async (element) => {
+              let linkSql = "select * from podcasts where id = " + element.podcastsId + "";
+              let linkResult = await promisePool.query(linkSql);
+              let newPodcast = new podcasts(linkResult[0][0].name, linkResult[0][0].id);
+              list.addPodcast(newPodcast);
+            });
+            sql = "select * from lists_episodes_link where listsId = " + list.id + "";
+            newResult = await promisePool.query(sql);
+            newResult[0].forEach(async (element) => {
+              let linkSql = "select * from episodes where id = " + element.episodesId + "";
+              let linkResult = await promisePool.query(linkSql);
+              let newEpisode = new episodes(linkResult[0][0].name, linkResult[0][0].id);
+              list.addEpisode(newEpisode);
+            });
             currentUser.addEpisodicList(list);
           });
           res({ lists: currentUser.episodicLists });
+          
       } catch (err) {
           console.log(err);
           res(err);

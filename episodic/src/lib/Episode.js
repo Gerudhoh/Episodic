@@ -1,6 +1,7 @@
 class Episode {
     constructor(
         title,
+        id,
         description, 
         audioLengthSeconds, 
         explicit, 
@@ -11,9 +12,10 @@ class Episode {
             this.explicit = explicit;
             this.podcast = podcast;
             this.rating = null;
+            this.id = id;
         }
 
-        get title () { return this.title; }
+        /*get title () { return this.title; }
 
         get description () { return this.description; }
 
@@ -23,7 +25,7 @@ class Episode {
 
         get podcast () { return this.podcast; }
 
-        get rating () { return this.rating; }
+        get rating () { return this.rating; }*/
 
         updateRating(newRating) {
             this.rating = newRating;

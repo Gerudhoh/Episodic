@@ -1,6 +1,7 @@
 class Podcast {
     
     constructor(title, 
+        id,
          description,
          rss,  
          image,  
@@ -24,11 +25,12 @@ class Podcast {
             this.episodes = [];
             this.totalEpisodes = totalEpisodes;
             this.platforms = platforms;
+            this.id = id;
       }
 
-    get title () { return this.title; }
+    get podcastTitle () { return this.title; }
 
-    get description () { return this.description; }
+    /*get description () { return this.description; }
 
     get rss () { return this.rss; }
 
@@ -50,7 +52,7 @@ class Podcast {
 
     get rating () { return this.rating; }
 
-    get platforms () { return this.platforms; }
+    get platforms () { return this.platforms; }*/
 
     updateRating(newRating) {
         this.rating = newRating;
