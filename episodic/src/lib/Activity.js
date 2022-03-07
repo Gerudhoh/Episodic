@@ -1,4 +1,4 @@
-export default class Activity {
+class Activity {
     constructor() { 
         this.events = [];
     }
@@ -11,3 +11,5 @@ export default class Activity {
         this.events.push(activity);
     }
 }
+
+module.exports = Activity;

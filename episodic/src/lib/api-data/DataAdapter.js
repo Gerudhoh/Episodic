@@ -1,4 +1,4 @@
-export default class DataAdapter {
+class DataAdapter {
 
     adaptPodcasts(jsonInformation) {
         // Leverages the adaptPodcast method to adapt each podcast in the passed array to create a EpisodicList object 
@@ -13,3 +13,4 @@ export default class DataAdapter {
     }
 
 }
+module.exports = DataAdapter;

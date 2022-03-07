@@ -1,9 +1,9 @@
-import User from "./User.mjs"
-var mysql = require('mysql'); 
+const User = require('./User.js');
+import { createConnection } from 'mysql'; 
 
-export default class DatabaseConnection {
+class DatabaseConnection {
     constructor(databaseInfo) { 
-        this.databaseConnection = mysql.createConnection({ 
+        this.databaseConnection = createConnection({ 
             host: databaseInfo["host"], 
             user: databaseInfo["username"], 
             password: databaseInfo["password"] 
@@ -22,3 +22,5 @@ export default class DatabaseConnection {
         // Writes a User’s information to the database 
     }
 }
+
+module.exports = DatabaseConnection;
