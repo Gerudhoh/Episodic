@@ -1,4 +1,4 @@
-export default class Achievement {
+class Achievement {
     constructor(description, image) { 
         this.description = description; 
         this.image = image; 
@@ -17,3 +17,4 @@ export default class Achievement {
         return this.creationDate;
     }
 }
+module.exports = Achievement;

@@ -1,6 +1,6 @@
-import EpisodicList from "./EpisodicList.mjs";
+const EpisodicList = require('./EpisodicList.js');
 
-export default class User {
+class User {
     constructor(profile) { 
         let listeningList = new EpisodicList("Listening") 
         let onDeckList = new EpisodicList("On Deck") 
@@ -66,3 +66,5 @@ export default class User {
           this.removeFromList(episode, listName);
       }
 }
+
+export default User;

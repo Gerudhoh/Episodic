@@ -1,7 +1,7 @@
 const SpotifyWebApi = require('spotify-web-api-node');
 const { Client } = require('podcast-api');
 
-export default class DataFetcher {
+class DataFetcher {
     constructor(spotifyApiKey, spotifySecret, listenNotesApiKey, podcastIndexApiKey, podcastIndexSecret) {    
         this.spotifyApi = new SpotifyWebApi({ 
             clientId: spotifyApiKey, 
@@ -72,3 +72,5 @@ export default class DataFetcher {
     }
                 
 }
+
+module.exports = DataFetcher;

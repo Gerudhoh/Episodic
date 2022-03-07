@@ -1,4 +1,4 @@
-export default class Episode {
+class Episode {
     constructor(
         title,
         description, 
@@ -29,3 +29,5 @@ export default class Episode {
             this.rating = newRating;
         }
 }
+
+module.exports = Episode;
