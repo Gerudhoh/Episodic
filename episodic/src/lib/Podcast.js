@@ -11,7 +11,8 @@ class Podcast {
          explicit, 
          totalEpisodes,
          platforms,
-         listenNotesId) { 
+         listenNotesId,
+         databaseId) { 
             this.title = title;
             this.description = description;
             this.rss = rss;
@@ -26,6 +27,7 @@ class Podcast {
             this.totalEpisodes = totalEpisodes;
             this.platforms = platforms;
             this.listenNotesId = listenNotesId;
+            this.databaseId = databaseId;
       }
 
     updateRating(newRating) {

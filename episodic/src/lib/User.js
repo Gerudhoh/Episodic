@@ -8,7 +8,7 @@ class User {
         this.episodicLists = [ listeningList, onDeckList, finishedList ] 
         this.activity = []
         this.profile = profile; 
-        this.achievements = [] 
+        this.achievements = [];
       }     
 
       get EpisodicLists () { return this.EpisodicLists; }

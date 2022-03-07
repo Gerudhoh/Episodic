@@ -5,7 +5,8 @@ class Episode {
         audioLengthSeconds, 
         explicit, 
         podcast,
-        listenNotesId) { 
+        listenNotesId,
+        databaseId) { 
             this.title = title;
             this.description = description;
             this.audioLengthSeconds = audioLengthSeconds;
@@ -13,6 +14,7 @@ class Episode {
             this.podcast = podcast;
             this.listenNotesId = listenNotesId; 
             this.rating = null;
+            this.databaseId = databaseId;
         }
 
         updateRating(newRating) {
