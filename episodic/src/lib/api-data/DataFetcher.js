@@ -27,21 +27,24 @@ class DataFetcher {
         this.listenNotesDataAdapter = new ListenNotesDataAdapter()
     } 
 
+    getListenNotesApi () { return this.listenNotesApi; }
+ 
+
     fetchSpotifyPodcast(podcastName){ 
     //Fetches a specified podcast from Spotify 
     }
 
-    fetchPodcasts(podcastName) {
+    async fetchPodcasts(podcastName) {
         this.listenNotesApi.search({
             q: podcastName,
             type: 'podcast',
             only_in: 'title,description',
           }).then((response) => {
-              return this.listenNotesDataAdapter.adaptPodcasts(response.data.results);
+              return response.data.results;
           })
     }
 
-    fetchListenNotesPodcast(podcastName) {
+    async fetchListenNotesPodcast(podcastName) {
         this.listenNotesApi.search({
             q: podcastName,
             type: 'podcast',
@@ -64,7 +67,7 @@ class DataFetcher {
           })
     }
     
-    fetchPodcastIndexPodcast(podcastName) {
+    async fetchPodcastIndexPodcast(podcastName) {
         //  Fetches a specified podcast from ListenNotes  
         this.podcastIndexApi.search(podcastName).then((response) => {
             let length = response.feeds.length
@@ -81,12 +84,12 @@ class DataFetcher {
     }
     
     
-    fetchSpotifyEpisode(podcastName, episodeName) {
+    async fetchSpotifyEpisode(podcastName, episodeName) {
     // Fetches a specified episode from Spotify 
     }
     
     
-    fetchListenNotesEpisode(podcastName, episodeName) {
+    async fetchListenNotesEpisode(podcastName, episodeName) {
         // Fetches a specified episode from ListenNotes
         this.listenNotesApi.search({
             q: episodeName,
@@ -116,7 +119,7 @@ class DataFetcher {
     }
     
     
-    fetchPodcastGenres() {
+    async fetchPodcastGenres() {
     // Uses ListenNote’s genre fetching endpoint to fetch podcast genres 
     // Genre needs to be its own user story
         this.listenNotesApi.fetchPodcastGenres({ top_level_only: 1 }).then((response) => {
@@ -133,7 +136,7 @@ class DataFetcher {
     }
     
     
-    fetchPodcastRecommendation(podcast) {
+    async fetchPodcastRecommendation(podcast) {
     // Uses ListenNote’s recommendations endpoint to fetch recommendations for the given podcast
         this.listenNotesApi.fetchRecommendationsForPodcast({ id: podcast.listenNotesId }).then((response) => {
             return this.listenNotesDataAdapter.adaptPodcasts(response.data.recommendations);
@@ -143,7 +146,7 @@ class DataFetcher {
     }
     
     
-    fetchEpisodeRecommendation(episode) {
+    async fetchEpisodeRecommendation(episode) {
     // Uses ListenNote’s episode recommendation endpoint to fetch recommendations for the given podcast 
         this.listenNotesApi.fetchRecommendationsForEpisode({ id: episode.listenNotesId }).then((response) => {
             return this.listenNotesDataAdapter.adaptEpisodes(response.data.recommendations);

@@ -14,6 +14,7 @@ import { styled } from '@mui/material/styles';
 import ListsHighlight from "./ListsHighlight.js";
 import FriendActivity from "./FriendActivity.js";
 import AllLists from "./AllLists.js";
+import NavBar from "./NavBar.js";
 
 //Styling
 const Item = styled(Paper)(({ theme }) => ({
@@ -98,6 +99,7 @@ export default function HomePage(){
 
   return(
     <React.Fragment>
+      <NavBar />
       <MediaQuery query='(min-width: 1225px)'>
         {homePageNormal()}
       </MediaQuery>

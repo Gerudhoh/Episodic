@@ -1,9 +1,13 @@
 import * as React from 'react';
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 //Material UI Components
 =======
 >>>>>>> more components added
+=======
+import { useNavigate  } from "react-router-dom";
+>>>>>>> Adding search capabilities
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -21,7 +25,10 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import SearchIcon from '@mui/icons-material/Search';
+import InputBase from '@mui/material/InputBase';
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 
 //Material UI Icons and Styles
@@ -75,6 +82,13 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 =======
 const pages = ['Products', 'Pricing', 'Blog'];
+=======
+
+//Material UI Icons and Styling
+import { styled, alpha } from '@mui/material/styles';
+
+const pages = ['Home', 'Profile'];
+>>>>>>> Adding search capabilities
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 >>>>>>> more components added
 
@@ -97,6 +111,66 @@ const ResponsiveAppBar = () => {
     setAnchorElUser(null);
   };
 
+  const Search = styled('div')(({ theme }) => ({
+    position: 'relative',
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: alpha(theme.palette.common.white, 0.15),
+    '&:hover': {
+      backgroundColor: alpha(theme.palette.common.white, 0.25),
+    },
+    marginLeft: 0,
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: theme.spacing(1),
+      width: 'auto',
+    },
+  }));
+  
+  const SearchIconWrapper = styled('div')(({ theme }) => ({
+    padding: theme.spacing(0, 2),
+    height: '100%',
+    position: 'absolute',
+    pointerEvents: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }));
+  
+  const StyledInputBase = styled(InputBase)(({ theme }) => ({
+      color: 'inherit',
+      '& .MuiInputBase-input': {
+        padding: theme.spacing(1, 1, 1, 0),
+        // vertical padding + font size from searchIcon
+        paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+        transition: theme.transitions.create('width'),
+        width: '100%',
+        [theme.breakpoints.up('sm')]: {
+          width: '12ch',
+          '&:focus': {
+            width: '20ch',
+          },
+        },
+      },
+    }));
+
+    const navigate = useNavigate();
+
+    const fetchData = async (data) => {
+      const response = await fetch('/api/v1/search', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name: data }),
+      });
+      const body = await response;
+      
+      console.log("Fetch!");  
+      console.log(body);
+    };
+  
+  
+
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -107,7 +181,7 @@ const ResponsiveAppBar = () => {
             component="div"
             sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
           >
-            LOGO
+            EPISODIC
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -177,6 +251,21 @@ const ResponsiveAppBar = () => {
           </Search>
 =======
 >>>>>>> more components added
+
+          <Search>
+            <SearchIconWrapper>
+              <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+              placeholder="Search…"
+              inputProps={{ 'aria-label': 'search' }}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  fetchData(event.target.value)
+                }
+              }}
+            />
+        </Search>
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
