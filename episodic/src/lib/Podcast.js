@@ -12,7 +12,8 @@ class Podcast {
          explicit, 
          totalEpisodes,
          platforms,
-         listenNotesId) { 
+         listenNotesId,
+         databaseId) { 
             this.title = title;
             this.description = description;
             this.rss = rss;
@@ -30,7 +31,11 @@ class Podcast {
             this.id = id;
 =======
             this.listenNotesId = listenNotesId;
+<<<<<<< HEAD
 >>>>>>> Added a bunch of listen notes fetches!
+=======
+            this.databaseId = databaseId;
+>>>>>>> Working on search stuff
       }
 
 <<<<<<< HEAD

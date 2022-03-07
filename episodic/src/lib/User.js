@@ -13,8 +13,12 @@ class User {
         this.episodicLists = [ /*listeningList, onDeckList, finishedList*/ ] //To make life easier for now, but we need this back when users and lists properly interact
         this.activity = []
         this.profile = profile; 
+<<<<<<< HEAD
         this.id = id;
         this.achievements = [] 
+=======
+        this.achievements = [];
+>>>>>>> Working on search stuff
       }     
 
       get userEpisodicLists () { return this.EpisodicLists; }

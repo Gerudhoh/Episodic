@@ -6,7 +6,8 @@ class Episode {
         audioLengthSeconds, 
         explicit, 
         podcast,
-        listenNotesId) { 
+        listenNotesId,
+        databaseId) { 
             this.title = title;
             this.description = description;
             this.audioLengthSeconds = audioLengthSeconds;
@@ -14,7 +15,11 @@ class Episode {
             this.podcast = podcast;
             this.listenNotesId = listenNotesId; 
             this.rating = null;
+<<<<<<< HEAD
             this.id = id;
+=======
+            this.databaseId = databaseId;
+>>>>>>> Working on search stuff
         }
 
 <<<<<<< HEAD
