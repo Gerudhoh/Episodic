@@ -7,10 +7,10 @@ class User {
             Object.assign(this, obj);
             return;
         }
-        let listeningList = new EpisodicList("Listening") 
-        let onDeckList = new EpisodicList("On Deck") 
-        let finishedList = new EpisodicList("Finished") 
-        this.episodicLists = [ listeningList, onDeckList, finishedList ] 
+        //let listeningList = new EpisodicList("Listening") 
+        //let onDeckList = new EpisodicList("On Deck") 
+        //let finishedList = new EpisodicList("Finished") 
+        this.episodicLists = [ /*listeningList, onDeckList, finishedList*/ ] //To make life easier for now, but we need this back when users and lists properly interact
         this.activity = []
         this.profile = profile; 
         this.id = id;

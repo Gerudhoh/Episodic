@@ -70,9 +70,26 @@ app.post('/api/v1/lists/add/podcast', async function(req, res) {
 
 });
 
-app.get("/api/v1/lists/get/all", (req, res) => {
-    console.log(currentUser.episodicLists);
-    res.send({ lists: currentUser.episodicLists });
+app.get("/api/v1/lists/get/all", async function(req, res) {
+  if (currentUser.episodicLists.length == 0){
+  let sql = "select * from lists where userId = " + currentUser.id + "";
+  //throw it into the database
+  await new Promise(async (res, rej) => {
+      try {
+          let result = await promisePool.query(sql);
+          result[0].forEach(element => {
+            let list = new lists(element.name, element.id);
+            currentUser.addEpisodicList(list);
+          });
+          res({ lists: currentUser.episodicLists });
+      } catch (err) {
+          console.log(err);
+          res(err);
+      }
+  });
+  }
+  res.send({ lists: currentUser.episodicLists });
+    
 });
 
 // Listen to the specified port for api requests

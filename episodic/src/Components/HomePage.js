@@ -84,8 +84,8 @@ class HomePage extends React.Component {
     //e.preventDefault();
     const response = await fetch("/api/v1/lists/get/all");
     const body = await response.json();
-    console.log(body);
-    this.setState({ lists: body.lists }); 
+    const listMap = body.lists.map((list) =>  <li>{JSON.stringify(list)}</li>);
+    this.setState({ lists: listMap }); 
   };
 
 
@@ -108,7 +108,7 @@ class HomePage extends React.Component {
         </Grid>
         <Grid item lg={12} >
           Current user's lists:<br></br>
-        {JSON.stringify(this.state.lists)}
+          <ul>{this.state.lists}</ul>
         </Grid>
 
         <Grid container display="flex" flexDirection="column" item lg={3} spacing={2} alignItems="stretch" justifyContent="center">
