@@ -2,7 +2,7 @@
   "name": "episodic",
   "version": "0.1.0",
   "private": true,
-  "proxy": "https://episodic.azurewebsites.net/:5000/",
+  "proxy": "http://localhost:5000/",
   "dependencies": {
     "@emotion/react": "^11.8.1",
     "@emotion/styled": "^11.8.1",
