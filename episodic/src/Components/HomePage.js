@@ -70,7 +70,6 @@ class HomePage extends React.Component {
 
   addPodcastToList = async e => {
     e.preventDefault();
-    console.log(e.target.id);
     const response = await fetch('/api/v1/lists/add/podcast', {
       method: 'POST',
       headers: {
@@ -79,7 +78,23 @@ class HomePage extends React.Component {
       body: JSON.stringify({ list: this.state.lists[e.target.id] }),
     });
     const body = await response.json();
-    //console.log(body);
+    let tempLists = this.state.lists;
+    tempLists[e.target.id] = body.list;
+    this.setState({ lists: tempLists });  
+    const listMap = tempLists.map((list) =>  <li>{JSON.stringify(list)}</li>);
+    this.setState({formattedLists: listMap})
+  };
+
+  removePodcastFromList = async e => {
+    e.preventDefault();
+    const response = await fetch('/api/v1/lists/remove/podcast', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ list: this.state.lists[e.target.id] }),
+    });
+    const body = await response.json();
     let tempLists = this.state.lists;
     tempLists[e.target.id] = body.list;
     this.setState({ lists: tempLists });  
@@ -89,7 +104,6 @@ class HomePage extends React.Component {
 
   addEpisodeToList = async e => {
     e.preventDefault();
-    console.log(e.target.id);
     const response = await fetch('/api/v1/lists/add/episode', {
       method: 'POST',
       headers: {
@@ -98,7 +112,23 @@ class HomePage extends React.Component {
       body: JSON.stringify({ list: this.state.lists[e.target.id] }),
     });
     const body = await response.json();
-    //console.log(body);
+    let tempLists = this.state.lists;
+    tempLists[e.target.id] = body.list;
+    this.setState({ lists: tempLists });  
+    const listMap = tempLists.map((list) =>  <li>{JSON.stringify(list)}</li>);
+    this.setState({formattedLists: listMap})
+  };
+
+  removeEpisodeFromList = async e => {
+    e.preventDefault();
+    const response = await fetch('/api/v1/lists/remove/episode', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ list: this.state.lists[e.target.id] }),
+    });
+    const body = await response.json();
     let tempLists = this.state.lists;
     tempLists[e.target.id] = body.list;
     this.setState({ lists: tempLists });  
@@ -135,11 +165,19 @@ class HomePage extends React.Component {
         </Grid>
         <Grid>
           Add a podcast with dummy data to first list:<br></br>
-          <button id='1' onClick={this.addPodcastToList}>ADD</button>
+          <button id='1' onClick={this.addPodcastToList}>ADD PODCAST</button>
         </Grid>
         <Grid>
-          Add an episode with dummy data to first list:<br></br>
-          <button id='1' onClick={this.addEpisodeToList}>ADD</button>
+        &nbsp;&nbsp;Add an episode with dummy data to first list:<br></br>
+          <button id='1' onClick={this.addEpisodeToList}>ADD EPISODE</button>
+        </Grid>
+        <Grid>
+        &nbsp;&nbsp;Remove a podcast with dummy data from first list:<br></br>
+          <button id='1' onClick={this.removePodcastFromList}>REMOVE PODCAST</button>
+        </Grid>
+        <Grid>
+        &nbsp;&nbsp;Remove an episode with dummy data from first list:<br></br>
+          <button id='1' onClick={this.removeEpisodeFromList}>REMOVE EPISODE</button>
         </Grid>
         <Grid item lg={12} >
           Current user's lists:<br></br>
