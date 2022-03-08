@@ -155,18 +155,8 @@ const ResponsiveAppBar = () => {
 
     const navigate = useNavigate();
 
-    const fetchData = async (data) => {
-      const response = await fetch('/api/v1/search', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name: data }),
-      });
-      const body = await response;
-      
-      console.log("Fetch!");  
-      console.log(body);
+    const fetchData = async (data) => {  
+      navigate('/searchresults', { state: data })
     };
   
   
