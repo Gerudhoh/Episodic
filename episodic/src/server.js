@@ -86,7 +86,7 @@ app.post('/api/v1/search', async function(req, res) {
         type: 'podcast',
         only_in: 'title,description',
       }).then((response) => {
-        res.send(response.data.results);
+        res.send({data : response.data.results});
       })
   
   });
