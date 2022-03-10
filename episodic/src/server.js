@@ -57,11 +57,11 @@ const fetcher = new DataFetcher(
 var bodyParser = require('body-parser');
 app.use( bodyParser.json() );
 app.use(bodyParser.urlencoded({ extended: false }));
-let buildFolder = path.join(process.cwd());
+let buildFolder = path.join(process.cwd(), "build");
 app.use(express.static(buildFolder));
 
 app.get('/', (req,res) => {
-  res.sendFile(process.cwd()+"/index.html");
+  res.sendFile(process.cwd()+"/client/build/index.html");
 });
 
 
