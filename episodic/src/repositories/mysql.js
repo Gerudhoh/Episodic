@@ -1,11 +1,12 @@
 var mysql = require('mysql2');
+var CONFIG = require('./config.json');
 
 const pool =  mysql.createConnection({
-    host: "episodic.mysql.database.azure.com",
-    user: "hohenade",
-    password: "[q#rPZMd[~4WF(9t",
-    database: "episodic",
-    port: 3306
+    host: CONFIG.host,
+    user: CONFIG.user,
+    password: CONFIG.password,
+    database: CONFIG.database,
+    port: CONFIG.port
 });
 
 const promisePool = pool.promise();
