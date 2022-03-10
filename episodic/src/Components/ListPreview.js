@@ -33,7 +33,7 @@ export default function ListPreview(props) {
         <Grid container direction="row" columnSpacing={2} justifyContent="center" alignItems="center">
           <Grid item>
             <ImageList style={ListPreviewStyles}>
-              {props.images.map((item) => (
+              {props.images?.map((item) => (
                 <EpisodeCard key={`EpisodeCard${item.title}`} img={item.img} title={item.title} cardSize={props.listSize}>
                 </EpisodeCard>
               ))}

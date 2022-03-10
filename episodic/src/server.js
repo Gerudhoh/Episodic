@@ -138,10 +138,11 @@ app.post('/api/v1/lists/remove/episode', async function (req, res) {
 
 });
 
-app.get("/api/v1/lists/get/all", async function (req, res) {
+//This endpoint needs to be deleted when we have proper user logging in and out.
+//We need to set the user's lists when they log in instead of when the page loads, which is where this is called.
+app.get("/api/v1/lists/get/all/temp", async function (req, res) {
   if (currentUser.episodicLists.length == 0) {
     let sql = "select * from lists where userId = " + currentUser.id + "";
-    //throw it into the database
     await new Promise(async (res, rej) => {
       try {
         let result = await promisePool.query(sql);
@@ -176,6 +177,11 @@ app.get("/api/v1/lists/get/all", async function (req, res) {
   }
   res.send({ lists: currentUser.episodicLists });
 
+});
+
+// You will need to manually refresh the page for this to work atm, because of the fact we're filling this array when the page renders and the page might not have been rendered when this is called
+app.get("/api/v1/lists/get/all", async function (req, res) {
+  res.send({ lists: currentUser.episodicLists });
 });
 
 // Listen to the specified port for api requests
