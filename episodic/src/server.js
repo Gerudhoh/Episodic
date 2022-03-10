@@ -8,9 +8,6 @@ const path = require('path');
 
 const promisePool = require('./repositories/mysql');
 
-let buildFolder = path.join(process.cwd(), "build");
-app.use(express.static(buildFolder));
-
 // Import all the models for the database requests
 //const users = require("./models/users");
 
@@ -31,10 +28,11 @@ const fetcher = new DataFetcher(
 var bodyParser = require('body-parser');
 app.use( bodyParser.json() );
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(process.cwd()+"/client/build/"));
+let buildFolder = path.join(process.cwd());
+app.use(express.static(buildFolder));
 
 app.get('/', (req,res) => {
-  res.sendFile(process.cwd()+"/client/build/index.html");
+  res.sendFile(process.cwd()+"/index.html");
 });
 
 
