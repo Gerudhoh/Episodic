@@ -18,12 +18,13 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "concurrently \"npm run server\" \"npm run dev\"",
+    "start": "npm run dev",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "server": "node src/server.js",
-    "dev": "react-scripts start"
+    "frontend": "set PORT=3000 && react-scripts start",
+    "dev": "concurrently \"npm run frontend\" \"npm run server\""
   },
   "eslintConfig": {
     "extends": [
