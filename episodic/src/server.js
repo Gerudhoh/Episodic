@@ -8,6 +8,9 @@ const path = require('path');
 
 const promisePool = require('./repositories/mysql');
 
+let buildFolder = path.join(process.cwd(), "build");
+app.use(express.static(buildFolder));
+
 // Import all the models for the database requests
 //const users = require("./models/users");
 
