@@ -99,7 +99,6 @@ export default function HomePage(){
 
   return(
     <React.Fragment>
-      <NavBar />
       <MediaQuery query='(min-width: 1225px)'>
         {homePageNormal()}
       </MediaQuery>

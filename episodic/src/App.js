@@ -6,12 +6,14 @@ import './App.css';
 //Custom Components
 import HomePage from "./Components/HomePage.js";
 import SearchPage from "./Components/SearchPage.js";
+import NavBar from "./Components/NavBar.js";
 
 function App() {
   return (
-    
+
     <div className="App">
       <BrowserRouter>
+        <NavBar />
         <Routes >
           <Route exact path="/" element={<HomePage />} />
           <Route exact path="searchresults" element={<SearchPage />} />

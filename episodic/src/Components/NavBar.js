@@ -1,6 +1,7 @@
 import * as React from 'react';
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 //Material UI Components
 =======
@@ -8,6 +9,9 @@ import * as React from 'react';
 =======
 import { useNavigate  } from "react-router-dom";
 >>>>>>> Adding search capabilities
+=======
+import { useNavigate, Link } from "react-router-dom";
+>>>>>>> FINALLY building locally based on commit f97d9356 from 3-id-2-search branch package.json
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -87,10 +91,18 @@ const pages = ['Products', 'Pricing', 'Blog'];
 //Material UI Icons and Styling
 import { styled, alpha } from '@mui/material/styles';
 
+<<<<<<< HEAD
 const pages = ['Home', 'Profile'];
 >>>>>>> Adding search capabilities
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 >>>>>>> more components added
+=======
+const pages = [
+  {display:'Home', to:'/'},
+  {display:'Search', to:'/searchresults'}
+];
+const settings = ['Profile', 'Logout'];
+>>>>>>> FINALLY building locally based on commit f97d9356 from 3-id-2-search branch package.json
 
 const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -125,7 +137,7 @@ const ResponsiveAppBar = () => {
       width: 'auto',
     },
   }));
-  
+
   const SearchIconWrapper = styled('div')(({ theme }) => ({
     padding: theme.spacing(0, 2),
     height: '100%',
@@ -135,7 +147,7 @@ const ResponsiveAppBar = () => {
     alignItems: 'center',
     justifyContent: 'center',
   }));
-  
+
   const StyledInputBase = styled(InputBase)(({ theme }) => ({
       color: 'inherit',
       '& .MuiInputBase-input': {
@@ -155,11 +167,11 @@ const ResponsiveAppBar = () => {
 
     const navigate = useNavigate();
 
-    const fetchData = async (data) => {  
+    const fetchData = async (data) => {
       navigate('/searchresults', { state: data })
     };
-  
-  
+
+
 
   return (
     <AppBar position="static">
@@ -204,8 +216,8 @@ const ResponsiveAppBar = () => {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+                <MenuItem component={Link} to={page.to} key={page.display} onClick={handleCloseNavMenu}>
+                  <Typography textAlign="center">{page.display}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -220,12 +232,12 @@ const ResponsiveAppBar = () => {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
-              <Button
-                key={page}
+              <Button component={Link} to={page.to}
+                key={page.display}
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
-                {page}
+                {page.display}
               </Button>
             ))}
           </Box>

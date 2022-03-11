@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import * as React from 'react';
+import { useState, useEffect } from 'react';
 import MediaQuery  from 'react-responsive';
 import { useLocation } from 'react-router-dom'
 
@@ -50,7 +51,7 @@ export default function SearchPage(){
   const [value, setValue] = useState(null);
   const [isLoading, setLoading] = useState(true);
   const location = useLocation()
-  
+
   async function fetchData(data) {
     setLoading(true);
     console.log("Fetch " + data);
@@ -71,7 +72,7 @@ export default function SearchPage(){
           title: data.data[i].title_original
         });
       }
-  
+
       console.log(images);
       return(
         <Stack spacing={2}>
@@ -85,7 +86,7 @@ export default function SearchPage(){
     });
 
   };
-  
+
 
   useEffect(() => {
     fetchData(location.state)
@@ -93,7 +94,6 @@ export default function SearchPage(){
 
   return(
     <React.Fragment>
-    <NavBar />
     {isLoading ? (
         <CircularProgress />
       ) : (
