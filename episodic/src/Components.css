@@ -26,8 +26,16 @@
   --redwood-30: rgba(153, 96, 72, 0.5);
   --china-rose-30: rgba(168, 77, 103, 0.5);
   --khaki-web-30: rgba(180, 171, 147, 0.5);
+  background-color: var(--eggplant);
 }
 
+p { font-size: 1.4em;}
+
+
+h4{ font-size: 1.96em; }
+h3{ font-size: 2.744em; }
+h2{ font-size: 3.842em; }
+h1{ font-size: 5.378em; }
 
 .sectionTitle {
   font-family: Poppins;
@@ -57,32 +65,4 @@
   color: var(--eggplant);
 
   border-bottom-color: var(--eggplant);
-}
-
-.activityInfo {
-  font-family: Poppins;
-  font-style: normal;
-  font-size: 14px;
-  line-height: 100%;
-  color: var(--eggplant);
-}
-
-.listTitle {
-  font-family: Poppins;
-  font-style: normal;
-  font-size: 16px;
-  line-height: 100%;
-  color: var(--eggplant);
-}
-
-.regularText > p {
-  font-family: Poppins;
-  font-style: normal;
-  font-size: 16px;
-  line-height: 100%;
-  color: var(--eggplant);
-}
-
-.iconbuttonCustom {
-  color: var(--eggplant);
 }

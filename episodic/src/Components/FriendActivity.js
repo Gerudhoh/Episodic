@@ -90,7 +90,6 @@ const friends = [
 export default function FriendActivity(props) {
   return (
     <Box>
-      <Typography>Friend Activity</Typography>
       <Stack spacing={2} divider={<Divider orientation="horizontal" flexItem />}>
       {friends.map((item) => (
         <ActivityCard key={item.name} activityInfo={item.activityInfo} activityType={item.activityType} userName={item.name} activitySize={props.activitySize}/>

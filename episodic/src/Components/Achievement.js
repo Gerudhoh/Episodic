@@ -19,7 +19,7 @@ function CriticAchievement(){
   );
 }
 
-function SocialButterFlyAchievement(){
+function SocialButterflyAchievement(){
   return(
     <Stack direction="row" spacing={2}>
       <GroupsIcon aria-label="Groups"/>
@@ -54,7 +54,7 @@ export default function Achievement(props){
       return(CloserAchievement())
       break;
     case 'socialbutterfly':
-      return(SocialButterFlyAchievement())
+      return(SocialButterflyAchievement())
       break;
     case 'organizer':
       return(OrganizerAchievement())

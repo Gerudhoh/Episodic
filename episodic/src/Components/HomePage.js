@@ -4,11 +4,9 @@ import MediaQuery  from 'react-responsive';
 //Material UI Components
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-
-
+import Typography from '@mui/material/Typography';
 //Material UI Icons and Styling
 import { styled } from '@mui/material/styles';
-
 
 //Custom Components
 import ListsHighlight from "./ListsHighlight.js";
@@ -30,7 +28,7 @@ function homePageStack(){
     <Stack alignItems="flex-start" justifyContent="space-evenly" direction="row" spacing={2}>
       <ListsHighlight listSize="large"/>
       <Stack spacing={2}>
-        <FriendActivity activitySize="small" />
+        <Item><FriendActivity activitySize="small" /></Item>
         <FriendActivity activitySize="small" />
         <AllLists />
       </Stack>
@@ -83,13 +81,19 @@ class HomePage extends React.Component {
 function homePageNormal(){
   return(
 
-    <Stack flexWrap="wrap" direction="row" spacing={2} columnSpacing={2} alignItems="flex-start" justifyContent="center" padding="10px">
+    <Stack flexWrap="wrap" direction="row" spacing={2} columnspacing={2} alignItems="flex-start" justifyContent="center" padding="10px">
       <Stack sx={{maxWidth:"25%"}} spacing={2}>
-        <Item ><FriendActivity activitySize="large" /></Item>
+        <Item>
+          <Typography variant="h4">Friend Activity</Typography>
+          <FriendActivity activitySize="large" />
+        </Item>
         <Item ><AllLists /></Item>
       </Stack>
       <Item sx={{maxWidth:"50%"}}><ListsHighlight listSize="large"/></Item>
-      <Item sx={{maxWidth:"25%"}}><FriendActivity activitySize="large" /></Item>
+      <Item sx={{maxWidth:"25%"}}>
+        <Typography variant="h4">Friend Activity</Typography>
+        <FriendActivity activitySize="large" />
+      </Item>
     </Stack>
   );
 >>>>>>> more components added
