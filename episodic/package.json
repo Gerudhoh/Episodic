@@ -2,7 +2,7 @@
   "name": "episodic",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:5000",
+  "proxy": "https://episodic.azurewebsites.net/:5000/",
   "dependencies": {
     "@emotion/react": "^11.8.1",
     "@emotion/styled": "^11.8.1",
@@ -58,7 +58,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "server": "node src/server.js",
-    "frontend": "PORT=3000 rreact-scripts start",
+    "frontend": "set PORT=3000 && react-scripts start",
     "dev": "concurrently \"npm run frontend\" \"npm run server\""
   },
   "eslintConfig": {
