@@ -98,16 +98,14 @@ function homePageNormal(){
 
 export default function HomePage(){
 
-  // return(
-  //   <React.Fragment>
-  //     <MediaQuery query='(min-width: 1225px)'>
-  //       {homePageNormal()}
-  //     </MediaQuery>
-  //     <MediaQuery query='(max-width: 1224px)'>
-  //       {homePageStack()}
-  //     </MediaQuery>
-  //   </React.Fragment>
-  // );
-
-  return(<AllComponents />);
+  return(
+    <React.Fragment>
+      <MediaQuery query='(min-width: 1225px)'>
+        {homePageNormal()}
+      </MediaQuery>
+      <MediaQuery query='(max-width: 1224px)'>
+        {homePageStack()}
+      </MediaQuery>
+    </React.Fragment>
+  );
 }
