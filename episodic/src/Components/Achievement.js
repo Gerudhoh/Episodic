@@ -14,7 +14,7 @@ function CriticAchievement(){
   return(
     <Stack direction="row" spacing={2}>
       <RateReviewIcon aria-label="Rate Review"/>
-      <Typography>Critic</Typography>
+      <Typography variant="p">Critic</Typography>
     </Stack>
   );
 }
@@ -23,7 +23,7 @@ function SocialButterflyAchievement(){
   return(
     <Stack direction="row" spacing={2}>
       <GroupsIcon aria-label="Groups"/>
-      <Typography>Social Butterfly</Typography>
+      <Typography variant="p">Social Butterfly</Typography>
     </Stack>
   );
 }
@@ -32,7 +32,7 @@ function OrganizerAchievement(){
   return(
     <Stack direction="row" spacing={2}>
       <FactCheckIcon aria-label="Fact Check" />
-      <Typography>Organizer</Typography>
+      <Typography variant="p">Organizer</Typography>
     </Stack>
   );
 }
@@ -41,7 +41,7 @@ function CloserAchievement(){
   return(
     <Stack direction="row" spacing={2}>
       <CheckCircleIcon aria-label="Check Circle" />
-      <Typography>Closer</Typography>
+      <Typography variant="p">Closer</Typography>
     </Stack>
   );
 }

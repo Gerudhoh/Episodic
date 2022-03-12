@@ -92,7 +92,7 @@ function UserProfileButton(props){
 function FriendList(props) {
   return (
     <Box container>
-      <Typography>Friends</Typography>
+      <Typography variant="h5">Friends</Typography>
       <Stack spacing={2}>
       {friends.map((item) => (
         <UserInfo userName={item.name} avatarSize={props.userSize} fontSize={props.fontSize}/>
@@ -105,7 +105,7 @@ function FriendList(props) {
 function FollowingList(props) {
   return (
     <Box container>
-      <Typography>Following</Typography>
+      <Typography variant="h5">Following</Typography>
       <Stack spacing={2}>
       {following.map((item) => (
         <UserInfo userName={item.name} avatarSize={props.userSize} fontSize={props.fontSize}/>
@@ -121,13 +121,13 @@ function UserDescription(props){
     <Stack direction="row" spacing={2} justifyContent="flex-start">
       <Avatar sx={{width: 80, height: 80}} alt={props.userName} src={props.profilePic}/>
       <Stack justifyContent="flex-start" alignItems="flex-start">
-        <Typography> {props.userName} </Typography>
+        <Typography variant="h6"> {props.userName} </Typography>
         <Stack direction="row" spacing={1} justifyContent="space-evenly">
-          <Typography>{props.numPodsListened} Podcasts </Typography>
-          <Typography>{props.numEpisListened} Episodes </Typography>
-          <Typography>{props.numLists} Lists </Typography>
+          <Typography variant="p">{props.numPodsListened} Podcasts </Typography>
+          <Typography variant="p">{props.numEpisListened} Episodes </Typography>
+          <Typography variant="p">{props.numLists} Lists </Typography>
         </Stack>
-        <Typography>{props.numReviews} Reviews ({props.ratingAvg} average)</Typography>
+        <Typography variant="p">{props.numReviews} Reviews ({props.ratingAvg} average)</Typography>
       </Stack>
       <UserProfileButton />
     </Stack>
@@ -137,7 +137,7 @@ function UserDescription(props){
 function Achievements(){
   return(
     <React.Fragment>
-      <Typography>Achievements</Typography>
+      <Typography variant="h5">Achievements</Typography>
       <Stack direction="row" spacing={2} alignItems="center" justifyContent="space-evenly">
         <Stack spacing={2} alignItems="flex-start">
           <Achievement achievement={achievements[0]} />
@@ -172,7 +172,7 @@ function profileNormal(){
         </Stack>
       </Stack>
       <Item sx={{maxWidth:"35%"}}><UserReviews /></Item>
-      <ListsHighlight listSize="medium"/>
+      <Item><ListsHighlight listSize="medium"/></Item>
     </Stack>
   );
 }

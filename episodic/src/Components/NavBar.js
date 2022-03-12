@@ -99,7 +99,8 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 =======
 const pages = [
   {display:'Home', to:'/'},
-  {display:'Search', to:'/searchresults'}
+  {display:'Search', to:'/searchresults'},
+  {display:'Profile', to:'/profile'}
 ];
 const settings = ['Profile', 'Logout'];
 >>>>>>> FINALLY building locally based on commit f97d9356 from 3-id-2-search branch package.json
@@ -126,9 +127,9 @@ const ResponsiveAppBar = () => {
   const Search = styled('div')(({ theme }) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
+    backgroundColor: 'rgba(215, 192, 173, 0.25)',
     '&:hover': {
-      backgroundColor: alpha(theme.palette.common.white, 0.25),
+      backgroundColor: 'rgba(215, 192, 173, 0.25)',
     },
     marginLeft: 0,
     width: '100%',
@@ -136,6 +137,7 @@ const ResponsiveAppBar = () => {
       marginLeft: theme.spacing(1),
       width: 'auto',
     },
+    color: '#d7c0ad'
   }));
 
   const SearchIconWrapper = styled('div')(({ theme }) => ({
@@ -146,6 +148,7 @@ const ResponsiveAppBar = () => {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    color: '#d7c0ad'
   }));
 
   const StyledInputBase = styled(InputBase)(({ theme }) => ({
@@ -178,7 +181,7 @@ const ResponsiveAppBar = () => {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
-            variant="h6"
+            variant="h4"
             noWrap
             component="div"
             sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
@@ -223,12 +226,12 @@ const ResponsiveAppBar = () => {
             </Menu>
           </Box>
           <Typography
-            variant="h6"
+            variant="h4"
             noWrap
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
           >
-            LOGO
+            EPISODIC
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
@@ -254,20 +257,22 @@ const ResponsiveAppBar = () => {
 =======
 >>>>>>> more components added
 
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter') {
-                  fetchData(event.target.value)
-                }
-              }}
-            />
-        </Search>
+          <Box sx={{padding:'5px'}}>
+            <Search>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder="Search…"
+                inputProps={{ 'aria-label': 'search' }}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    fetchData(event.target.value)
+                  }
+                }}
+              />
+          </Search>
+        </Box>
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">

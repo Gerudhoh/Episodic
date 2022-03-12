@@ -14,7 +14,7 @@ import EpisodeCard from "./EpisodeCard.js"
 
 export default function EpisodeCardList(props){
   return(
-    <Stack spacing={2} direction="row" justifyContent="space-evenly" alignItems="center">
+    <Stack flexWrap="wrap" spacing={2} direction="row" justifyContent="space-evenly" alignItems="center">
       {props.images.map((item) => (
         <EpisodeCard key={`EpisodeCard${item.title}`} img={item.img} title={item.title} cardSize={props.listSize}>
         </EpisodeCard>

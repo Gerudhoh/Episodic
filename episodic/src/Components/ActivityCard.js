@@ -24,17 +24,17 @@ const activityCardStyles ={
   {
     avSize: "small",
     buttonSize:"small",
-    fontSize: 12
+    fontSize: '1em'
   },
   medium:{
     avSize: "medium",
     buttonSize:"inherit",
-    fontSize: 14
+    fontSize: '1em'
   },
   large:{
     avSize: "large",
     buttonSize:"large",
-    fontSize: 16,
+    fontSize: '1em',
   }
 };
 
@@ -43,7 +43,7 @@ const activityCardStyles ={
 function NewListPreview(props){
   return(
     <Stack alignItems="flex-start" spacing={2}>
-      <Typography fontSize={props.fontSize}> made new list listName </Typography>
+      <Typography variant="p" fontSize={props.fontSize}> made new list listName </Typography>
       <EpisodeCardList listName={props.listName} images={props.images} listSize="small"/>
     </Stack>
   );
@@ -52,7 +52,7 @@ function NewListPreview(props){
 function MoveListPreview(props){
   return(
     <Stack alignItems="flex-start" spacing={2}>
-      <Typography fontSize={props.fontSize}>moved podcastName from listName to listName</Typography>
+      <Typography variant="h2" fontSize={props.fontSize}>moved podcastName from listName to listName</Typography>
       <EpisodeCardList listName={props.listName} images={props.images} listSize="small"/>
     </Stack>
   );

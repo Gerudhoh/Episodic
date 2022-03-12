@@ -19,12 +19,14 @@ function DateAndRating(props){
 
 export default function ReviewPreview(props){
   return (
-    <Stack  flexWrap="wrap" direction="row" alignItems="flex-start" justifyContent="flex-start" spacing={2}>
+    <Stack direction="row" alignItems="flex-start" justifyContent="flex-start" spacing={2}>
       <img className="podcastCover" src="/pepekingprawn.jpg" width="120px" height="auto"/>
       <Box container sx={{display:"flex", alignItems:"flex-start", justifyContent:"flex-start", flexDirection:"column", flexWrap:"wrap"}}>
-        <Typography >reviewed PodcastTitle EpisodeTitle(opt)</Typography>
+        <Typography variant="h6">reviewed PodcastTitle EpisodeTitle(opt)</Typography>
         <DateAndRating date={props.date} rating={props.rating}/>
-        <Typography component="div" textAlign="left">{props.reviewText}</Typography>
+        <div style={{overflow:'hidden', textOverflow:"ellipsis", maxWidth:'10rem'}}>
+          <Typography noWrap={true} component="div" textAlign="left" variant="p">{props.reviewText}</Typography>
+        </div>
       </Box>
     </Stack>
   );

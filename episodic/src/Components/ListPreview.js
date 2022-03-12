@@ -42,7 +42,7 @@ export default function ListPreview(props) {
       </Grid>
 =======
       <Stack spacing={0} direction="column" justifyContent="flex-start" alignItems="flex-start">
-        <Typography>{props.listName}</Typography>
+        <Typography variant="h6">{props.listName}</Typography>
         <Stack direction="row" spacing={1} justifyContent="space-evenly" alignItems="center">
             <EpisodeCardList images={props.images} listSize={props.listSize} />
             <IconButton aria-label="see more" >

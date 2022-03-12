@@ -74,6 +74,7 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
+<<<<<<< HEAD
 class ListsHighlight extends React.Component {
 
   constructor(props) {
@@ -109,6 +110,14 @@ class ListsHighlight extends React.Component {
         <Typography>Lists</Typography>
         <Stack spacing={2}>
           {this.state.allLists.map((item) => (
+=======
+export default function ListsHighlight(props) {
+  return (
+    <Box>
+      <Typography variant="h4">Lists</Typography>
+      <Stack spacing={2}>
+          {lists.map((item) =>(
+>>>>>>> fixed text wrap and continuing themeing for all components
             <Item key={item.name}>
               <ListPreview listName={item.name} images={item.images} listSize={this.size} />
             </Item>

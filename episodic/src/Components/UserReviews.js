@@ -52,14 +52,13 @@ const reviews = [
 export default function UserReviews() {
 
   return (
-    <Box container sx={{maxWidth:"90%"}}>
-      <Typography>Friend Activity</Typography>
-      <Stack flexWrap="wrap" spacing={2} divider={<Divider orientation="horizontal" flexItem />} sx={{maxWidth:"100%"}}>
+    <Box container>
+      <Typography variant="h4">Reviews</Typography>
+      <Stack spacing={2} divider={<Divider orientation="horizontal" flexItem />}>
       {reviews.map((item) => (
         <ActivityCard key={item.name} activityType={item.activityType} userName={item.name} activityInfo={item.activityInfo} activitySize="large"/>
       ))}
       </Stack>
-
     </Box>
   );
 }

@@ -18,20 +18,15 @@ import NavBar from "./NavBar.js";
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
   textAlign: 'center',
-  color: theme.palette.text.secondary,
 }));
 
 
 function homePageStack(){
   return(
     <React.Fragment>
-    <Stack alignItems="flex-start" justifyContent="space-evenly" direction="row" spacing={2}>
-      <ListsHighlight listSize="large"/>
-      <Stack spacing={2}>
-        <Item><FriendActivity activitySize="small" /></Item>
-        <FriendActivity activitySize="small" />
-        <AllLists />
-      </Stack>
+    <Stack alignItems="flex-start" justifyContent="space-evenly" direction="row" spacing={2} sx={{padding:"20px"}}>
+        <Item sx={{maxWidth:"60%"}}><ListsHighlight listSize="small"/></Item>
+        <Item sx={{maxWidth:"40%"}}><FriendActivity activitySize="small" /></Item>
     </Stack>
     </React.Fragment>
   );
@@ -83,11 +78,12 @@ function homePageNormal(){
 
     <Stack flexWrap="wrap" direction="row" spacing={2} columnspacing={2} alignItems="flex-start" justifyContent="center" padding="10px">
       <Stack sx={{maxWidth:"25%"}} spacing={2}>
+        <Item ><AllLists /></Item>
         <Item>
-          <Typography variant="h4">Friend Activity</Typography>
+          <Typography variant="h4">My Activity</Typography>
           <FriendActivity activitySize="large" />
         </Item>
-        <Item ><AllLists /></Item>
+
       </Stack>
       <Item sx={{maxWidth:"50%"}}><ListsHighlight listSize="large"/></Item>
       <Item sx={{maxWidth:"25%"}}>

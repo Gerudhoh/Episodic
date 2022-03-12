@@ -9,6 +9,7 @@ import Alert from '@mui/material/Alert';
 
 import ListsHighlight from "./ListsHighlight.js"
 
+<<<<<<< HEAD
 class AllLists extends React.Component {
 
   constructor(props) {
@@ -89,6 +90,34 @@ class AllLists extends React.Component {
       </Box>
     );
   }
+=======
+const allLists = [
+    {
+      name: "listName1"
+    },
+
+    {
+      name: "listName2"
+    },
+    {
+      name: "listName3"
+    },
+    {
+      name: "listName4"
+    },
+]
+export default function AllLists() {
+  return (
+    <Box container>
+      <Typography variant="h4">Lists</Typography>
+      <List>
+      {allLists.map((item) => (
+        <ListItem key={item.name}>{item.name}</ListItem>
+      ))}
+      </List>
+    </Box>
+  );
+>>>>>>> fixed text wrap and continuing themeing for all components
 }
 
 export default AllLists;

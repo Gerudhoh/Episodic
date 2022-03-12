@@ -33,7 +33,10 @@ p { font-size: 1.4em;}
 
 
 h4{ font-size: 1.96em; }
-h3{ font-size: 2.744em; }
+h3{
+  font-size: 2.744em;
+  color: var(--desert-sand);
+}
 h2{ font-size: 3.842em; }
 h1{ font-size: 5.378em; }
 

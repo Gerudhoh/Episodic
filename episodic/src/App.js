@@ -7,6 +7,7 @@ import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
 //Custom Components
 import HomePage from "./Components/HomePage.js";
 import SearchPage from "./Components/SearchPage.js";
+import ProfilePage from "./Components/ProfilePage.js";
 import NavBar from "./Components/NavBar.js";
 
 const theme = createTheme({
@@ -24,8 +25,7 @@ const theme = createTheme({
     },
     text: {
       primary: '#d7c0ad',
-      secondary: 'rgba(215,192,173,0.83)',
-      hint: '#d6a887',
+      secondary: '#d7c0ad',
     },
     background: {
       default: '#533745',
@@ -33,10 +33,40 @@ const theme = createTheme({
     },
     divider: 'rgba(215,192,173,0.5)'
   },
-  props: {
-    MuiAppBar:{
-      color: 'secondary',
+  typography : {
+    allVariants: {
+      color: '#d7c0ad'
+    },
+    color: '#d7c0ad',
+    fontFamily: 'Poppins',
+    h1: {
+      fontSize: '5.378em',
+    },
+    h2: {
+      fontSize: '3.842em',
+    },
+    h3: {
+      fontSize: '2.744em',
+      color: '#d7c0ad',
+    },
+    h4: {
+      fontSize: '1.96em',
+    },
+    p: {
+      fontSize: '1em',
     }
+  },
+  components: {
+    MuiAppBar:{
+      defaultProps:{
+        color: 'transparent',
+      },
+    },
+    MuiIcon:{
+      props:{
+        color: 'action',
+      },
+    },
   }
 });
 
@@ -50,6 +80,7 @@ function App() {
           <Routes >
             <Route exact path="/" element={<HomePage />} />
             <Route exact path="searchresults" element={<SearchPage />} />
+            <Route exact path="profile" element={<ProfilePage />} />
           </Routes >
         </BrowserRouter>
       </ThemeProvider>
