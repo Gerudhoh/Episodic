@@ -64,62 +64,16 @@ const list ={
     ],
 };
 
-function EditListButtons(){
-  if(flag === "ownProfile"){
-    return(
-      <Fab size="small">
-        <EditIcon fontSize="small"/>
-      </Fab>
-    );
-  }
-  else {
-    return(<React.Fragment></React.Fragment>);
-  }
-
-}
-
-function NewListButton(props){
-  if(flag === "ownProfile"){
-    return(<Button variant="contained" style={{height: "35px"}}>New List</Button>);
-  }
-  else {
-    return(<React.Fragment></React.Fragment>);
-  }
-}
-
-function ShowList(props){
-  if(props.listName === 'all'){
-    return (<React.Fragment></React.Fragment>);
-  }
-  return(
-    <Item>
-      <Stack spacing={2}>
-        <Stack direction="row" spacing={2}>
-          <Typography variant="h4">{props.listName}</Typography>
-          <EditListButtons />
-        </Stack>
-        <Stack>
-          <EpisodeCardList images={list.images} listSize={"large"}/>
-        </Stack>
-      </Stack>
-    </Item>
-  );
-}
-
-export default function ProfileListView(props){
+export default function ExploreListView(props){
   const location = useLocation();
   return(
-    <Stack direction="row" spacing={2} padding="20px">
-      <Stack spacing={2} sx={{width:"25%"}}>
-        <Item >
-          <Stack spacing={2} direction="row" justifyContent="space-between" >
-            <UserInfo avatarSize="large" fontSize="20px" userName={props.userName} />
-            <NewListButton />
-          </Stack>
-        </Item>
-        <Item><AllLists /></Item>
+    <Stack spacing={2}>
+      <Stack direction="row" spacing={2}>
+        <Typography variant="h4">{props.listName}</Typography>
       </Stack>
-      <ShowList listName={location.pathname.split('/')[2]}/>
+      <Stack>
+        <EpisodeCardList images={list.images} listSize={"large"}/>
+      </Stack>
     </Stack>
   );
 

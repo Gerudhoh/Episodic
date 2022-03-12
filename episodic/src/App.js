@@ -10,7 +10,7 @@ import HomePage from "./Components/HomePage.js";
 import SearchPage from "./Components/SearchPage.js";
 import ProfilePage from "./Components/ProfilePage.js";
 import ProfileListView from "./Components/ProfileListView.js";
-
+import ExploreListView from "./Components/ExploreListView.js";
 
 const theme = createTheme({
   palette: {
@@ -87,7 +87,9 @@ function App() {
             <Route exact path="/" element={<HomePage />} />
             <Route exact path="searchresults" element={<SearchPage />} />
             <Route exact path="profile" element={<ProfilePage />} />
-            <Route exact path="profile-lists" element={<ProfileListView userName="userName" listName="listName"/>} />
+            <Route path="userlist/:name" element={<ProfileListView userName="userName"/>} />
+            <Route path="userlist/" element={<ProfileListView userName="userName"/>} />
+            <Route path="explorelist/:name" element={<ExploreListView />} />
           </Routes >
         </BrowserRouter>
       </ThemeProvider>

@@ -47,25 +47,21 @@ h1{ font-size: 5.378em; }
   line-height: 100%;
   color: var(--eggplant);
 
-  border-bottom-color: var(--eggplant);
+  border-bottom-color: var(--desertSand);
 }
 
-.sectionTitle > h1{
+.sectionTitle {
   font-family: Poppins;
   font-style: normal;
-  font-size: 24px;
   line-height: 100%;
-  color: var(--eggplant);
+  color: var(--desertSand);
 
-  border-bottom-color: var(--eggplant);
+  border-bottom-color: var(--desertSand);
 }
 
-.sectionTitle > h2, h3{
+.listLink{
   font-family: Poppins;
   font-style: normal;
   font-size: 20px;
-  line-height: 100%;
-  color: var(--eggplant);
-
-  border-bottom-color: var(--eggplant);
+  color: var(--desertSand);
 }

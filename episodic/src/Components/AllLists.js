@@ -1,5 +1,5 @@
 import * as React from 'react';
-
+import { useNavigate, Link } from "react-router-dom";
 //Material UI Components
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -109,10 +109,14 @@ const allLists = [
 export default function AllLists() {
   return (
     <Box container>
-      <Typography variant="h4">Lists</Typography>
+      <Typography variant="h4" component={Link} to="/userlist/all">Lists</Typography>
       <List>
       {allLists.map((item) => (
-        <ListItem key={item.name}>{item.name}</ListItem>
+        <ListItem key={item.name} id={item.name}>
+            <Link className="listLink" to={`/userlist/${item.name}`}>
+              {item.name}
+            </Link>
+        </ListItem>
       ))}
       </List>
     </Box>

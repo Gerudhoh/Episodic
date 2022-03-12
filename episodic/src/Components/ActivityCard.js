@@ -61,7 +61,6 @@ function MoveListPreview(props){
 
 export default function ActivityCard(props){
   const size = activityCardStyles[props.activitySize];
-  console.log(props.activityInfo)
   const activityType = props.activityType;
 
   const ActivityPreview = (activityType) => {

@@ -27,7 +27,10 @@ function homePageStack(){
   return(
     <React.Fragment>
     <Stack alignItems="flex-start" justifyContent="space-evenly" direction="row" spacing={2} sx={{padding:"20px"}}>
-        <Item sx={{maxWidth:"60%"}}><ListsHighlight listSize="small"/></Item>
+        <Item sx={{maxWidth:"60%"}}>
+          <Typography variant="h4">Explore</Typography>
+          <ListsHighlight listSize="small"/>
+        </Item>
         <Item sx={{maxWidth:"40%"}}><FriendActivity activitySize="small" /></Item>
     </Stack>
     </React.Fragment>
@@ -86,7 +89,10 @@ function homePageNormal(){
           <FriendActivity activitySize="large" />
         </Item>
       </Stack>
-      <Item sx={{maxWidth:"50%"}}><ListsHighlight listSize="large"/></Item>
+      <Item sx={{maxWidth:"50%"}}>
+        <Typography variant="h4">Explore</Typography>
+        <ListsHighlight listSize="large"/>
+      </Item>
       <Item sx={{maxWidth:"25%"}}>
         <Typography variant="h4">Friend Activity</Typography>
         <FriendActivity activitySize="large" />

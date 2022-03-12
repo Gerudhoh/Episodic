@@ -40,6 +40,7 @@ const lists = [
 =======
     {
       name: "list1",
+      type: "user",
       images: [
         {
           img: '/pepekingprawn.jpg',
@@ -57,6 +58,7 @@ const lists = [
     },
     {
       name: "list2",
+      type: "user",
       images: [
         {
         img: '/pepekingprawn.jpg',
@@ -95,6 +97,7 @@ const lists = [
     },
     {
       name: "list3",
+      type: "user",
       images: [
         {
           img: '/pepekingprawn.jpg',
@@ -160,7 +163,6 @@ class ListsHighlight extends React.Component {
 export default function ListsHighlight(props) {
   return (
     <Box>
-      <Typography variant="h4">Lists</Typography>
       <Stack spacing={2}>
           {lists.map((item) =>(
 <<<<<<< HEAD
@@ -169,8 +171,12 @@ export default function ListsHighlight(props) {
               <ListPreview listName={item.name} images={item.images} listSize={this.size} />
 =======
             <Item key={item.name} >
+<<<<<<< HEAD
               <ListPreview listName={item.name} images={item.images} listSize={props.listSize}/>
 >>>>>>> continuing styling and adding big list view, trying to fix search results display
+=======
+              <ListPreview listName={item.name} type={item.type} images={item.images} listSize={props.listSize}/>
+>>>>>>> added list view, made list links route to dynamic pages
             </Item>
           ))}
         </Stack>

@@ -2,7 +2,7 @@
 import * as React from 'react';
 
 //Material UI Components
-import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
 
 //Material UI Icons and Styling
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -35,12 +35,12 @@ const episodeCardStyles ={
 export default function EpisodeCard(props) {
   const size = episodeCardStyles[props.cardSize];
   return (
-    <Stack spacing={1}>
-        <img width={size.minSize} height="auto"
+    <Box sx={{m:2}}>
+        < img  width={size.minSize} height="auto"
           src={props.img}
           alt={props.title}
           loading="lazy"
         />
-    </Stack>
+    </Box>
   );
 }

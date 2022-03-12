@@ -1,5 +1,6 @@
 import * as React from 'react';
 import MediaQuery  from 'react-responsive';
+import {Link} from 'react-router-dom';
 //Material UI Components
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
@@ -171,7 +172,10 @@ function profileNormal(){
         </Stack>
       </Stack>
       <Item sx={{maxWidth:"30%"}}><UserReviews /></Item>
-      <Item sx={{maxWidth:"40%"}}><ListsHighlight listSize="medium"/></Item>
+      <Item sx={{maxWidth:"40%"}}>
+        <Typography variant="h4" component={Link} to="/listview/all">Lists</Typography>
+        <ListsHighlight listSize="medium"/>
+      </Item>
     </Stack>
   );
 };
