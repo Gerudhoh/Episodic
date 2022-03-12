@@ -43,7 +43,7 @@ const activityCardStyles ={
 function NewListPreview(props){
   return(
     <Stack alignItems="flex-start" spacing={2}>
-      <Typography variant="p" fontSize={props.fontSize}> made new list listName </Typography>
+      <Typography component="div" textAlign="left" variant="h6"> made new list listName </Typography>
       <EpisodeCardList listName={props.listName} images={props.images} listSize="small"/>
     </Stack>
   );
@@ -52,7 +52,7 @@ function NewListPreview(props){
 function MoveListPreview(props){
   return(
     <Stack alignItems="flex-start" spacing={2}>
-      <Typography variant="h2" fontSize={props.fontSize}>moved podcastName from listName to listName</Typography>
+      <Typography component="div" textAlign="left" variant="h6">moved podcastName from listName to listName</Typography>
       <EpisodeCardList listName={props.listName} images={props.images} listSize="small"/>
     </Stack>
   );

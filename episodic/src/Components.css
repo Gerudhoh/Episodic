@@ -14,18 +14,18 @@
   --khaki-web-30: rgba(180, 171, 147, 0.3);
 
   /*40% opacity*/
-  --desert-sand-30: rgba(215, 192, 173, 0.4);
-  --egglant-30: rgba(83, 55, 69, 0.4);
-  --redwood-30: rgba(153, 96, 72, 0.4);
-  --china-rose-30: rgba(168, 77, 103, 0.4);
-  --khaki-web-30: rgba(180, 171, 147, 0.4);
+  --desert-sand-40: rgba(215, 192, 173, 0.4);
+  --egglant-40: rgba(83, 55, 69, 0.4);
+  --redwood-40: rgba(153, 96, 72, 0.4);
+  --china-rose-40: rgba(168, 77, 103, 0.4);
+  --khaki-web-40: rgba(180, 171, 147, 0.4);
 
   /*50% opacity*/
-  --desert-sand-30: rgba(215, 192, 173, 0.5);
-  --egglant-30: rgba(83, 55, 69, 0.5);
-  --redwood-30: rgba(153, 96, 72, 0.5);
-  --china-rose-30: rgba(168, 77, 103, 0.5);
-  --khaki-web-30: rgba(180, 171, 147, 0.5);
+  --desert-sand-50: rgba(215, 192, 173, 0.5);
+  --egglant-50: rgba(83, 55, 69, 0.5);
+  --redwood-50: rgba(153, 96, 72, 0.5);
+  --china-rose-50: rgba(168, 77, 103, 0.5);
+  --khaki-web-50: rgba(180, 171, 147, 0.5);
   background-color: var(--eggplant);
 }
 

@@ -14,6 +14,8 @@ import FriendActivity from "./FriendActivity.js";
 import AllLists from "./AllLists.js";
 import NavBar from "./NavBar.js";
 
+import AllComponents from "./AllComponents.js";
+
 //Styling
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
@@ -83,7 +85,6 @@ function homePageNormal(){
           <Typography variant="h4">My Activity</Typography>
           <FriendActivity activitySize="large" />
         </Item>
-
       </Stack>
       <Item sx={{maxWidth:"50%"}}><ListsHighlight listSize="large"/></Item>
       <Item sx={{maxWidth:"25%"}}>
@@ -97,14 +98,16 @@ function homePageNormal(){
 
 export default function HomePage(){
 
-  return(
-    <React.Fragment>
-      <MediaQuery query='(min-width: 1225px)'>
-        {homePageNormal()}
-      </MediaQuery>
-      <MediaQuery query='(max-width: 1224px)'>
-        {homePageStack()}
-      </MediaQuery>
-    </React.Fragment>
-  );
+  // return(
+  //   <React.Fragment>
+  //     <MediaQuery query='(min-width: 1225px)'>
+  //       {homePageNormal()}
+  //     </MediaQuery>
+  //     <MediaQuery query='(max-width: 1224px)'>
+  //       {homePageStack()}
+  //     </MediaQuery>
+  //   </React.Fragment>
+  // );
+
+  return(<AllComponents />);
 }

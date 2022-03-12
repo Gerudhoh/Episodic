@@ -14,6 +14,7 @@ import ActivityCard from "./ActivityCard.js";
 import ListPreview from "./ListPreview.js";
 
 const lists = [
+<<<<<<< HEAD
   {
     name: "list1",
     images: [
@@ -36,17 +37,42 @@ const lists = [
     images: [
       {
         img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
+=======
+    {
+      name: "list1",
+      images: [
+        {
+          img: '/pepekingprawn.jpg',
+          title: 'Breakfast',
+        },
+        {
+          img: '/pepekingprawn.jpg',
+          title: 'Burger',
+        },
+        {
+          img: '/pepekingprawn.jpg',
+          title: 'Camera',
+        },
+      ]
+    },
+    {
+      name: "list2",
+      images: [
+        {
+        img: '/pepekingprawn.jpg',
+>>>>>>> continuing styling and adding big list view, trying to fix search results display
         title: 'Hats'
       },
       {
-        img: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62',
+        img: '/pepekingprawn.jpg',
         title: 'Honey'
       },
       {
-        img: 'https://images.unsplash.com/photo-1516802273409-68526ee1bdd6',
+        img: '/pepekingprawn.jpg',
         title: 'Basketball',
       },
     ]
+<<<<<<< HEAD
   },
   {
     name: "list3",
@@ -65,6 +91,26 @@ const lists = [
       },
     ]
   },
+=======
+    },
+    {
+      name: "list3",
+      images: [
+        {
+          img: '/pepekingprawn.jpg',
+          title: 'Fern',
+        },
+        {
+          img: '/pepekingprawn.jpg',
+          title: 'Mushrooms',
+        },
+        {
+          img: '/pepekingprawn.jpg',
+          title: 'Tomato basil',
+        },
+      ]
+    },
+>>>>>>> continuing styling and adding big list view, trying to fix search results display
 ]
 
 //Styling
@@ -117,9 +163,14 @@ export default function ListsHighlight(props) {
       <Typography variant="h4">Lists</Typography>
       <Stack spacing={2}>
           {lists.map((item) =>(
+<<<<<<< HEAD
 >>>>>>> fixed text wrap and continuing themeing for all components
             <Item key={item.name}>
               <ListPreview listName={item.name} images={item.images} listSize={this.size} />
+=======
+            <Item key={item.name} >
+              <ListPreview listName={item.name} images={item.images} listSize={props.listSize}/>
+>>>>>>> continuing styling and adding big list view, trying to fix search results display
             </Item>
           ))}
         </Stack>

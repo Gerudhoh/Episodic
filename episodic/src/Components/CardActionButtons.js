@@ -2,9 +2,13 @@
 import * as React from 'react';
 
 //Material UI Components
+import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import AddIcon from '@mui/icons-material/Add';
+import StarIcon from '@mui/icons-material/Star';
 
-function CardActionButtons(props) {
+export default function CardActionButtons(props) {
   return (
     <Stack direction="row" justifyContent="center">
       <IconButton aria-label="favorite">

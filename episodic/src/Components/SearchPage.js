@@ -6,6 +6,7 @@ import { useLocation } from 'react-router-dom'
 //Material UI Components
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 
 //Material UI Icons and Styling
@@ -16,6 +17,7 @@ import { styled } from '@mui/material/styles';
 import AllLists from "./AllLists.js";
 import NavBar from "./NavBar.js";
 import ListPreview from "./ListPreview.js"
+import EpisodeCardList from "./EpisodeCardList.js"
 
 //Styling
 const Item = styled(Paper)(({ theme }) => ({
@@ -29,7 +31,6 @@ function searchPageStack(){
     <React.Fragment>
     <Stack alignItems="flex-start" justifyContent="space-evenly" direction="row" spacing={2}>
       <Stack spacing={2}>
-        <AllLists />
       </Stack>
     </Stack>
     </React.Fragment>
@@ -41,7 +42,7 @@ function searchPageNormal(){
 
     <Stack flexWrap="wrap" direction="row" spacing={2} columnSpacing={2} alignItems="flex-start" justifyContent="center" padding="10px">
       <Stack sx={{maxWidth:"25%"}} spacing={2}>
-        <Item ><AllLists /></Item>
+
       </Stack>
     </Stack>
   );
@@ -75,8 +76,9 @@ export default function SearchPage(){
 
       console.log(images);
       return(
-        <Stack spacing={2}>
-          <ListPreview listName={"Search Results"} images={images} listSize={"large"}/>
+        <Stack spacing={2} padding="20px">
+          <Typography variant="h4">Search Results</Typography>
+          <EpisodeCardList images={images} listSize={"large"}/>
         </Stack>
         );
     }).then( resource => {

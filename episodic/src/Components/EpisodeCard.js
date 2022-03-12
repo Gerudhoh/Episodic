@@ -9,6 +9,8 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import AddIcon from '@mui/icons-material/Add';
 import StarIcon from '@mui/icons-material/Star';
 
+import CardActionButtons from './CardActionButtons.js';
+
 //Styling
 const episodeCardStyles ={
   small:
@@ -18,7 +20,7 @@ const episodeCardStyles ={
     fontSize: 14,
   },
   medium:{
-    minSize: 160,
+    minSize: 140,
     buttonSize: "inherit",
     fontSize: 16,
   },
@@ -32,11 +34,10 @@ const episodeCardStyles ={
 
 export default function EpisodeCard(props) {
   const size = episodeCardStyles[props.cardSize];
-  const imgSize = size.minSize-20;
   return (
     <Stack spacing={1}>
-        <img
-          src={`${props.img}?w=${imgSize}&h=${imgSize}&fit=crop&auto=format`}
+        <img width={size.minSize} height="auto"
+          src={props.img}
           alt={props.title}
           loading="lazy"
         />

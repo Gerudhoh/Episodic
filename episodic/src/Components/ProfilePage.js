@@ -1,7 +1,6 @@
 import * as React from 'react';
-
+import MediaQuery  from 'react-responsive';
 //Material UI Components
-import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
@@ -121,13 +120,13 @@ function UserDescription(props){
     <Stack direction="row" spacing={2} justifyContent="flex-start">
       <Avatar sx={{width: 80, height: 80}} alt={props.userName} src={props.profilePic}/>
       <Stack justifyContent="flex-start" alignItems="flex-start">
-        <Typography variant="h6"> {props.userName} </Typography>
+        <Typography variant="h6" > {props.userName} </Typography>
         <Stack direction="row" spacing={1} justifyContent="space-evenly">
-          <Typography variant="p">{props.numPodsListened} Podcasts </Typography>
-          <Typography variant="p">{props.numEpisListened} Episodes </Typography>
-          <Typography variant="p">{props.numLists} Lists </Typography>
+          <Typography variant="p" textAlign="left">{props.numPodsListened} Podcasts </Typography>
+          <Typography variant="p" textAlign="left">{props.numEpisListened} Episodes </Typography>
+          <Typography variant="p" textAlign="left">{props.numLists} Lists </Typography>
         </Stack>
-        <Typography variant="p">{props.numReviews} Reviews ({props.ratingAvg} average)</Typography>
+        <Typography variant="p" textAlign="left">{props.numReviews} Reviews ({props.ratingAvg} average)</Typography>
       </Stack>
       <UserProfileButton />
     </Stack>
@@ -154,9 +153,9 @@ function Achievements(){
 
 function profileNormal(){
   return(
-    <Stack flexWrap="wrap" direction="row" spacing={2} padding="20px" alignItems="flex-start" justifyContent="space-evenly">
-      <Stack spacing={2}>
-        <Item><UserDescription
+    <Stack direction="row" spacing={2} padding="10px" alignItems="flex-start" justifyContent="space-evenly">
+      <Stack spacing={2} sx={{maxWidth:"30%"}}>
+        <Item ><UserDescription
         userName={userInfo.name}
         profilePic={userInfo.profilePic}
         numPodsListened={userInfo.numPodsListened}
@@ -171,14 +170,47 @@ function profileNormal(){
           <Item sx={{width:"50%"}}><FriendList userSize="small" fontSize={20}/></Item>
         </Stack>
       </Stack>
-      <Item sx={{maxWidth:"35%"}}><UserReviews /></Item>
-      <Item><ListsHighlight listSize="medium"/></Item>
+      <Item sx={{maxWidth:"30%"}}><UserReviews /></Item>
+      <Item sx={{maxWidth:"40%"}}><ListsHighlight listSize="medium"/></Item>
     </Stack>
   );
-}
+};
+
+function profileStack(){
+  return(
+    <Stack direction="row" spacing={2} padding="10px" alignItems="flex-start" justifyContent="center">
+      <Stack spacing={2} sx={{maxWidth:"50%"}}>
+        <Item ><UserDescription
+        userName={userInfo.name}
+        profilePic={userInfo.profilePic}
+        numPodsListened={userInfo.numPodsListened}
+        numEpisListened={userInfo.numEpisListened}
+        numLists={userInfo.numLists}
+        numReviews={userInfo.numReviews}
+        ratingAvg={userInfo.ratingAvg}
+        /></Item>
+        <Item>{Achievements()}</Item>
+        <Stack direction="row" spacing={2} justifyContent="center">
+          <Item sx={{width:"50%"}}><FollowingList userSize="small" fontSize={20}/></Item>
+          <Item sx={{width:"50%"}}><FriendList userSize="small" fontSize={20}/></Item>
+        </Stack>
+        <Item sx={{maxWidth:"100%"}}><ListsHighlight listSize="small"/></Item>
+      </Stack>
+      <Item sx={{maxWidth:"40%"}}><UserReviews /></Item>
+
+    </Stack>
+  );
+};
 
 export default function ProfilePage(){
   return (
-    profileNormal()
+    <React.Fragment>
+        <MediaQuery query='(min-width: 1225px)'>
+          {profileNormal()}
+        </MediaQuery>
+        <MediaQuery query='(max-width: 1224px)'>
+          {profileStack()}
+        </MediaQuery>
+      </React.Fragment>
     );
 }

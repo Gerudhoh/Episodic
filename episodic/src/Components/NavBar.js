@@ -257,7 +257,7 @@ const ResponsiveAppBar = () => {
 =======
 >>>>>>> more components added
 
-          <Box sx={{padding:'5px'}}>
+          <Box sx={{padding:'10px'}}>
             <Search>
               <SearchIconWrapper>
                 <SearchIcon />

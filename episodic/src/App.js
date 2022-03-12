@@ -1,14 +1,16 @@
 import logo from './logo.svg';
-import * as React from 'react'
+import * as React from 'react';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import './Components.css';
 import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
 
 //Custom Components
+import NavBar from "./Components/NavBar.js";
 import HomePage from "./Components/HomePage.js";
 import SearchPage from "./Components/SearchPage.js";
 import ProfilePage from "./Components/ProfilePage.js";
-import NavBar from "./Components/NavBar.js";
+import ProfileListView from "./Components/ProfileListView.js";
+
 
 const theme = createTheme({
   palette: {
@@ -67,9 +69,13 @@ const theme = createTheme({
         color: 'action',
       },
     },
+    MuiButton:{
+      props:{
+        color: 'secondary',
+      },
+    },
   }
-});
-
+})
 
 function App() {
   return (
@@ -81,6 +87,7 @@ function App() {
             <Route exact path="/" element={<HomePage />} />
             <Route exact path="searchresults" element={<SearchPage />} />
             <Route exact path="profile" element={<ProfilePage />} />
+            <Route exact path="profile-lists" element={<ProfileListView userName="userName" listName="listName"/>} />
           </Routes >
         </BrowserRouter>
       </ThemeProvider>

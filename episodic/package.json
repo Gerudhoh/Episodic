@@ -59,6 +59,8 @@
     "eject": "react-scripts eject",
     "server": "node src/server.js",
     "frontend": "set PORT=3000 && react-scripts start",
+    "frontend-mac": "PORT=3000 react-scripts start",
+    "dev-mac": "concurrently \"npm run frontend-mac\" \"npm run server\"",
     "dev": "concurrently \"npm run frontend\" \"npm run server\""
   },
   "eslintConfig": {
