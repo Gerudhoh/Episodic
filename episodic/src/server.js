@@ -84,7 +84,6 @@ app.post('/api/v1/lists/add/podcast', async function (req, res) {
     return;
   }
 
-  let name = req.body.name;
   let apiClient = fetcher.getListenNotesApi();
   apiClient.fetchPodcastById({
     id: podcastId
@@ -99,6 +98,8 @@ app.post('/api/v1/lists/add/podcast', async function (req, res) {
         let id = result[0].insertId;
         podcast.databaseId = id;
         list.addPodcast(podcast);
+        let linkSql = "insert into lists_podcasts_link (listsId, podcastsId) values (" + list.id + ", " + podcast.databaseId + ")";
+        await promisePool.query(linkSql);
         let i = 0;
         currentUser.episodicLists.forEach((element) => {
           if (element.id == list.id) {
@@ -113,6 +114,9 @@ app.post('/api/v1/lists/add/podcast', async function (req, res) {
           let result = await promisePool.query(sql);
           podcast.databaseId = result[0][0].id;
           list.addPodcast(podcast);
+
+          let linkSql = "insert into lists_podcasts_link (listsId, podcastsId) values (" + list.id + ", " + podcast.databaseId + ")";
+          await promisePool.query(linkSql);
           let i = 0;
           currentUser.episodicLists.forEach((element) => {
             if (element.id == list.id) {
@@ -203,16 +207,25 @@ app.get("/api/v1/lists/get/all/temp", async function (req, res) {
           newResult[0].forEach(async (element) => {
             let linkSql = "select * from podcasts where id = " + element.podcastsId + "";
             let linkResult = await promisePool.query(linkSql);
-            let newPodcast = new podcasts(linkResult[0][0].name, linkResult[0][0].id);
-            list.addPodcast(newPodcast);
+
+
+            let adapter = new ListenNotesDataAdapter();
+            let apiClient = fetcher.getListenNotesApi();
+            apiClient.fetchPodcastById({
+              id: linkResult[0][0].listenNotesId
+            }).then(async (response) => {
+              let podcast = adapter.adaptPodcast(response.data);
+              podcast.image = response.data.image;
+              list.addPodcast(podcast);
+            });
           });
           sql = "select * from lists_episodes_link where listsId = " + list.id + "";
           newResult = await promisePool.query(sql);
           newResult[0].forEach(async (element) => {
             let linkSql = "select * from episodes where id = " + element.episodesId + "";
             let linkResult = await promisePool.query(linkSql);
-            let newEpisode = new episodes(linkResult[0][0].name, linkResult[0][0].id);
-            list.addEpisode(newEpisode);
+            /*let newEpisode = new episodes(linkResult[0][0].name, linkResult[0][0].id);
+            list.addEpisode(newEpisode);*/
           });
           currentUser.addEpisodicList(list);
         });
