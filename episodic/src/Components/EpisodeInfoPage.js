@@ -21,38 +21,6 @@ import { styled } from '@mui/material/styles';
 import PodcastEpisodesCard from './PodcastEpisodesCard.js';
 import Reviews from './Reviews.js'
 
-const podcast1 = {
-  title : 'podcastTitle',
-  description : 'description',
-  rss : 'rss',
-  image : '/pepekingprawn.jpg',
-  website : 'website',
-  publisher : 'publisher',
-  language : 'language',
-  explicit : 'explicit',
-  rating : 0,
-  genre : 'genre',
-  episodes : [
-    {
-      title: 'title1',
-      description: 'description',
-      podcast: 'podcast'
-    },
-    {
-      title: 'title2',
-      description: 'description',
-      podcast: 'podcast'
-    },
-    {
-      title: 'title3',
-      description: 'description',
-      podcast: 'podcast'
-    },
-  ],
-  totalEpisodes : 'totalEpisodes',
-  platforms : 'platforms',
-  id : 'id',
-}
 
 const reviews = [
     {
@@ -94,6 +62,43 @@ const reviews = [
     },
 ]
 
+const episode = {
+  title: 'episodeTitle',
+  description: 'description',
+  rating: 5,
+  podcast: {
+    title : 'podcastTitle',
+    description : 'description',
+    rss : 'rss',
+    image : '/pepekingprawn.jpg',
+    website : 'website',
+    publisher : 'publisher',
+    language : 'language',
+    explicit : 'explicit',
+    rating : 0,
+    genre : 'genre',
+    episodes : [
+      {
+        title: 'title1',
+        description: 'description',
+        podcast: 'podcast'
+      },
+      {
+        title: 'title2',
+        description: 'description',
+        podcast: 'podcast'
+      },
+      {
+        title: 'title3',
+        description: 'description',
+        podcast: 'podcast'
+      },
+    ],
+    totalEpisodes : 'totalEpisodes',
+    platforms : 'platforms',
+    id : 'id',
+  }
+}
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: 10,
@@ -101,38 +106,41 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-function PodcastInfo(props){
-  const podcast = props.podcast;
+function EpisodeInfo(props){
+  const episode = props.episode;
+  const podcast = episode.podcast;
+
   return(
     <Stack direction="row" spacing={2} padding="10px" justifyContent="flex-start">
       <img src={podcast.image} width="200px" height="auto"/>
       <Item>
         <Stack alignItems="center" spacing={2} padding="10px">
-          <Typography variant="h2">{podcast.title}</Typography>
+          <Typography variant="h2">{episode.title}</Typography>
+          <Typography variant="h3">{podcast.title}</Typography>
           <Stack direction="row" spacing={2}>
             <Button variant="contained" style={{height: "35px"}}>Add To List</Button>
             <Button variant="contained" style={{height: "35px"}}>Review</Button>
           </Stack>
-          <Rating readOnly size="large" value={podcast.rating}/>
+          <Rating readOnly size="large" value={episode.rating}/>
         </Stack>
       </Item>
       <Item>
-        <Typography variant="p">{podcast.description}</Typography>
+        <Typography variant="p">{episode.description}</Typography>
       </Item>
     </Stack>
   );
 }
 
-export default function PodcastInfoPage(){
+export default function EpisodeInfoPage(){
   const location = useLocation();
   return(
     <Stack spacing={2} sx={{pl:"20px", pt:"10px"}} justifyContent="space-evenly">
-      <PodcastInfo podcast={podcast1}/>
+      <EpisodeInfo episode={episode}/>
       <Stack direction="row" flexWrap="wrap" spacing={2} justifyContent="left">
         <Item sx={{width:"45%"}}>
-          <Typography variant="h3">Episodes</Typography>
-          <PodcastEpisodesCard episodes={podcast1.episodes} image={podcast1.image}/>
-          </Item>
+          <Typography variant="h3">More From {episode.podcast.title}</Typography>
+          <PodcastEpisodesCard episodes={episode.podcast.episodes} image={episode.podcast.image} />
+        </Item>
         <Item sx={{width:"45%"}}>
           <Typography variant="h3">Reviews</Typography>
           <Reviews />

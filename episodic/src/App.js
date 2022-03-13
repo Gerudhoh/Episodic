@@ -12,6 +12,8 @@ import ProfilePage from "./Components/ProfilePage.js";
 import ProfileListView from "./Components/ProfileListView.js";
 import ExploreListView from "./Components/ExploreListView.js";
 import PodcastInfoPage from "./Components/PodcastInfoPage.js";
+import EpisodeInfoPage from "./Components/EpisodeInfoPage.js";
+
 const theme = createTheme({
   palette: {
     primary: {
@@ -91,6 +93,7 @@ function App() {
             <Route path="userlist/" element={<ProfileListView userName="userName"/>} />
             <Route path="explorelist/:name" element={<ExploreListView />} />
             <Route path="podcast/" element={<PodcastInfoPage />} />
+            <Route path="podcast/episode" element={<EpisodeInfoPage />} />
           </Routes >
         </BrowserRouter>
       </ThemeProvider>

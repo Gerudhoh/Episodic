@@ -41,7 +41,6 @@ function PodcastEpisode(props){
 export default function PodcastEpisodesCard(props){
   return(
     <Stack spacing={2} padding="10px">
-      <Typography variant="h3">Episodes</Typography>
       {props.episodes.map((episode) =>
         <Item><PodcastEpisode
         image={props.image}
