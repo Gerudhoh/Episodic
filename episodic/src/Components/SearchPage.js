@@ -1,30 +1,14 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import MediaQuery  from 'react-responsive';
 import { useLocation } from 'react-router-dom'
 
 //Material UI Components
-import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 
-//Material UI Icons and Styling
-import { styled } from '@mui/material/styles';
-
-
 //Custom Components
-import AllLists from "./AllLists.js";
-import NavBar from "./NavBar.js";
-import ListPreview from "./ListPreview.js"
 import EpisodeCardList from "./EpisodeCardList.js"
-
-//Styling
-const Item = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(2),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-}));
 
 function searchPageStack(){
   return(

@@ -5,14 +5,14 @@ const PodcastIndexDataAdapter = require("./PodcastIndexDataAdapter.js")
 const ListenNotesDataAdapter = require("./ListenNotesDataAdapter.js")
 
 class DataFetcher {
-    constructor(spotifyApiKey, spotifySecret, listenNotesApiKey, podcastIndexApiKey, podcastIndexSecret) {    
-        // this.spotifyApi = new SpotifyWebApi({ 
-        //     clientId: spotifyApiKey, 
-        //     clientSecret: spotifySecret, 
-        //     redirectUri: 'https://episodic.azurewebsites.net/' 
-        // });; 
+    constructor(spotifyApiKey, spotifySecret, listenNotesApiKey, podcastIndexApiKey, podcastIndexSecret) {
+        // this.spotifyApi = new SpotifyWebApi({
+        //     clientId: spotifyApiKey,
+        //     clientSecret: spotifySecret,
+        //     redirectUri: 'https://episodic.azurewebsites.net/'
+        // });;
         // this.spotifyApi.setAccessToken(spotifyApiKey);
-      
+
         this.podcastIndexApi = new PodcastIndexClient({
             key: podcastIndexApiKey,
             secret: podcastIndexSecret,
@@ -20,18 +20,18 @@ class DataFetcher {
             disableAnalytics: true,
           });
           this.podcastIndexDataAdapter = new PodcastIndexDataAdapter();
-  
-        this.listenNotesApi = Client({ 
-            apiKey: listenNotesApiKey 
+
+        this.listenNotesApi = Client({
+            apiKey: listenNotesApiKey
         });
         this.listenNotesDataAdapter = new ListenNotesDataAdapter()
-    } 
+    }
 
     getListenNotesApi () { return this.listenNotesApi; }
- 
 
-    fetchSpotifyPodcast(podcastName){ 
-    //Fetches a specified podcast from Spotify 
+
+    fetchSpotifyPodcast(podcastName){
+    //Fetches a specified podcast from Spotify
     }
 
     async fetchPodcasts(podcastName) {
@@ -59,36 +59,36 @@ class DataFetcher {
                     let pod = this.listenNotesDataAdapter.adaptPodcast(podcast);
                     // console.log(pod.stringify());
                     return pod;
-                  } 
+                  }
               }
               if(found === false) {
                   return null;
               }
           })
     }
-    
+
     async fetchPodcastIndexPodcast(podcastName) {
-        //  Fetches a specified podcast from ListenNotes  
+        //  Fetches a specified podcast from ListenNotes
         this.podcastIndexApi.search(podcastName).then((response) => {
             let length = response.feeds.length
             for(let i = 0; i < length; i++) {
                 let podcast = response.feeds[i];
                 if (podcast.title === podcastName) {
                     let pod = this.podcastIndexDataAdapter.adaptPodcast(podcast);
-                    // console.log(pod.stringify());
+                    console.log(pod);
                     return pod;
-                } 
+                }
             }
             }
         );
     }
-    
-    
+
+
     async fetchSpotifyEpisode(podcastName, episodeName) {
-    // Fetches a specified episode from Spotify 
+    // Fetches a specified episode from Spotify
     }
-    
-    
+
+
     async fetchListenNotesEpisode(podcastName, episodeName) {
         // Fetches a specified episode from ListenNotes
         this.listenNotesApi.search({
@@ -106,36 +106,36 @@ class DataFetcher {
                     let ep = this.listenNotesDataAdapter.adaptEpisode(episode, episode.podcast);
                     // console.log(ep.stringify());
                     return ep;
-                  } 
+                  }
               }
               if(found === false) {
                   return null;
               }
           });
     }
-    
+
     fetchPodcastsRecommendations(listenedList) {
-    //Uses ListenNotes’s recommendations endpoint to fetch recommendations for each podcast in a list, using the fetchRecommendation method and adding the newly fetched  to method's returned  
+    //Uses ListenNotes’s recommendations endpoint to fetch recommendations for each podcast in a list, using the fetchRecommendation method and adding the newly fetched  to method's returned
     }
-    
-    
+
+
     async fetchPodcastGenres() {
-    // Uses ListenNote’s genre fetching endpoint to fetch podcast genres 
+    // Uses ListenNote’s genre fetching endpoint to fetch podcast genres
     // Genre needs to be its own user story
         this.listenNotesApi.fetchPodcastGenres({ top_level_only: 1 }).then((response) => {
             return response.data;
           }).catch((error) => {
             console.log(error);
           });
-    } 
-    
-    
+    }
+
+
     fetchBestPodcastsByGenre(genre) {
-    // Uses ListenNote’s genre fetching endpoint to fetch the best podcasts in a genre 
+    // Uses ListenNote’s genre fetching endpoint to fetch the best podcasts in a genre
     // Genre needs to be its own user story
     }
-    
-    
+
+
     async fetchPodcastRecommendation(podcast) {
     // Uses ListenNote’s recommendations endpoint to fetch recommendations for the given podcast
         this.listenNotesApi.fetchRecommendationsForPodcast({ id: podcast.listenNotesId }).then((response) => {
@@ -144,29 +144,29 @@ class DataFetcher {
             console.log(error);
           });
     }
-    
-    
+
+
     async fetchEpisodeRecommendation(episode) {
-    // Uses ListenNote’s episode recommendation endpoint to fetch recommendations for the given podcast 
+    // Uses ListenNote’s episode recommendation endpoint to fetch recommendations for the given podcast
         this.listenNotesApi.fetchRecommendationsForEpisode({ id: episode.listenNotesId }).then((response) => {
             return this.listenNotesDataAdapter.adaptEpisodes(response.data.recommendations);
           }).catch((error) => {
             console.log(error);
           });
-    } 
-    
+    }
+
     getEpisodesSpotifyId(episode) {
-    // Fetches the given podcast episode from the Spotify API and returns its ID 
+    // Fetches the given podcast episode from the Spotify API and returns its ID
     }
-    
+
     playEpisode(episode) {
-    // Uses Spotify’s api to play a specified episode. Gets the Episode’s Spotify id (needed to play the episode) from the getEpisodesSpotifyId method. 
+    // Uses Spotify’s api to play a specified episode. Gets the Episode’s Spotify id (needed to play the episode) from the getEpisodesSpotifyId method.
     }
-    
-    pauseEpisode(episode) { 
+
+    pauseEpisode(episode) {
     // Uses Spotify’s api to pause the playing episode. Gets the Episode’s Spotify id (needed to pause the episode) from the getEpisodesSpotifyId method.
     }
-                
+
 }
 
 module.exports = DataFetcher;

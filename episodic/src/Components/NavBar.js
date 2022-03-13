@@ -17,12 +17,13 @@ import InputBase from '@mui/material/InputBase';
 
 
 //Material UI Icons and Styling
-import { styled, alpha } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 
 const pages = [
   {display:'Home', to:'/'},
   {display:'Search', to:'/searchresults'},
-  {display:'Profile', to:'/profile'}
+  {display:'Profile', to:'/profile'},
+  {display:'TestPodInfo', to:'/info/Getting%20Literate'}
 ];
 const settings = ['Profile', 'Logout'];
 
@@ -140,7 +141,7 @@ const ResponsiveAppBar = () => {
               }}
             >
               {pages.map((page) => (
-                <MenuItem component={Link} to={page.to} key={page.display} onClick={handleCloseNavMenu}>
+                <MenuItem component={Link} to={page.to} key={page.display} replace onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">{page.display}</Typography>
                 </MenuItem>
               ))}
@@ -156,7 +157,7 @@ const ResponsiveAppBar = () => {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
-              <Button component={Link} to={page.to}
+              <Button component={Link} to={page.to} replace
                 key={page.display}
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block' }}

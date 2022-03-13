@@ -1,29 +1,14 @@
 import * as React from 'react';
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 //Material UI Components
 import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Alert from '@mui/material/Alert';
-
-import ListsHighlight from "./ListsHighlight.js"
-const allLists = [
-    {
-      name: "listName1"
-    },
-
-    {
-      name: "listName2"
-    },
-    {
-      name: "listName3"
-    },
-    {
-      name: "listName4"
-    },
-]
-
+import TextField from '@mui/material/TextField';
 
 class AllLists extends React.Component {
 
@@ -77,14 +62,10 @@ class AllLists extends React.Component {
   render() {
     return (
       <Box container>
-        {this.state.showError ? (<Alert severity="error">
-          Error: Could not create list.
-        </Alert>) : (null)}
-
-        {this.state.showSuccess ? (<Alert severity="success">
-          Successfully created list!
-        </Alert>) : (null)}
-
+      {this.state.showError ? (<Alert severity="error">
+        Error: Could not create list.
+      </Alert>) : (null)}
+      {this.state.showSuccess ? (<React.Fragment></React.Fragment>) : (null)}
         <Typography variant="h4" component={Link} to="/userlist/all">Lists</Typography>
         <List>
           {this.state.allLists.map((item) => (
@@ -95,18 +76,19 @@ class AllLists extends React.Component {
             </ListItem>
           ))}
         </List>
-
-        <form onSubmit={this.createList}>
-          <p>
-            <strong>Create New List:</strong>
-          </p>
-          <input
-            type="text"
-            value={this.state.listName}
-            onChange={e => this.setState({ listName: e.target.value })}
-          />
-          <button type="submit">Submit</button>
-        </form>
+        <Box component="form" onSubmit={this.createList}>
+          <Stack direction="row" spacing={2} justifyContent="flex-start">
+            <TextField
+              required
+              id="new-list-input"
+              type="text"
+              value={this.state.listName}
+              label="New List Name"
+              onChange={e => this.setState({ listName: e.target.value })}
+            />
+            <Button variant="contained" type="submit">Create</Button>
+          </Stack>
+        </Box>
       </Box>
     );
   }

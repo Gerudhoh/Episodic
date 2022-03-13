@@ -76,8 +76,10 @@ a:hover{
   color: var(--china-rose);
 }
 
-.EpisodeCard>a:hover{
-  display: block;
-  color: var(--desert-sand-30);
-  
+.EpisodeCardOverlay :hover{
+  opacity:1;
+}
+
+.EpisodeCard :hover >img{
+  opacity: 0.2;
 }

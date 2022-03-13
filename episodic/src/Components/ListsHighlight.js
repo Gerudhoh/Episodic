@@ -3,14 +3,12 @@ import * as React from 'react';
 //Material UI Components
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 
 //Material UI Icons and Styling
 import { styled } from '@mui/material/styles';
 
 //Custom Components
-import ActivityCard from "./ActivityCard.js";
 import ListPreview from "./ListPreview.js";
 
 const lists = [
@@ -41,18 +39,18 @@ const lists = [
       images: [
         {
         img: '/pepekingprawn.jpg',
-        podcastTitle: 'podcast',
-        episodeTitle: 'podcast1'
+        podcastTitle: 'podcast1',
+        episodeTitle: ''
       },
       {
         img: '/pepekingprawn.jpg',
-        podcastTitle: 'podcast',
-        episodeTitle: 'podcast2'
+        podcastTitle: 'podcast2',
+        episodeTitle: ''
       },
       {
         img: '/pepekingprawn.jpg',
-        podcastTitle: 'podcast',
-        episodeTitle: 'podcast3',
+        podcastTitle: 'podcast1',
+        episodeTitle: '',
       },
     ]
     },
@@ -62,8 +60,8 @@ const lists = [
       images: [
         {
           img: '/pepekingprawn.jpg',
-          podcastTitle: 'podcast',
-          episodeTitle: 'episode4',
+          podcastTitle: 'podcast3',
+          episodeTitle: '',
         },
         {
           img: '/pepekingprawn.jpg',

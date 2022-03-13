@@ -4,13 +4,11 @@ import {Link} from 'react-router-dom';
 
 //Material UI Components
 import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import Typography from '@mui/material/Typography';
 
-//Material UI Icons and Styling
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import AddIcon from '@mui/icons-material/Add';
-import StarIcon from '@mui/icons-material/Star';
-
-import CardActionButtons from './CardActionButtons.js';
+import { styled } from '@mui/material/styles';
+//import CardActionButtons from './CardActionButtons.js';
 
 //Styling
 const episodeCardStyles ={
@@ -31,17 +29,39 @@ const episodeCardStyles ={
   }
 };
 
+const EpisodeCardStyles = styled(Box)(({ theme }) => ({
+  position: 'absolute',
+  top:0,
+  backgroundColor: '#533745',
+  opacity: 0,
+  color: '#D7C0AD',
+  width: '100%',
+  height:'100%',
+  textAlign:'center',
+  '&:hover' :{
+    opacity:0.6,
+  }
+}));
+
 
 export default function EpisodeCard(props) {
   const size = episodeCardStyles[props.cardSize];
-  const uri = `info/${encodeURIComponent(props.podcastTitle)}/${encodeURIComponent(props.episodeTitle)}`;
+  const uri = `/info/${encodeURIComponent(props.podcastTitle)}/${encodeURIComponent(props.episodeTitle)}`;
   return (
-    <Box sx={{m:0.5}} className="EpisodeCard" component={Link} to={uri}>
+    <Card className="EpisodeCard" component={Link} to={uri} replace>
+      <Box sx={{position:'relative'}}>
         < img  width={size.minSize} height="auto"
           src={props.img}
           alt={`${props.episodeTitle} ${props.podcastTitle}`}
           loading="lazy"
         />
-    </Box>
+        <EpisodeCardStyles>
+          <Typography variant="p" fontSize={size.fontSize}>{props.episodeTitle}</Typography>
+          <br/>
+          <Typography variant="p" fontSize={size.fontSize}>{props.podcastTitle}</Typography>
+        </EpisodeCardStyles>
+      </Box>
+
+    </Card>
   );
 }

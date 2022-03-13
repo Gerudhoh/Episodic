@@ -13,11 +13,6 @@ import UserInfo from "./UserInfo.js";
 import ReviewPreview from "./ReviewPreview.js";
 import EpisodeCardList from "./EpisodeCardList.js";
 
-const item ={
-  img: '/pepekingprawn.jpg',
-  title: 'Breakfast'
-}
-
 //Styling
 const activityCardStyles ={
   small:
@@ -61,16 +56,15 @@ function MoveListPreview(props){
 
 export default function ActivityCard(props){
   const size = activityCardStyles[props.activitySize];
-  const activityType = props.activityType;
 
   const ActivityPreview = (activityType) => {
-    if (activityType === 'newList'){
+    if (props.activityType === 'newList'){
       return (<NewListPreview fontSize={size.fontSize} listName={props.activityInfo.listName} images={props.activityInfo.images} />);
     }
-    else if (activityType === 'listMove') {
+    else if (props.activityType === 'listMove') {
       return (<MoveListPreview fontSize={size.fontSize} listName={props.activityInfo.listName} images={props.activityInfo.images} />);
     }
-    else if (activityType === 'newReview') {
+    else if (props.activityType === 'newReview') {
       return (<ReviewPreview
         reviewText={props.activityInfo.reviewText}
         date={props.activityInfo.date}

@@ -12,9 +12,8 @@ import { styled } from '@mui/material/styles';
 import ListsHighlight from "./ListsHighlight.js";
 import FriendActivity from "./FriendActivity.js";
 import AllLists from "./AllLists.js";
-import NavBar from "./NavBar.js";
 
-import AllComponents from "./AllComponents.js";
+//import AllComponents from "./AllComponents.js";
 
 //Styling
 const Item = styled(Paper)(({ theme }) => ({

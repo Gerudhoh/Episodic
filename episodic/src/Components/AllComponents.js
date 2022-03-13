@@ -2,10 +2,8 @@ import * as React from 'react';
 
 //Material UI Components
 import Stack from '@mui/material/Stack';
-import Box from '@mui/material/Box';
 import Fab from '@mui/material/Fab';
 import Typography from '@mui/material/Typography';
-import Rating from '@mui/material/Rating';
 import IconButton from '@mui/material/IconButton';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import AddIcon from '@mui/icons-material/Add';

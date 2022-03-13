@@ -1,8 +1,7 @@
-import logo from './logo.svg';
 import * as React from 'react';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import './Components.css';
-import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 //Custom Components
 import NavBar from "./Components/NavBar.js";
@@ -13,7 +12,7 @@ import ProfileListView from "./Components/ProfileListView.js";
 import ExploreListView from "./Components/ExploreListView.js";
 import PodcastInfoPage from "./Components/PodcastInfoPage.js";
 import EpisodeInfoPage from "./Components/EpisodeInfoPage.js";
-
+import TestPodInfo from "./Components/TestPodInfoPage.js";
 const theme = createTheme({
   palette: {
     primary: {
@@ -89,9 +88,13 @@ function App() {
             <Route exact path="/" element={<HomePage />} />
             <Route exact path="searchresults" element={<SearchPage />} />
             <Route exact path="profile" element={<ProfilePage />} />
+
             <Route path="userlist/:name" element={<ProfileListView userName="userName" />} />
             <Route path="userlist/" element={<ProfileListView userName="userName"/>} />
+
             <Route path="explorelist/:name" element={<ExploreListView />} />
+
+            <Route exact path="info/Getting%20Literate" element={<TestPodInfo />} />
             <Route path="info/:podcastTitle" element={<PodcastInfoPage />} />
             <Route path="info/:podcastTitle/:episodeTitle" element={<EpisodeInfoPage />} />
           </Routes >

@@ -1,17 +1,16 @@
 //Packages
 import * as React from 'react';
-
-import {useLocation, withRouter} from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import {useLocation} from 'react-router-dom';
 
 //Material UI Components
-import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import Avatar from '@mui/material/Avatar';
 import Paper from '@mui/material/Paper';
-import Fab from '@mui/material/Fab';
 import Button from '@mui/material/Button';
 import Rating from '@mui/material/Rating';
+
+import CircularProgress from '@mui/material/CircularProgress';
 
 
 //Material UI Icons and Styling

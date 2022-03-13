@@ -49,21 +49,22 @@ function CloserAchievement(){
 
 
 export default function Achievement(props){
+  let reactFragment = <React.Fragment />;
   switch (props.achievement) {
     case 'closer':
-      return(CloserAchievement())
+      reactFragment = CloserAchievement();
       break;
     case 'socialbutterfly':
-      return(SocialButterflyAchievement())
+      reactFragment = SocialButterflyAchievement();
       break;
     case 'organizer':
-      return(OrganizerAchievement())
+      reactFragment = OrganizerAchievement();
       break;
     case 'critic':
-      return(CriticAchievement())
+      reactFragment = CriticAchievement();
       break;
+    default :
+      console.log('not a valid achievement type!');
   }
-  return(
-    <React.Fragment />
-  );
+  return(reactFragment);
 }

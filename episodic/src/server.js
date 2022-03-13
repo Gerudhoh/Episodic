@@ -198,17 +198,24 @@ app.get("/api/v1/lists/get/all", async function (req, res) {
 });
 
 app.post('/api/v1/search', async function(req, res) {
-    let name = req.body.name;
-    let apiClient = fetcher.getListenNotesApi();
-    apiClient.search({
-        q: name,
-        type: 'podcast',
-        only_in: 'title,description',
-      }).then((response) => {
-        res.send({data : response.data.results});
-      })
+  let name = req.body.name;
+  let apiClient = fetcher.getListenNotesApi();
+  apiClient.search({
+      q: name,
+      type: 'podcast',
+      only_in: 'title,description',
+  }).then((response) => {
+    res.send({data : response.data.results});
+  })
+});
 
+app.post('/api/v1/searchPodcast', async function(req, res) {
+  let name = req.body.name
+  await fetcher.fetchPodcastIndexPodcast(name).then((response) => {
+    console.log(response);
+    res.send({pod: response.data});
   });
+});
 
 
 // Listen to the specified port for api requests
