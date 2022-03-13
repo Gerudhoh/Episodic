@@ -22,6 +22,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(process.cwd() + "/client/build/"));
 
+app.get('/*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '..', '/client/build', 'index.html'));
+});
+
+
 let currentUser = null;
 
 function randomString(length, chars) {
