@@ -8,7 +8,7 @@ class SpotifyDataAdapter extends DataAdapter {
         // Adapts podcast information returned from a Spotify API query into a Podcast object 
     }
 
-    adaptEpisode(jsonInformation) {
+    adaptEpisode(jsonInformation, podcastJson) {
         // Adapts episode information returned from a Spotify API query into an Episode Object 
     }
 }

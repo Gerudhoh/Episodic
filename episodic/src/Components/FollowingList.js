@@ -30,7 +30,7 @@ const following = [
     },
 ];
 
-export default function FollowingList() {
+export default function FollowingList(props) {
   return (
     <Box container>
       <Typography>Following</Typography>
