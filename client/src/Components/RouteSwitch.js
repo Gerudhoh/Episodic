@@ -1,5 +1,6 @@
 import React from 'react';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
+import history from './history';
 
 //Logged out routes
 import Login from "./LoginForm";
@@ -30,7 +31,7 @@ class RouteSwitch extends React.Component {
   render() {
     return (
       <div>
-        <BrowserRouter>
+        <BrowserRouter history={history}>
             <Routes >
                 {/* Logged Out routes */}
                 <Route exact path="/login" element={<Login changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
