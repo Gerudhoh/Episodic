@@ -72,6 +72,7 @@ class AllLists extends React.Component {
     let listNames = [];
     body.lists.map((list) => listNames.push({ name: list.name }));
     this.setState({ allLists: listNames });
+    console.log(this.state.allLists);
   };
   render() {
     return (

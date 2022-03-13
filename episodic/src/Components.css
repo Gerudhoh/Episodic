@@ -47,16 +47,16 @@ h1{ font-size: 5.378em; }
   line-height: 100%;
   color: var(--eggplant);
 
-  border-bottom-color: var(--desertSand);
+  border-bottom-color: var(--desert-sand);
 }
 
 .sectionTitle {
   font-family: Poppins;
   font-style: normal;
   line-height: 100%;
-  color: var(--desertSand);
+  color: var(--desert-sand);
 
-  border-bottom-color: var(--desertSand);
+  border-bottom-color: var(--desert-sand);
 }
 
 .listLink{
@@ -64,4 +64,20 @@ h1{ font-size: 5.378em; }
   font-style: normal;
   font-size: 20px;
   color: var(--desertSand);
+}
+.listLink :hover{
+  font-family: Poppins;
+  font-style: normal;
+  font-size: 20px;
+  color: var(--china-rose);
+}
+
+a:hover{
+  color: var(--china-rose);
+}
+
+.EpisodeCard>a:hover{
+  display: block;
+  color: var(--desert-sand-30);
+  
 }

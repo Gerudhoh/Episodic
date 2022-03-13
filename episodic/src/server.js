@@ -17,8 +17,19 @@ const lists = require("./lib/EpisodicList")
 const podcasts = require("./lib/Podcast")
 const episodes = require("./lib/Episode")
 
+const DataFetcher = require("./lib/api-data/DataFetcher.js");
+
+
 // Expose the port specified in .env or port 5000
 const port = process.env.PORT || 5000;
+
+const fetcher = new DataFetcher(
+    process.env.SPOTIFY_CLIENT_ID,
+    process.env.SPOTIFY_CLIENT_SECRET,
+    process.env.LISTEN_NOTES_KEY,
+    process.env.PODCAST_INDEX_KEY,
+    process.env.PODCAST_INDEX_SECRET)
+
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
@@ -185,6 +196,20 @@ app.get("/api/v1/lists/get/all/temp", async function (req, res) {
 app.get("/api/v1/lists/get/all", async function (req, res) {
   res.send({ lists: currentUser.episodicLists });
 });
+
+app.post('/api/v1/search', async function(req, res) {
+    let name = req.body.name;
+    let apiClient = fetcher.getListenNotesApi();
+    apiClient.search({
+        q: name,
+        type: 'podcast',
+        only_in: 'title,description',
+      }).then((response) => {
+        res.send({data : response.data.results});
+      })
+
+  });
+
 
 // Listen to the specified port for api requests
 app.listen(port);

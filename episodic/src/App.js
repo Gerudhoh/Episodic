@@ -92,8 +92,8 @@ function App() {
             <Route path="userlist/:name" element={<ProfileListView userName="userName" />} />
             <Route path="userlist/" element={<ProfileListView userName="userName"/>} />
             <Route path="explorelist/:name" element={<ExploreListView />} />
-            <Route path="podcast/" element={<PodcastInfoPage />} />
-            <Route path="podcast/episode" element={<EpisodeInfoPage />} />
+            <Route path="info/:podcastTitle" element={<PodcastInfoPage />} />
+            <Route path="info/:podcastTitle/:episodeTitle" element={<EpisodeInfoPage />} />
           </Routes >
         </BrowserRouter>
       </ThemeProvider>

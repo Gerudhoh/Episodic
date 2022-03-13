@@ -15,56 +15,65 @@ import ListPreview from "./ListPreview.js";
 
 const lists = [
     {
-      name: "list1",
+      name: "episodes",
       type: "user",
       images: [
         {
           img: '/pepekingprawn.jpg',
-          title: 'Breakfast',
+          podcastTitle: 'podcast',
+          episodeTitle: 'episode1',
         },
         {
           img: '/pepekingprawn.jpg',
-          title: 'Burger',
+          podcastTitle: 'podcast',
+          episodeTitle: 'episode2',
         },
         {
           img: '/pepekingprawn.jpg',
-          title: 'Camera',
+          podcastTitle: 'podcast',
+          episodeTitle: 'episode3',
         },
       ]
     },
     {
-      name: "list2",
+      name: "podcasts",
       type: "user",
       images: [
         {
         img: '/pepekingprawn.jpg',
-        title: 'Hats'
+        podcastTitle: 'podcast',
+        episodeTitle: 'podcast1'
       },
       {
         img: '/pepekingprawn.jpg',
-        title: 'Honey'
+        podcastTitle: 'podcast',
+        episodeTitle: 'podcast2'
       },
       {
         img: '/pepekingprawn.jpg',
-        title: 'Basketball',
+        podcastTitle: 'podcast',
+        episodeTitle: 'podcast3',
       },
     ]
     },
     {
-      name: "list3",
+      name: "episodes",
       type: "user",
       images: [
         {
           img: '/pepekingprawn.jpg',
-          title: 'Fern',
+          podcastTitle: 'podcast',
+          episodeTitle: 'episode4',
         },
         {
           img: '/pepekingprawn.jpg',
-          title: 'Mushrooms',
+          podcastTitle: 'podcast',
+          episodeTitle: 'episode5',
         },
         {
           img: '/pepekingprawn.jpg',
-          title: 'Tomato basil',
+          podcastTitle: 'podcast',
+          episodeTitle: 'episode6',
         },
       ]
     },

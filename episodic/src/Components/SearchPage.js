@@ -70,7 +70,8 @@ export default function SearchPage(){
       for(let i = 0; i < length; i++) {
         images.push({
           img: data.data[i].image,
-          title: data.data[i].title_original
+          podcastTitle: data.data[i].title_original,
+          episodeTitle: ""
         });
       }
 

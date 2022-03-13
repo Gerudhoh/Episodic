@@ -1,5 +1,6 @@
 //Packages
 import * as React from 'react';
+import {Link} from 'react-router-dom';
 
 //Material UI Components
 import Box from '@mui/material/Box';
@@ -30,15 +31,15 @@ const episodeCardStyles ={
   }
 };
 
-//Inner Components
 
 export default function EpisodeCard(props) {
   const size = episodeCardStyles[props.cardSize];
+  const uri = `info/${encodeURIComponent(props.podcastTitle)}/${encodeURIComponent(props.episodeTitle)}`;
   return (
-    <Box sx={{m:0.5}}>
+    <Box sx={{m:0.5}} className="EpisodeCard" component={Link} to={uri}>
         < img  width={size.minSize} height="auto"
           src={props.img}
-          alt={props.title}
+          alt={`${props.episodeTitle} ${props.podcastTitle}`}
           loading="lazy"
         />
     </Box>

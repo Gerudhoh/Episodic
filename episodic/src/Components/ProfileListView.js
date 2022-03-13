@@ -100,10 +100,11 @@ class ProfileListViewClass extends React.Component {
     //const listMap = body.lists.map((list) => {list.name});
     let userLists = [];
 
+
     body.lists.forEach((list) => {
       let listImgs = [];
-      list.episodes.map((episode) => listImgs.push({img: episode.podcast.image, title:episode.title}));
-      list.podcasts.map((podcast) => listImgs.push({img: podcast.image, title:podcast.title}))
+      list.episodes.map((episode) => listImgs.push({img: episode.podcast.image, episodeTitle: episode.title, podcastTitle:episode.podcast.title}));
+      list.podcasts.map((podcast) => listImgs.push({img: podcast.image, episodeTitle: "", podcastTitle: podcast.title}))
       userLists.push({ name: list.name, images:[listImgs]});
     });
 
@@ -130,20 +131,23 @@ class ProfileListViewClass extends React.Component {
     if(listName === 'all'){
       return (<React.Fragment></React.Fragment>);
     }
-    console.log(listName);
     const list = this.state.allLists.find((list) => list.name === listName);
-    return(
-      <Item>
-      <Stack spacing={2}>
-        <Stack direction="row" spacing={2}>
-          <Typography variant="h4">{list.name}</Typography>
+    if(list){
+      return(
+        <Item>
+        <Stack spacing={2}>
+          <Stack direction="row" spacing={2}>
+            <Typography variant="h4">{list.name}</Typography>
+          </Stack>
+          <Stack>
+            <EpisodeCardList images={list.images} listSize={"large"}/>
+          </Stack>
         </Stack>
-        <Stack>
-          <EpisodeCardList images={list.images} listSize={"large"}/>
-        </Stack>
-      </Stack>
-    </Item>
-    );
+      </Item>
+      );
+    }
+    return (<React.Fragment></React.Fragment>);
+
   };
 
   render(){
