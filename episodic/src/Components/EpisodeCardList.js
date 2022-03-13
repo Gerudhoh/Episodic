@@ -16,7 +16,7 @@ export default function EpisodeCardList(props){
   return(
     <Stack spacing={2} direction="row" justifyContent="space-evenly" alignItems="center">
       {props.images?.map((item) => (
-        <EpisodeCard key={`EpisodeCard${item.title}`} img={item.img} title={item.title} cardSize={props.listSize} id={item.id}>
+        <EpisodeCard key={`EpisodeCard${item.title}`} img={item.img} title={item.title} cardSize={props.listSize} id={item.id} listView={item.listView}>
         </EpisodeCard>
       ))}
     </Stack>

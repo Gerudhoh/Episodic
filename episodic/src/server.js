@@ -17,6 +17,7 @@ const lists = require("./lib/EpisodicList")
 const podcasts = require("./lib/Podcast")
 const episodes = require("./lib/Episode")
 const DataFetcher = require("./lib/api-data/DataFetcher.js");
+const ListenNotesDataAdapter = require("./lib/api-data/ListenNotesDataAdapter.js");
 
 // Expose the port specified in .env or port 5000
 const port = process.env.PORT || 5000;
@@ -52,16 +53,15 @@ app.post('/api/v1/lists/create', async function (req, res) {
 
   let list = null;
   //throw it into the database
-  await new Promise(async (res, rej) => {
+  await new Promise(async (rem, rej) => {
     try {
       let result = await promisePool.query(sql);
       let id = result[0].insertId;
       list = new lists(name, id);
       currentUser.addEpisodicList(list);
-      res(list);
+      res.send(list);
     } catch (err) {
-      console.log(err);
-      res(err);
+      res.send(err);
     }
   });
 
@@ -84,8 +84,49 @@ app.post('/api/v1/lists/add/podcast', async function (req, res) {
     return;
   }
 
-  res.send({
-    success: false
+  let name = req.body.name;
+  let apiClient = fetcher.getListenNotesApi();
+  apiClient.fetchPodcastById({
+    id: podcastId
+  }).then(async (response) => {
+    let adapter = new ListenNotesDataAdapter();
+    let podcast = adapter.adaptPodcast(response.data);
+    podcast.image = response.data.image;
+    await new Promise(async (rem, rej) => {
+      try {
+        let sql = "insert into podcasts (name, listenNotesId) values ('" + podcast.title + "', '" + podcastId + "')";
+        let result = await promisePool.query(sql);
+        let id = result[0].insertId;
+        podcast.databaseId = id;
+        list.addPodcast(podcast);
+        let i = 0;
+        currentUser.episodicLists.forEach((element) => {
+          if (element.id == list.id) {
+            currentUser.episodicLists[i] = list;
+          }
+          i++;
+        });
+        res.send({ success: true });
+      } catch (err) {
+        let sql = "select id from podcasts where listenNotesId = '" + podcastId + "'";
+        try {
+          let result = await promisePool.query(sql);
+          podcast.databaseId = result[0][0].id;
+          list.addPodcast(podcast);
+          let i = 0;
+          currentUser.episodicLists.forEach((element) => {
+            if (element.id == list.id) {
+              currentUser.episodicLists[i] = list;
+            }
+            i++;
+          });
+          res.send({ success: true });
+        } catch (err) {
+          res.send({ success: false });
+        }
+      }
+    });
+    return;
   });
 
 });
@@ -178,7 +219,6 @@ app.get("/api/v1/lists/get/all/temp", async function (req, res) {
         res({ lists: currentUser.episodicLists });
 
       } catch (err) {
-        console.log(err);
         res(err);
       }
     });
@@ -195,7 +235,6 @@ app.post('/api/v1/search', async function (req, res) {
     type: 'podcast',
     only_in: 'title,description',
   }).then((response) => {
-    console.log(response.data.results);
     res.send({ data: response.data.results });
   })
 

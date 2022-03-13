@@ -96,9 +96,22 @@ class ListsHighlight extends React.Component {
     let listNames = [];
     body.lists.map((list) => {
       let tmp = { name: list.name, images: [] };
+
+      let i = 0;
+      list.podcasts.map((podcast) => {
+        if (i < 3) {
+          tmp.images.push({
+            img: podcast.image,
+            title: podcast.title,
+            listView: true,
+            id: podcast.listenNotesId
+          });
+        }
+        i++;
+      })
       // Add podcasts/episodes as images if there are any
       // I'm not entirely sure how to do this. We need the podcasts to be clickable (?) but they are just images + titles here
-      listNames.push({ name: list.name })
+      listNames.push(tmp)
     });
     this.setState({ allLists: listNames });
   };

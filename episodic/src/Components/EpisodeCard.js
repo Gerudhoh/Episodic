@@ -8,6 +8,7 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import Alert from '@mui/material/Alert';
 
 //Material UI Icons and Styling
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -51,7 +52,7 @@ class EpisodeCard extends React.Component {
       listView: this.props.listView || false,
       lists: [],
       listMenuItems: null,
-      selectedList: 0
+      showSuccess: false
     };
   }
 
@@ -66,9 +67,11 @@ class EpisodeCard extends React.Component {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ list: this.state.lists[this.state.selectedList], podcastId: this.id, name: "fun"}),
+      body: JSON.stringify({ list: this.state.lists[e.target.value], podcastId: this.id}),
     });
     const body = await response.json();
+    this.setState({showSuccess : body.success});
+    window.location.reload(false);
 
   };
   
@@ -93,13 +96,16 @@ class EpisodeCard extends React.Component {
           alt={this.title}
           loading="lazy"
         />
+        {this.state.showSuccess ? (<Alert severity="success">
+          Successfully added to list!
+        </Alert>) : (null)}
         {!this.state.listView ? (
         <FormControl fullWidth>
           <InputLabel id="demo-simple-select-label">Add to List</InputLabel>
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
-            value={this.state.selectedList}
+            /*value={this.state.selectedList}*/
             label="Age"
             onChange={this.addPodcastToList}
           >

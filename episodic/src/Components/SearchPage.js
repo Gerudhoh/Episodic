@@ -67,7 +67,7 @@ export default function SearchPage(){
       for(let i = 0; i < length; i++) {
         images.push({
           img: data.data[i].image,
-          title: data.data[i].title_original,
+          title: data.data[i].title,
           id: data.data[i].id
         });
       }
