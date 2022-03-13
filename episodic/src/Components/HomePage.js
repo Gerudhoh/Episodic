@@ -37,47 +37,6 @@ function homePageStack(){
   );
 }
 
-<<<<<<< HEAD
-
-
-class HomePage extends React.Component {
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      
-    };
-  }
-
-  handleStateChange = async(e) => {
-    await this.setState({ [e.target.id]: e.target.value });
-  }
-
-
-  render() {
-    return (
-      
-      <Grid container display="flex" spacing={2} justifyContent="center" alignItems="flex-start">
-
-        <Grid container display="flex" flexDirection="column" item lg={3} spacing={2} alignItems="stretch" justifyContent="center">
-          <Grid item lg={12} >
-              <Item> <FriendActivity /> </Item>
-          </Grid>
-          <Grid item lg={12}>
-            <Item> <AllLists /> </Item>
-          </Grid>
-        </Grid>
-        <Grid item lg={5}>
-          <Item> <ListsHighlight listSize="large"/> </Item>
-        </Grid>
-        <Grid item lg={3}>
-          <Item> <FriendActivity /> </Item>
-        </Grid>
-      </Grid>
-    );
-  }
-=======
 function homePageNormal(){
   return(
 
@@ -99,7 +58,6 @@ function homePageNormal(){
       </Item>
     </Stack>
   );
->>>>>>> more components added
 }
 
 export default function HomePage(){

@@ -14,30 +14,6 @@ import ActivityCard from "./ActivityCard.js";
 import ListPreview from "./ListPreview.js";
 
 const lists = [
-<<<<<<< HEAD
-  {
-    name: "list1",
-    images: [
-      {
-        img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-        title: 'Breakfast',
-      },
-      {
-        img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
-        title: 'Burger',
-      },
-      {
-        img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
-        title: 'Camera',
-      },
-    ]
-  },
-  {
-    name: "list2",
-    images: [
-      {
-        img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-=======
     {
       name: "list1",
       type: "user",
@@ -62,7 +38,6 @@ const lists = [
       images: [
         {
         img: '/pepekingprawn.jpg',
->>>>>>> continuing styling and adding big list view, trying to fix search results display
         title: 'Hats'
       },
       {
@@ -74,26 +49,6 @@ const lists = [
         title: 'Basketball',
       },
     ]
-<<<<<<< HEAD
-  },
-  {
-    name: "list3",
-    images: [
-      {
-        img: 'https://images.unsplash.com/photo-1518756131217-31eb79b20e8f',
-        title: 'Fern',
-      },
-      {
-        img: 'https://images.unsplash.com/photo-1597645587822-e99fa5d45d25',
-        title: 'Mushrooms',
-      },
-      {
-        img: 'https://images.unsplash.com/photo-1567306301408-9b74779a11af',
-        title: 'Tomato basil',
-      },
-    ]
-  },
-=======
     },
     {
       name: "list3",
@@ -113,7 +68,6 @@ const lists = [
         },
       ]
     },
->>>>>>> continuing styling and adding big list view, trying to fix search results display
 ]
 
 //Styling
@@ -123,65 +77,16 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-<<<<<<< HEAD
-class ListsHighlight extends React.Component {
-
-  constructor(props) {
-    super(props);
-    this.size = this.props.listSize;
-
-    this.state = {
-      allLists: []
-    };
-  }
-
-  componentDidMount() {
-    this.getUserLists();
-  }
-
-  getUserLists = async e => {
-    //e.preventDefault();
-    const response = await fetch("/api/v1/lists/get/all/temp");
-    const body = await response.json();
-    let listNames = [];
-    body.lists.map((list) => {
-      let tmp = { name: list.name, images: [] };
-      // Add podcasts/episodes as images if there are any
-      // I'm not entirely sure how to do this. We need the podcasts to be clickable (?) but they are just images + titles here
-      listNames.push({ name: list.name })
-    });
-    this.setState({ allLists: listNames });
-  };
-
-  render() {
-    return (
-      <Box>
-        <Typography>Lists</Typography>
-        <Stack spacing={2}>
-          {this.state.allLists.map((item) => (
-=======
 export default function ListsHighlight(props) {
   return (
     <Box>
       <Stack spacing={2}>
           {lists.map((item) =>(
-<<<<<<< HEAD
->>>>>>> fixed text wrap and continuing themeing for all components
-            <Item key={item.name}>
-              <ListPreview listName={item.name} images={item.images} listSize={this.size} />
-=======
             <Item key={item.name} >
-<<<<<<< HEAD
-              <ListPreview listName={item.name} images={item.images} listSize={props.listSize}/>
->>>>>>> continuing styling and adding big list view, trying to fix search results display
-=======
               <ListPreview listName={item.name} type={item.type} images={item.images} listSize={props.listSize}/>
->>>>>>> added list view, made list links route to dynamic pages
             </Item>
           ))}
         </Stack>
-      </Box>
-    );
-  }
+    </Box>
+  );
 }
-export default ListsHighlight;

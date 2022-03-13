@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useLocation} from 'react-router-dom';
+import {useLocation, withRouter} from 'react-router-dom';
 //Material UI Components
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
@@ -19,8 +19,6 @@ const Item = styled(Paper)(({ theme }) => ({
   textAlign: 'center',
   color: theme.palette.text.secondary,
 }));
-
-const flag = "ownProfile";
 
 const list ={
     name: 'list1',
@@ -64,63 +62,110 @@ const list ={
     ],
 };
 
-function EditListButtons(){
-  if(flag === "ownProfile"){
+// function NewListButton(props){
+//   if(flag === "ownProfile"){
+//     return(<Button variant="contained" style={{height: "35px", width:"auto"}}>New List</Button>);
+//   }
+//   else {
+//     return(<React.Fragment></React.Fragment>);
+//   }
+// }
+
+const usePathName = () => {
+  const location = useLocation();
+  return location.pathname;
+}
+
+class ProfileListViewClass extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      listName: "",
+      list: {},
+      allLists: [],
+      showSuccess: JSON.parse(localStorage.getItem('showSuccess')) || false,
+      showError: false
+    };
+  }
+
+  componentDidMount() {
+    this.getUserLists();
+  }
+
+  getUserLists = async e => {
+    //e.preventDefault();
+    const response = await fetch("/api/v1/lists/get/all/temp");
+    const body = await response.json();
+    //const listMap = body.lists.map((list) => {list.name});
+    let userLists = [];
+
+    body.lists.forEach((list) => {
+      let listImgs = [];
+      list.episodes.map((episode) => listImgs.push({img: episode.podcast.image, title:episode.title}));
+      list.podcasts.map((podcast) => listImgs.push({img: podcast.image, title:podcast.title}))
+      userLists.push({ name: list.name, images:[listImgs]});
+    });
+
+    this.setState({ allLists: userLists });
+
+  };
+
+  EditListButtons(){
+    const flag = "ownProfile";
+    if(flag === "ownProfile"){
+      return(
+        <Fab size="small">
+          <EditIcon fontSize="small"/>
+        </Fab>
+      );
+    }
+    else {
+      return(<React.Fragment></React.Fragment>);
+    }
+
+  };
+
+  ShowList(listName){
+    if(listName === 'all'){
+      return (<React.Fragment></React.Fragment>);
+    }
+    console.log(listName);
+    const list = this.state.allLists.find((list) => list.name === listName);
     return(
-      <Fab size="small">
-        <EditIcon fontSize="small"/>
-      </Fab>
-    );
-  }
-  else {
-    return(<React.Fragment></React.Fragment>);
-  }
-
-}
-
-function NewListButton(props){
-  if(flag === "ownProfile"){
-    return(<Button variant="contained" style={{height: "35px"}}>New List</Button>);
-  }
-  else {
-    return(<React.Fragment></React.Fragment>);
-  }
-}
-
-function ShowList(props){
-  if(props.listName === 'all'){
-    return (<React.Fragment></React.Fragment>);
-  }
-  return(
-    <Item>
+      <Item>
       <Stack spacing={2}>
         <Stack direction="row" spacing={2}>
-          <Typography variant="h4">{props.listName}</Typography>
-          <EditListButtons />
+          <Typography variant="h4">{list.name}</Typography>
         </Stack>
         <Stack>
           <EpisodeCardList images={list.images} listSize={"large"}/>
         </Stack>
       </Stack>
     </Item>
-  );
+    );
+  };
+
+  render(){
+    return(
+      <Stack direction="row" spacing={2} padding="20px">
+        <Stack spacing={2} sx={{width:"25%"}}>
+          <Item >
+            <Stack spacing={2} direction="row" justifyContent="space-between" >
+              <UserInfo avatarSize="large" fontSize="20px" userName="userName" />
+            </Stack>
+          </Item>
+          <Item><AllLists /></Item>
+        </Stack>
+        {  this.ShowList(this.props.location.split('/')[2])}
+      </Stack>
+    )
+    };
 }
 
-export default function ProfileListView(props){
+export default function ProfileListView(){
   const location = useLocation();
   return(
-    <Stack direction="row" spacing={2} padding="20px">
-      <Stack spacing={2} sx={{width:"25%"}}>
-        <Item >
-          <Stack spacing={2} direction="row" justifyContent="space-between" >
-            <UserInfo avatarSize="large" fontSize="20px" userName={props.userName} />
-            <NewListButton />
-          </Stack>
-        </Item>
-        <Item><AllLists /></Item>
-      </Stack>
-      <ShowList listName={location.pathname.split('/')[2]}/>
-    </Stack>
+    <ProfileListViewClass location={location.pathname}/>
   );
-
 }

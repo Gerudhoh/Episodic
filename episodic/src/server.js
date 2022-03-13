@@ -1,43 +1,31 @@
 'use strict'
 
 // Require all modules needed
-<<<<<<< HEAD
 const express = require("express");
 const app = express();
 const path = require('path');
 require('dotenv').config()
-=======
-require('dotenv').config()
-const express = require("express");
-const app  = express();
-const path = require('path');
->>>>>>> Adding search capabilities
 
 const promisePool = require('./repositories/mysql');
 
 // Import all the models for the database requests
 //const users = require("./models/users");
 
-<<<<<<< HEAD
 // Import classes
 const users = require("./lib/User")
 const lists = require("./lib/EpisodicList")
 const podcasts = require("./lib/Podcast")
 const episodes = require("./lib/Episode")
-=======
-// Import lists class
-const lists = require("./lib/EpisodicList");
-const DataFetcher = require("./lib/api-data/DataFetcher.js");
->>>>>>> Adding search capabilities
 
 // Expose the port specified in .env or port 5000
 const port = process.env.PORT || 5000;
 
-<<<<<<< HEAD
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(process.cwd() + "/client/build/"));
+let buildFolder = path.join(process.cwd(), "build");
+app.use(express.static(buildFolder));
+
 
 app.get('/', (req, res) => {
   res.sendFile(process.cwd() + "/client/build/index.html");
@@ -46,39 +34,14 @@ app.get('/', (req, res) => {
 let currentUser = new users("test", 1);
 
 app.post('/api/v1/lists/create', async function (req, res) {
-=======
-const fetcher = new DataFetcher(
-    process.env.SPOTIFY_CLIENT_ID,
-    process.env.SPOTIFY_CLIENT_SECRET,
-    process.env.LISTEN_NOTES_KEY,
-    process.env.PODCAST_INDEX_KEY,
-    process.env.PODCAST_INDEX_SECRET)
-
-var bodyParser = require('body-parser');
-app.use( bodyParser.json() );
-app.use(bodyParser.urlencoded({ extended: false }));
-let buildFolder = path.join(process.cwd(), "build");
-app.use(express.static(buildFolder));
-
-app.get('/', (req,res) => {
-  res.sendFile(process.cwd()+"/client/build/index.html");
-});
-
-
-// Check if a username and password is correct and generate a token
-
-
-app.post('/api/v1/lists/create', async function(req, res) {
->>>>>>> Adding search capabilities
   let name = req.body.name;
 
-  let userId = 1; //Not sure where to find current user atm, do we need to pass this? 
+  let userId = 1; //Not sure where to find current user atm, do we need to pass this?
   let sql = "insert into lists (name, userId) values ('" + name + "', " + userId + ")";
 
   let list = null;
   //throw it into the database
   await new Promise(async (res, rej) => {
-<<<<<<< HEAD
     try {
       let result = await promisePool.query(sql);
       let id = result[0].insertId;
@@ -89,17 +52,6 @@ app.post('/api/v1/lists/create', async function(req, res) {
       console.log(err);
       res(err);
     }
-=======
-      try {
-          let result = await promisePool.query(sql);
-          let id = result[0].insertId;
-          list = new lists(name, id);
-          res(list);
-      } catch (err) {
-          console.log(err);
-          res(err);
-      }
->>>>>>> Adding search capabilities
   });
 
   res.send({
@@ -108,7 +60,6 @@ app.post('/api/v1/lists/create', async function(req, res) {
 
 });
 
-<<<<<<< HEAD
 app.post('/api/v1/lists/add/podcast', async function (req, res) {
   let list = req.body.list;
   let podcast = req.body.podcast;
@@ -234,40 +185,7 @@ app.get("/api/v1/lists/get/all/temp", async function (req, res) {
 app.get("/api/v1/lists/get/all", async function (req, res) {
   res.send({ lists: currentUser.episodicLists });
 });
-=======
-app.post('/api/v1/lists/add/podcast', async function(req, res) {
-  let list = req.body.list;
-  let podcast = req.body.podcast;
-
-  list = new lists(list.name, list.id, list);
-
-  //let result = list.addPodcast(podcast);
-  /*
-  res.send({
-    list: list
-  });*/
-
-});
-
-app.post('/api/v1/search', async function(req, res) {
-    let name = req.body.name;
-    let apiClient = fetcher.getListenNotesApi();
-    apiClient.search({
-        q: name,
-        type: 'podcast',
-        only_in: 'title,description',
-      }).then((response) => {
-        res.send({data : response.data.results});
-      })
-  
-  });
-
->>>>>>> Adding search capabilities
 
 // Listen to the specified port for api requests
 app.listen(port);
 console.log('Running app at localhost: ' + port);
-<<<<<<< HEAD
-=======
-
->>>>>>> Adding search capabilities

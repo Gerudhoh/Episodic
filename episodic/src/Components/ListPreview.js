@@ -14,28 +14,6 @@ import EpisodeCardList from "./EpisodeCardList.js"
 
 export default function ListPreview(props) {
   return (
-<<<<<<< HEAD
-      <Grid container columnSpacing={3} direction="column" justifyContent="flex-start">
-        <Grid item>
-          <Typography>{props.listName}</Typography>
-        </Grid>
-        <Grid container direction="row" columnSpacing={2} justifyContent="center" alignItems="center">
-          <Grid item>
-            <ImageList style={ListPreviewStyles}>
-              {props.images?.map((item) => (
-                <EpisodeCard key={`EpisodeCard${item.title}`} img={item.img} title={item.title} cardSize={props.listSize}>
-                </EpisodeCard>
-              ))}
-            </ImageList>
-          </Grid>
-          <Grid item>
-            <Fab aria-label="see more" size={props.listSize}>
-              <ArrowForwardIcon />
-            </Fab>
-          </Grid>
-        </Grid>
-      </Grid>
-=======
       <Stack spacing={0} direction="column" justifyContent="flex-start" alignItems="flex-start">
         <Typography variant="h6" component={Link} to={`/${props.type}list/${props.listName}`}>{props.listName}</Typography>
         <Stack direction="row" spacing={1} justifyContent="space-evenly" alignItems="center">
@@ -45,6 +23,5 @@ export default function ListPreview(props) {
             </IconButton>
         </Stack>
       </Stack>
->>>>>>> more components added
   );
 };

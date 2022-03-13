@@ -2,27 +2,19 @@ class Episode {
     constructor(
         title,
         id,
-        description, 
-        audioLengthSeconds, 
-        explicit, 
-        podcast,
-        listenNotesId,
-        databaseId) { 
+        description,
+        audioLengthSeconds,
+        explicit,
+        podcast) {
             this.title = title;
             this.description = description;
             this.audioLengthSeconds = audioLengthSeconds;
             this.explicit = explicit;
             this.podcast = podcast;
-            this.listenNotesId = listenNotesId; 
             this.rating = null;
-<<<<<<< HEAD
             this.id = id;
-=======
-            this.databaseId = databaseId;
->>>>>>> Working on search stuff
         }
 
-<<<<<<< HEAD
         /*get title () { return this.title; }
 
         get description () { return this.description; }
@@ -35,8 +27,6 @@ class Episode {
 
         get rating () { return this.rating; }*/
 
-=======
->>>>>>> Got ListenNotes episode fetch to work!
         updateRating(newRating) {
             this.rating = newRating;
         }
@@ -44,7 +34,7 @@ class Episode {
         stringify() {
             return this.title + this.description + this.explicit + this.audioLengthSeconds + this.podcast.title
         }
-        
+
 }
 
 module.exports = Episode;

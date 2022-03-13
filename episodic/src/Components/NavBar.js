@@ -1,29 +1,12 @@
 import * as React from 'react';
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-//Material UI Components
-=======
->>>>>>> more components added
-=======
-import { useNavigate  } from "react-router-dom";
->>>>>>> Adding search capabilities
-=======
 import { useNavigate, Link } from "react-router-dom";
->>>>>>> FINALLY building locally based on commit f97d9356 from 3-id-2-search branch package.json
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-<<<<<<< HEAD
-import InputBase from '@mui/material/InputBase';
-import Menu from '@mui/material/Menu';
-=======
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
->>>>>>> more components added
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -32,78 +15,16 @@ import MenuItem from '@mui/material/MenuItem';
 import SearchIcon from '@mui/icons-material/Search';
 import InputBase from '@mui/material/InputBase';
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-//Material UI Icons and Styles
-import { styled, alpha } from '@mui/material/styles';
-import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
-
-
-const pages = ['Profile', 'Account', 'Dashboard', ];
-const settings = ['Profile', 'Logout'];
-
-const Search = styled('div')(({ theme }) => ({
-  position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: '100%',
-  [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(3),
-    width: 'auto',
-  },
-}));
-
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
-  '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '20ch',
-    },
-  },
-}));
-
-=======
-const pages = ['Products', 'Pricing', 'Blog'];
-=======
 
 //Material UI Icons and Styling
 import { styled, alpha } from '@mui/material/styles';
 
-<<<<<<< HEAD
-const pages = ['Home', 'Profile'];
->>>>>>> Adding search capabilities
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
->>>>>>> more components added
-=======
 const pages = [
   {display:'Home', to:'/'},
   {display:'Search', to:'/searchresults'},
   {display:'Profile', to:'/profile'}
 ];
 const settings = ['Profile', 'Logout'];
->>>>>>> FINALLY building locally based on commit f97d9356 from 3-id-2-search branch package.json
 
 const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -244,18 +165,6 @@ const ResponsiveAppBar = () => {
               </Button>
             ))}
           </Box>
-<<<<<<< HEAD
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </Search>
-=======
->>>>>>> more components added
 
           <Box sx={{padding:'10px'}}>
             <Search>

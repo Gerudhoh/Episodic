@@ -1,19 +1,17 @@
 class Podcast {
-    
-    constructor(title, 
+
+    constructor(title,
         id,
          description,
-         rss,  
-         image,  
-         website,  
-         publisher,  
-         language,  
-         genre,  
-         explicit, 
+         rss,
+         image,
+         website,
+         publisher,
+         language,
+         genre,
+         explicit,
          totalEpisodes,
-         platforms,
-         listenNotesId,
-         databaseId) { 
+         platforms) {
             this.title = title;
             this.description = description;
             this.rss = rss;
@@ -27,18 +25,9 @@ class Podcast {
             this.episodes = [];
             this.totalEpisodes = totalEpisodes;
             this.platforms = platforms;
-<<<<<<< HEAD
             this.id = id;
-=======
-            this.listenNotesId = listenNotesId;
-<<<<<<< HEAD
->>>>>>> Added a bunch of listen notes fetches!
-=======
-            this.databaseId = databaseId;
->>>>>>> Working on search stuff
       }
 
-<<<<<<< HEAD
     get podcastTitle () { return this.title; }
 
     /*get description () { return this.description; }
@@ -65,8 +54,6 @@ class Podcast {
 
     get platforms () { return this.platforms; }*/
 
-=======
->>>>>>> Got podcast search to work! Just need to hook it up to the frontend
     updateRating(newRating) {
         this.rating = newRating;
     }

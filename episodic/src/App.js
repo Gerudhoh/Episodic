@@ -87,7 +87,7 @@ function App() {
             <Route exact path="/" element={<HomePage />} />
             <Route exact path="searchresults" element={<SearchPage />} />
             <Route exact path="profile" element={<ProfilePage />} />
-            <Route path="userlist/:name" element={<ProfileListView userName="userName"/>} />
+            <Route path="userlist/:name" element={<ProfileListView userName="userName" />} />
             <Route path="userlist/" element={<ProfileListView userName="userName"/>} />
             <Route path="explorelist/:name" element={<ExploreListView />} />
           </Routes >

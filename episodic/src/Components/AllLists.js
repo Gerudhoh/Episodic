@@ -8,8 +8,23 @@ import ListItem from '@mui/material/ListItem';
 import Alert from '@mui/material/Alert';
 
 import ListsHighlight from "./ListsHighlight.js"
+const allLists = [
+    {
+      name: "listName1"
+    },
 
-<<<<<<< HEAD
+    {
+      name: "listName2"
+    },
+    {
+      name: "listName3"
+    },
+    {
+      name: "listName4"
+    },
+]
+
+
 class AllLists extends React.Component {
 
   constructor(props) {
@@ -69,10 +84,14 @@ class AllLists extends React.Component {
           Successfully created list!
         </Alert>) : (null)}
 
-        <Typography>Lists</Typography>
+        <Typography variant="h4" component={Link} to="/userlist/all">Lists</Typography>
         <List>
           {this.state.allLists.map((item) => (
-            <ListItem key={item.name}>{item.name}</ListItem>
+            <ListItem key={item.name} id={item.id}>
+                <Link className="listLink" to={`/userlist/${item.name}`}>
+                  {item.name}
+                </Link>
+            </ListItem>
           ))}
         </List>
 
@@ -90,38 +109,6 @@ class AllLists extends React.Component {
       </Box>
     );
   }
-=======
-const allLists = [
-    {
-      name: "listName1"
-    },
-
-    {
-      name: "listName2"
-    },
-    {
-      name: "listName3"
-    },
-    {
-      name: "listName4"
-    },
-]
-export default function AllLists() {
-  return (
-    <Box container>
-      <Typography variant="h4" component={Link} to="/userlist/all">Lists</Typography>
-      <List>
-      {allLists.map((item) => (
-        <ListItem key={item.name} id={item.name}>
-            <Link className="listLink" to={`/userlist/${item.name}`}>
-              {item.name}
-            </Link>
-        </ListItem>
-      ))}
-      </List>
-    </Box>
-  );
->>>>>>> fixed text wrap and continuing themeing for all components
 }
 
 export default AllLists;
