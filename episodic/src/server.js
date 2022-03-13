@@ -3,7 +3,7 @@
 // Require all modules needed
 require('dotenv').config()
 const express = require("express");
-const app  = express();
+const app = express();
 const path = require('path');
 
 const promisePool = require('./repositories/mysql');
@@ -16,35 +16,35 @@ const users = require("./lib/User")
 const lists = require("./lib/EpisodicList")
 const podcasts = require("./lib/Podcast")
 const episodes = require("./lib/Episode")
-// Import lists class
-const lists = require("./lib/EpisodicList");
 const DataFetcher = require("./lib/api-data/DataFetcher.js");
 
 // Expose the port specified in .env or port 5000
 const port = process.env.PORT || 5000;
 
 const fetcher = new DataFetcher(
-    process.env.SPOTIFY_CLIENT_ID,
-    process.env.SPOTIFY_CLIENT_SECRET,
-    process.env.LISTEN_NOTES_KEY,
-    process.env.PODCAST_INDEX_KEY,
-    process.env.PODCAST_INDEX_SECRET)
+  process.env.SPOTIFY_CLIENT_ID,
+  process.env.SPOTIFY_CLIENT_SECRET,
+  process.env.LISTEN_NOTES_KEY,
+  process.env.PODCAST_INDEX_KEY,
+  process.env.PODCAST_INDEX_SECRET)
 
 var bodyParser = require('body-parser');
-app.use( bodyParser.json() );
+const User = require('./lib/User');
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 let buildFolder = path.join(process.cwd(), "build");
 app.use(express.static(buildFolder));
 
-app.get('/', (req,res) => {
-  res.sendFile(process.cwd()+"/client/build/index.html");
+app.get('/', (req, res) => {
+  res.sendFile(process.cwd() + "/client/build/index.html");
 });
 
 
 // Check if a username and password is correct and generate a token
 
+let currentUser = new User(null, 1);
 
-app.post('/api/v1/lists/create', async function(req, res) {
+app.post('/api/v1/lists/create', async function (req, res) {
   let name = req.body.name;
 
   let userId = 1; //Not sure where to find current user atm, do we need to pass this? 
@@ -73,24 +73,19 @@ app.post('/api/v1/lists/create', async function(req, res) {
 
 app.post('/api/v1/lists/add/podcast', async function (req, res) {
   let list = req.body.list;
-  let podcast = req.body.podcast;
-
-  podcast = new podcasts("test", 1);  //Remove this line when podcasts are implemented
+  let podcastId = req.body.podcastId;
 
   list = new lists(list.name, list.id, list);
-  let podcastId = podcast.id;
 
   if (list.podcasts.some((element) => element.id == podcastId)) {
     res.send({
-      list: list
+      success: false
     });
     return;
   }
 
-  list.addPodcast(podcast);
-
   res.send({
-    list: list
+    success: false
   });
 
 });
@@ -192,16 +187,17 @@ app.get("/api/v1/lists/get/all/temp", async function (req, res) {
 
 });
 
-app.post('/api/v1/search', async function(req, res) {
+app.post('/api/v1/search', async function (req, res) {
   let name = req.body.name;
   let apiClient = fetcher.getListenNotesApi();
   apiClient.search({
-      q: name,
-      type: 'podcast',
-      only_in: 'title,description',
-    }).then((response) => {
-      res.send({data : response.data.results});
-    })
+    q: name,
+    type: 'podcast',
+    only_in: 'title,description',
+  }).then((response) => {
+    console.log(response.data.results);
+    res.send({ data: response.data.results });
+  })
 
 });
 

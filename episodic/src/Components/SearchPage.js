@@ -64,15 +64,14 @@ export default function SearchPage(){
     response.json().then(data => {
       let images = [];
       let length = data.data.length;
-      console.log(length);
       for(let i = 0; i < length; i++) {
         images.push({
           img: data.data[i].image,
-          title: data.data[i].title_original
+          title: data.data[i].title_original,
+          id: data.data[i].id
         });
       }
   
-      console.log(images);
       return(
         <Stack spacing={2}>
           <ListPreview listName={"Search Results"} images={images} listSize={"large"}/>

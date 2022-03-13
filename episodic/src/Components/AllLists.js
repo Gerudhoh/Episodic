@@ -13,18 +13,21 @@ class AllLists extends React.Component {
 
   constructor(props) {
     super(props);
+    let success = JSON.parse(localStorage.getItem('showSuccess')) || false;
 
     this.state = {
       listName: "",
       list: {},
       allLists: [],
-      showSuccess: JSON.parse(localStorage.getItem('showSuccess')) || false,
+      showSuccess: success,
       showError: false
     };
+    
   }
 
   componentDidMount() {
     this.getUserLists();
+    localStorage.setItem( 'showSuccess', false );
   }
 
   createList = async e => {

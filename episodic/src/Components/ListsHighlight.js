@@ -91,7 +91,7 @@ class ListsHighlight extends React.Component {
 
   getUserLists = async e => {
     //e.preventDefault();
-    const response = await fetch("/api/v1/lists/get/all/temp");
+    const response = await fetch("/api/v1/lists/get/all");
     const body = await response.json();
     let listNames = [];
     body.lists.map((list) => {
@@ -110,7 +110,7 @@ class ListsHighlight extends React.Component {
         <Stack spacing={2}>
           {this.state.allLists.map((item) => (
             <Item key={item.name}>
-              <ListPreview listName={item.name} images={item.images} listSize={this.size} />
+              <ListPreview listName={item.name} images={item.images} listSize={this.size} listView={true} />
             </Item>
           ))}
         </Stack>
