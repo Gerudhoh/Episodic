@@ -20,7 +20,8 @@ const episodeCardStyles ={
     fontSize: 14,
   },
   medium:{
-    minSize: 140,
+    //minSize: 120,
+    minSize: "120em",
     buttonSize: "inherit",
     fontSize: 16,
   },
@@ -35,7 +36,7 @@ const episodeCardStyles ={
 export default function EpisodeCard(props) {
   const size = episodeCardStyles[props.cardSize];
   return (
-    <Box sx={{m:2}}>
+    <Box sx={{m:0.5}}>
         < img  width={size.minSize} height="auto"
           src={props.img}
           alt={props.title}

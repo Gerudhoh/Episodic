@@ -14,7 +14,7 @@ import ReviewPreview from "./ReviewPreview.js";
 import EpisodeCardList from "./EpisodeCardList.js";
 
 const item ={
-  img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
+  img: '/pepekingprawn.jpg',
   title: 'Breakfast'
 }
 

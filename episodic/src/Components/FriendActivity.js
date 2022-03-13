@@ -27,15 +27,15 @@ const friends = [
           listName: "list1",
           images: [
             {
-              img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
+              img: '/pepekingprawn.jpg',
               title: 'Breakfast',
             },
             {
-              img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
+              img: '/pepekingprawn.jpg',
               title: 'Burger',
             },
             {
-              img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
+              img: '/pepekingprawn.jpg',
               title: 'Camera',
             },
           ]
@@ -48,15 +48,15 @@ const friends = [
         listName: "list1",
         images: [
           {
-            img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
+            img: '/pepekingprawn.jpg',
             title: 'Breakfast',
           },
           {
-            img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
+            img: '/pepekingprawn.jpg',
             title: 'Burger',
           },
           {
-            img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
+            img: '/pepekingprawn.jpg',
             title: 'Camera',
           },
         ]
@@ -69,15 +69,15 @@ const friends = [
         listName: "list1",
         images: [
           {
-            img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
+            img: '/pepekingprawn.jpg',
             title: 'Breakfast',
           },
           {
-            img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
+            img: '/pepekingprawn.jpg',
             title: 'Burger',
           },
           {
-            img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
+            img: '/pepekingprawn.jpg',
             title: 'Camera',
           },
         ]

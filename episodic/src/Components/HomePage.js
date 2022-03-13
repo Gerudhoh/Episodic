@@ -18,7 +18,7 @@ import AllComponents from "./AllComponents.js";
 
 //Styling
 const Item = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(2),
+  padding: 10,
   textAlign: 'center',
 }));
 
@@ -26,7 +26,7 @@ const Item = styled(Paper)(({ theme }) => ({
 function homePageStack(){
   return(
     <React.Fragment>
-    <Stack alignItems="flex-start" justifyContent="space-evenly" direction="row" spacing={2} sx={{padding:"20px"}}>
+    <Stack alignItems="flex-start" justifyContent="center" direction="row" spacing={1} sx={{padding:"10px"}}>
         <Item sx={{maxWidth:"60%"}}>
           <Typography variant="h4">Explore</Typography>
           <ListsHighlight listSize="small"/>
@@ -40,21 +40,21 @@ function homePageStack(){
 function homePageNormal(){
   return(
 
-    <Stack flexWrap="wrap" direction="row" spacing={2} columnspacing={2} alignItems="flex-start" justifyContent="center" padding="10px">
-      <Stack sx={{maxWidth:"25%"}} spacing={2}>
-        <Item ><AllLists /></Item>
-        <Item>
+    <Stack direction="row" spacing={1} alignItems="flex-start" justifyContent="center" padding="10px">
+      <Stack sx={{maxWidth:"30%"}} spacing={2}>
+        <Item><AllLists /></Item>
+        <Item >
           <Typography variant="h4">My Activity</Typography>
-          <FriendActivity activitySize="large" />
+          <FriendActivity activitySize="small" />
         </Item>
       </Stack>
-      <Item sx={{maxWidth:"50%"}}>
+      <Item sx={{maxWidth:"40%"}}>
         <Typography variant="h4">Explore</Typography>
-        <ListsHighlight listSize="large"/>
+        <ListsHighlight listSize="medium"/>
       </Item>
-      <Item sx={{maxWidth:"25%"}}>
+      <Item sx={{maxWidth:"30%"}}>
         <Typography variant="h4">Friend Activity</Typography>
-        <FriendActivity activitySize="large" />
+        <FriendActivity activitySize="small" />
       </Item>
     </Stack>
   );
