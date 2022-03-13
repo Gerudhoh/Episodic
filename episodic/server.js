@@ -25,9 +25,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(process.cwd() + "/client/build/"));
 
-app.get('/', (req, res) => {
-  res.sendFile(process.cwd() + "/client/build/index.html");
-});
+
+//This will create a middleware.
+//When you navigate to the root page, it would use the built react-app
+app.use(express.static(path.resolve(__dirname, "./client/build")));
 
 let currentUser = new users("test", 1);
 

@@ -1,5 +1,4 @@
 var mysql = require('mysql2');
-var CONFIG = require('./config.json');
 
 const pool =  mysql.createConnection({
     host: process.env.SQL_HOST,
