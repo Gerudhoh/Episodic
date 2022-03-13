@@ -15,7 +15,7 @@ import { styled } from '@mui/material/styles';
 //Custom Components
 import ListsHighlight from "./ListsHighlight.js";
 import UserInfo from "./UserInfo.js";
-import UserReviews from "./UserReviews.js"
+import Reviews from "./Reviews.js"
 import Achievement from "./Achievement.js"
 
 //Styling
@@ -171,7 +171,10 @@ function profileNormal(){
           <Item sx={{width:"50%"}}><FriendList userSize="small" fontSize={20}/></Item>
         </Stack>
       </Stack>
-      <Item sx={{maxWidth:"30%"}}><UserReviews /></Item>
+      <Item sx={{maxWidth:"30%"}}>
+        <Typography variant="h4">Reviews</Typography>
+        <Reviews />
+      </Item>
       <Item sx={{maxWidth:"40%"}}>
         <Typography variant="h4" component={Link} to="/listview/all">Lists</Typography>
         <ListsHighlight listSize="medium"/>
@@ -200,7 +203,10 @@ function profileStack(){
         </Stack>
         <Item sx={{maxWidth:"100%"}}><ListsHighlight listSize="small"/></Item>
       </Stack>
-      <Item sx={{maxWidth:"40%"}}><UserReviews /></Item>
+      <Item sx={{maxWidth:"40%"}}>
+        <Typography variant="h4">Reviews</Typography>
+        <Reviews />
+      </Item>
 
     </Stack>
   );

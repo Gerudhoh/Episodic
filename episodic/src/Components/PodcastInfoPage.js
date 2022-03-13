@@ -1,13 +1,58 @@
+//Packages
 import * as React from 'react';
+
+import {useLocation, withRouter} from 'react-router-dom';
 
 //Material UI Components
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
+import Avatar from '@mui/material/Avatar';
+import Paper from '@mui/material/Paper';
+import Fab from '@mui/material/Fab';
+import Button from '@mui/material/Button';
+import Rating from '@mui/material/Rating';
+
+
+//Material UI Icons and Styling
+import { styled } from '@mui/material/styles';
 
 //Custom Components
-import ActivityCard from "./ActivityCard.js";
+import PodcastEpisodesCard from './PodcastEpisodesCard.js';
+import Reviews from './Reviews.js'
+
+const podcast1 = {
+  title : 'title',
+  description : 'description',
+  rss : 'rss',
+  image : '/pepekingprawn.jpg',
+  website : 'website',
+  publisher : 'publisher',
+  language : 'language',
+  explicit : 'explicit',
+  rating : 0,
+  genre : 'genre',
+  episodes : [
+    {
+      title: 'title1',
+      description: 'description',
+      podcast: 'podcast'
+    },
+    {
+      title: 'title2',
+      description: 'description',
+      podcast: 'podcast'
+    },
+    {
+      title: 'title3',
+      description: 'description',
+      podcast: 'podcast'
+    },
+  ],
+  totalEpisodes : 'totalEpisodes',
+  platforms : 'platforms',
+  id : 'id',
+}
 
 const reviews = [
     {
@@ -49,16 +94,49 @@ const reviews = [
     },
 ]
 
-export default function UserReviews() {
 
-  return (
-    <Box container>
-      <Typography variant="h4">Reviews</Typography>
-      <Stack spacing={2} divider={<Divider orientation="horizontal" flexItem />}>
-      {reviews.map((item) => (
-        <ActivityCard key={item.name} activityType={item.activityType} userName={item.name} activityInfo={item.activityInfo} activitySize="large"/>
-      ))}
+const Item = styled(Paper)(({ theme }) => ({
+  padding: 10,
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+}));
+
+function PodcastInfo(props){
+  const podcast = props.podcast;
+  return(
+    <Stack direction="row" spacing={2} padding="10px" justifyContent="flex-start">
+      <img src={podcast.image} width="200px" height="auto"/>
+      <Item>
+        <Stack alignItems="center" spacing={2} padding="10px">
+          <Typography variant="h2">{podcast.title}</Typography>
+          <Stack direction="row" spacing={2}>
+            <Button variant="contained" style={{height: "35px"}}>Add To List</Button>
+            <Button variant="contained" style={{height: "35px"}}>Review</Button>
+          </Stack>
+          <Rating readOnly size="large" value={podcast.rating}/>
+        </Stack>
+      </Item>
+      <Item>
+        <Typography variant="p">{podcast.description}</Typography>
+      </Item>
+    </Stack>
+  );
+}
+
+export default function PodcastInfoPage(){
+  const location = useLocation();
+  return(
+    <Stack spacing={2} sx={{pl:"20px", pt:"10px"}} justifyContent="space-evenly">
+      <PodcastInfo podcast={podcast1}/>
+      <Stack direction="row" flexWrap="wrap" spacing={2} justifyContent="left">
+        <Item sx={{width:"45%"}}>
+          <PodcastEpisodesCard episodes={podcast1.episodes} image={podcast1.image}/>
+          </Item>
+        <Item sx={{width:"45%"}}>
+          <Typography variant="h3">Reviews</Typography>
+          <Reviews />
+        </Item>
       </Stack>
-    </Box>
+    </Stack>
   );
 }

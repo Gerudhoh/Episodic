@@ -20,8 +20,7 @@ const episodeCardStyles ={
     fontSize: 14,
   },
   medium:{
-    //minSize: 120,
-    minSize: "120em",
+    minSize: 120,
     buttonSize: "inherit",
     fontSize: 16,
   },
