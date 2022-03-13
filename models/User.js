@@ -13,11 +13,11 @@ module.exports = {
         });
     },
 
-    addUser: function (username, password) {
+    addUser: function (username, password, token) {
         return new Promise(async (res, rej) => {
-            let sql = 'INSERT INTO users(username, password) VALUES(?,?);'
+            let sql = 'INSERT INTO users(username, password, token) VALUES(?,?, ?);'
             
-            const [rows, fields] = await promisePool.query(sql, [username, password]);
+            const [rows, fields] = await promisePool.query(sql, [username, password, token]);
 
             console.log(`Rows in addUser: ${JSON.stringify(rows)}`);
 

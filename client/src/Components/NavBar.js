@@ -19,8 +19,10 @@ import MenuItem from '@mui/material/MenuItem';
 import { styled, alpha } from '@mui/material/styles';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
+import AddIcon from '@mui/icons-material/Add';
 
-import {checkAuth, logOut, getCookieData} from "../lib/CookieData.js"
+import {logOut, getCookieData} from "../lib/CookieData.js"
+import history from './history';
 
 
 const pages = ['Profile', 'Account', 'Dashboard', ];
@@ -84,22 +86,33 @@ class ResponsiveAppBar extends React.Component {
     this.handleOpenUserMenu = this.handleOpenUserMenu.bind(this);
     this.handleCloseNavMenu = this.handleCloseNavMenu.bind(this);
     this.handleCloseUserMenu = this.handleCloseUserMenu.bind(this);
+    this.loginPage = this.loginPage.bind(this);
   }
 
   async logOut() {
     this.closeMenu();
     let authData = getCookieData();
-    //console.log(authData);
+    console.log(authData);
 
-    if(authData.username && authData.token) {
+    if(authData.username === undefined || authData.token === undefined) {
       let response = await logOut(authData.username, authData.token);
-      //logout
+      this.props.removeAuth();
+      await history.push("/login");
+      window.scrollTo(0, 0);
+      window.location.reload();
 
       if(response.error !== undefined) {
         //console.log(response.error);
       }
     }
   }
+
+  async loginPage() {
+    this.props.removeAuth();
+    await history.push("/login");
+    window.scrollTo(0, 0);
+    window.location.reload();
+  };
 
   handleOpenNavMenu = (event) => {
     this.setState({ showMenu: event.currentTarget});
@@ -131,8 +144,6 @@ class ResponsiveAppBar extends React.Component {
                 LOGO
               </Typography>
 
-              {this.props.auth &&
-              <div>
               <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                 <IconButton
                   size="large"
@@ -198,12 +209,15 @@ class ResponsiveAppBar extends React.Component {
                 />
               </Search>
 
+              {this.props.auth === true &&
+              <div>
               <Box sx={{ flexGrow: 0 }}>
                 <Tooltip title="Open settings">
                   <IconButton onClick={this.handleOpenUserMenu} sx={{ p: 0 }}>
                     <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
                   </IconButton>
                 </Tooltip>
+                
                 <Menu
                   sx={{ mt: '45px' }}
                   id="menu-appbar"
@@ -220,6 +234,7 @@ class ResponsiveAppBar extends React.Component {
                   open={Boolean(this.state.anchorElUser)}
                   onClose={this.handleCloseUserMenu}
                 >
+                  
                   {settings.map((setting) => (
                     <MenuItem key={setting} onClick={this.handleCloseUserMenu}>
                       <Typography textAlign="center">{setting}</Typography>
@@ -227,6 +242,12 @@ class ResponsiveAppBar extends React.Component {
                   ))}
                 </Menu>
               </Box>
+              </div>
+              }
+
+              {this.props.auth === false &&
+              <div>
+                <Button variant="text" color="secondary"  onClick={this.loginPage}>Login</Button>
               </div>
               }
             </Toolbar>

@@ -4,8 +4,8 @@ import './App.css';
 import {checkAuth, logOut, getCookieData} from "./lib/CookieData.js"
 
 //Custom Components
-import HomePage from "./Components/HomePage.js";
-import NavBar from "./Components/NavBar.js";
+import NavBar from "./Components/NavBar";
+import RouteSwitch from "./Components/RouteSwitch";
 
 class App extends React.Component {
   constructor(props) {
@@ -21,17 +21,17 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    window.scrollTo(0, 0);
     this.checkAuthData();
   }
 
   async checkAuthData() {
     let authData = getCookieData();
-    console.log(authData);
-    console.log(authData.token);
 
-    if(authData.username !== undefined && authData.token !== undefined) {
-      console.log("Check auth")
+    if(authData.username && authData.token) { 
       let authCheck = await checkAuth(authData.username, authData.token);
+      console.log(authCheck);
+      console.log(authCheck.length > 0)
 
       if(authCheck.length > 0) {
         this.setState({auth: true})
@@ -52,6 +52,7 @@ class App extends React.Component {
   }
 
   removeAuth() {
+    console.log("Remove auth")
     this.setState({
       auth: false
     })
@@ -59,9 +60,9 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className="App">
-          <NavBar auth={this.state.auth}  updateAuth={this.updateAuth} removeAuth={this.removeAuth}/>
-          <HomePage auth={this.state.auth}  updateAuth={this.updateAuth} removeAuth={this.removeAuth} />
+      <div>
+        <NavBar auth={this.state.auth}  updateAuth={this.updateAuth} removeAuth={this.removeAuth}/>
+        <RouteSwitch auth={this.state.auth} updateAuth={this.updateAuth} removeAuth={this.removeAuth}/>
       </div>
     );
   }
