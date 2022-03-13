@@ -8,14 +8,11 @@ require('dotenv').config()
 
 const promisePool = require('./repositories/mysql');
 
-// Import all the models for the database requests
-//const users = require("./models/users");
-
 // Import classes
-const users = require("./lib/User")
-const lists = require("./lib/EpisodicList")
-const podcasts = require("./lib/Podcast")
-const episodes = require("./lib/Episode")
+const users = require("./models/User")
+const lists = require("./models/EpisodicList")
+const podcasts = require("./models/Podcast")
+const episodes = require("./models/Episode")
 
 // Expose the port specified in .env or port 5000
 const port = process.env.PORT || 5000;
@@ -30,9 +27,10 @@ app.use(express.static(process.cwd() + "/client/build/"));
 //When you navigate to the root page, it would use the built react-app
 app.use(express.static(path.resolve(__dirname, "./client/build")));
 
-let currentUser = new users("test", 1);
+/*let currentUser = users.addUser("test", "test123");*/
 
 app.post('/api/v1/lists/create', async function (req, res) {
+  /*
   let name = req.body.name;
 
   let userId = 1; //Not sure where to find current user atm, do we need to pass this? 
@@ -52,15 +50,19 @@ app.post('/api/v1/lists/create', async function (req, res) {
       res(err);
     }
   });
-
   res.send({
     list: list
+  });
+  */
+
+  res.send({
+    list: []
   });
 
 });
 
 app.post('/api/v1/lists/add/podcast', async function (req, res) {
-  let list = req.body.list;
+  /*let list = req.body.list;
   let podcast = req.body.podcast;
 
   podcast = new podcasts("test", 1);  //Remove this line when podcasts are implemented
@@ -80,11 +82,15 @@ app.post('/api/v1/lists/add/podcast', async function (req, res) {
   res.send({
     list: list
   });
+  */
+  res.send({
+    list: []
+  });
 
 });
 
 app.post('/api/v1/lists/remove/podcast', async function (req, res) {
-  let list = req.body.list;
+  /*let list = req.body.list;
   let podcast = req.body.podcast;
 
   podcast = new podcasts("test", 1);  //Remove this line when podcasts are implemented
@@ -95,12 +101,15 @@ app.post('/api/v1/lists/remove/podcast', async function (req, res) {
 
   res.send({
     list: list
+  });*/
+  res.send({
+    list: []
   });
 
 });
 
 app.post('/api/v1/lists/add/episode', async function (req, res) {
-  let list = req.body.list;
+  /*let list = req.body.list;
   let episode = req.body.episode;
 
   episode = new episodes("test", 1); //Remove this line when episodes are implemented
@@ -119,12 +128,12 @@ app.post('/api/v1/lists/add/episode', async function (req, res) {
 
   res.send({
     list: list
-  });
+  });*/
 
 });
 
 app.post('/api/v1/lists/remove/episode', async function (req, res) {
-  let list = req.body.list;
+  /*let list = req.body.list;
   let episode = req.body.episode;
 
   episode = new episodes("test", 1);  //Remove this line when podcasts are implemented
@@ -135,6 +144,10 @@ app.post('/api/v1/lists/remove/episode', async function (req, res) {
 
   res.send({
     list: list
+  });*/
+
+  res.send({
+    list: []
   });
 
 });
@@ -142,7 +155,7 @@ app.post('/api/v1/lists/remove/episode', async function (req, res) {
 //This endpoint needs to be deleted when we have proper user logging in and out.
 //We need to set the user's lists when they log in instead of when the page loads, which is where this is called.
 app.get("/api/v1/lists/get/all/temp", async function (req, res) {
-  if (currentUser.episodicLists.length == 0) {
+  /*if (currentUser.episodicLists.length == 0) {
     let sql = "select * from lists where userId = " + currentUser.id + "";
     await new Promise(async (res, rej) => {
       try {
@@ -176,13 +189,19 @@ app.get("/api/v1/lists/get/all/temp", async function (req, res) {
       }
     });
   }
-  res.send({ lists: currentUser.episodicLists });
+  res.send({ lists: currentUser.episodicLists });*/
+  res.send({
+    lists: []
+  });
 
 });
 
 // You will need to manually refresh the page for this to work atm, because of the fact we're filling this array when the page renders and the page might not have been rendered when this is called
 app.get("/api/v1/lists/get/all", async function (req, res) {
-  res.send({ lists: currentUser.episodicLists });
+  //res.send({ lists: currentUser.episodicLists });
+  res.send({
+    lists: []
+  });
 });
 
 // Listen to the specified port for api requests

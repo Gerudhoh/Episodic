@@ -1,9 +1,9 @@
 const User = require("./User.js");
 const DataFetcher = require("./api-data/DataFetcher.js");
-const DatabaseConnection = require("./DatabaseConnection.js");
+const DatabaseConnection = require("./DatabaseConnection.js.js");
 const SpotifyAdapter = require("./api-data/SpotifyDataAdapter.js");
-const PodcastIndexAdapter = require("./api-data/PodcastIndexAdapter.js");
-const ListenNotesAdapter = require("./api-data/ListenNotesAdapter.js");
+const PodcastIndexAdapter = require("./api-data/PodcastIndexAdapter.js.js");
+const ListenNotesAdapter = require("./api-data/ListenNotesAdapter.js.js");
 
 class Session {
     constructor() {
