@@ -54,7 +54,7 @@ export default function SearchPage(){
           img: data.data[i].image,
           podcastTitle: data.data[i].title_original,
           id: data.data[i].id,
-          description: data.data[i].description,
+          description: data.data[i].description_original,
           rss: data.data[i].rss,
           website: data.data[i].website,
           publisher: data.data[i].publisher,
