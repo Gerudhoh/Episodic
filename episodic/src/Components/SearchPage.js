@@ -47,9 +47,8 @@ export default function SearchPage(){
     response.json().then(data => {
       let images = [];
       let length = data.data.length;
-      console.log(length);
       for(let i = 0; i < length; i++) {
-        console.log(data.data[i]);
+        // console.log(data.data[i]);
         images.push({
           img: data.data[i].image,
           podcastTitle: data.data[i].title_original,
@@ -80,8 +79,9 @@ export default function SearchPage(){
   };
 
   useEffect(() => {
+    console.log(location.state);
     fetchData(location.state)
-  }, []);
+  }, [location.state]);
 
   return(
     <React.Fragment>
