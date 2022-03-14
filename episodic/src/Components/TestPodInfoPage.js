@@ -1,5 +1,5 @@
 import * as React from 'react';
-// import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {useLocation} from 'react-router-dom';
 
 //Material UI Components
@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 // import Paper from '@mui/material/Paper';
 // import Button from '@mui/material/Button';
 // import Rating from '@mui/material/Rating';
-// import CircularProgress from '@mui/material/CircularProgress';
+ import CircularProgress from '@mui/material/CircularProgress';
 
 //Material UI Icons and Styling
 // import { styled } from '@mui/material/styles';
@@ -16,8 +16,11 @@ import Typography from '@mui/material/Typography';
 // //Custom Components
 // import PodcastEpisodesCard from './PodcastEpisodesCard.js';
 // import Reviews from './Reviews.js'
+import PodcastInfo from './PodcastInfoPage.js';
 
 export default function TestPodInfo(){
+  const [value, setValue] = useState(null);
+  const [isLoading, setLoading] = useState(true);
   const location = useLocation()
   const podTitle = decodeURIComponent(location.pathname.split('/')[2]);
 
@@ -31,27 +34,40 @@ export default function TestPodInfo(){
       body: JSON.stringify({ name: data }),
     });
     response.json().then(response => {
-      //let podInfo = {title: 'testTitle'};
-      console.log(data);
-      //   title : data.title,
-      //   description : data.description,
-      //   rss : data.rss,
-      //   image : data.data.image,
-      //   website : data.data.website,
-      //   publisher : data.data.publisher,
-      //   language : data.data.language,
-      //   explicit : 'explicit',
-      //   genre : data.data.genre_ids,
-      //   episodes : data.data.episodes,
-      // // }
-      // console.log(podInfo);
-      return('huh');
+      let podcast = response.pod;
+      let episodes = response.eps;
+      let info = {
+        title : podcast.title,
+        description : podcast.description,
+        rss : podcast.rss,
+        image : podcast.image,
+        website : podcast.url,
+        publisher : podcast.author,
+        language : podcast.language,
+        explicit : 'explicit',
+        genre : podcast.categories,
+        episodes : episodes,
+      }
+      console.log(info);
+      return <PodcastInfo podcast={info}/>
+    }).then( resource => {
+      setValue(resource);
+      setLoading(false);
+
     });
   }
 
-  getPodcast(podTitle);
+  useEffect(() => {
+    getPodcast(podTitle);
+  }, [podTitle]);
 
   return(
-    <Typography>Displaying something</Typography>
+    <React.Fragment>
+    {isLoading ? (
+        <CircularProgress />
+      ) : (
+        value
+      )}
+    </React.Fragment>
   );
 }

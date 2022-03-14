@@ -100,7 +100,7 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-function PodcastInfo(props){
+export default function PodcastInfo(props){
   const podcast = props.podcast;
   return(
     <Stack direction="row" spacing={2} padding="10px" justifyContent="flex-start">
@@ -122,21 +122,20 @@ function PodcastInfo(props){
   );
 }
 
-export default function PodcastInfoPage(){
-  const location = useLocation();
-  return(
-    <Stack spacing={2} sx={{pl:"20px", pt:"10px"}} justifyContent="space-evenly">
-      <PodcastInfo podcast={podcast1}/>
-      <Stack direction="row" flexWrap="wrap" spacing={2} justifyContent="left">
-        <Item sx={{width:"45%"}}>
-          <Typography variant="h3">Episodes</Typography>
-          <PodcastEpisodesCard episodes={podcast1.episodes} image={podcast1.image}/>
-          </Item>
-        <Item sx={{width:"45%"}}>
-          <Typography variant="h3">Reviews</Typography>
-          <Reviews />
-        </Item>
-      </Stack>
-    </Stack>
-  );
-}
+// export default function PodcastInfoPage(){
+//   return(
+//     <Stack spacing={2} sx={{pl:"20px", pt:"10px"}} justifyContent="space-evenly">
+//       <PodcastInfo podcast={podcast1}/>
+//       <Stack direction="row" flexWrap="wrap" spacing={2} justifyContent="left">
+//         <Item sx={{width:"45%"}}>
+//           <Typography variant="h3">Episodes</Typography>
+//           <PodcastEpisodesCard episodes={podcast1.episodes} image={podcast1.image}/>
+//           </Item>
+//         <Item sx={{width:"45%"}}>
+//           <Typography variant="h3">Reviews</Typography>
+//           <Reviews />
+//         </Item>
+//       </Stack>
+//     </Stack>
+//   );
+// }

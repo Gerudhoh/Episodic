@@ -29,6 +29,8 @@ class DataFetcher {
 
     getListenNotesApi () { return this.listenNotesApi; }
 
+    getPodcastIndexApi () { return this.podcastIndexApi; }
+
 
     fetchSpotifyPodcast(podcastName){
     //Fetches a specified podcast from Spotify
