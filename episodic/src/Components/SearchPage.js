@@ -37,7 +37,6 @@ export default function SearchPage(){
   const location = useLocation()
   async function fetchData(data) {
     setLoading(true);
-    console.log("Fetch " + data);
     const response = await fetch('/api/v1/search', {
       method: 'POST',
       headers: {
@@ -50,10 +49,19 @@ export default function SearchPage(){
       let length = data.data.length;
       console.log(length);
       for(let i = 0; i < length; i++) {
+        console.log(data.data[i]);
         images.push({
           img: data.data[i].image,
           podcastTitle: data.data[i].title_original,
-          id: data.data[i].id
+          id: data.data[i].id,
+          description: data.data[i].description,
+          rss: data.data[i].rss,
+          website: data.data[i].website,
+          publisher: data.data[i].publisher,
+          language: data.data[i].language,
+          genre: data.data[i].genre_ids,
+          explicit: data.data[i].explicit_content,
+          totalEpisodes: data.data[i].total_episodes
         });
       }
 

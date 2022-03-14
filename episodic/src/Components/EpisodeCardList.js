@@ -12,11 +12,22 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 //Custom Components
 import EpisodeCard from "./EpisodeCard.js"
 
-export default function EpisodeCardList(props){
-  return(
+export default function EpisodeCardList(props) {
+  return (
     <Stack flexWrap="wrap" spacing={2} direction="row" justifyContent="flex-start" alignItems="center" >
       {props.images?.map((item) => (
-        <EpisodeCard key={`EpisodeCard${item.title}`} img={item.img} episodeTitle={item.episodeTitle} podcastTitle={item.podcastTitle} cardSize={props.listSize} id={item.id} listView={props.listView}>
+        <EpisodeCard key={`EpisodeCard${item.title}`} img={item.img} episodeTitle={item.episodeTitle} podcastTitle={item.podcastTitle} cardSize={props.listSize} id={item.id} listView={props.listView}
+          description={item.description}
+          rss={item.rss}
+          website={item.website}
+          publisher={item.publisher}
+          language={item.language}
+          genre={item.genre}
+          explicit={item.explicit}
+          totalEpisodes={item.totalEpisodes}
+          platforms={item.platforms}
+          audioLengthSeconds = {item.audioLengthSeconds}
+          currentList = {item.currentList}>
         </EpisodeCard>
       ))}
     </Stack>

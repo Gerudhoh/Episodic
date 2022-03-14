@@ -1,7 +1,6 @@
 class Podcast {
 
     constructor(title,
-        id,
          description,
          rss,
          image,

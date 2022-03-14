@@ -118,7 +118,8 @@ class ListsHighlight extends React.Component {
             img: podcast.image,
             podcastTitle: podcast.title,
             listView: true,
-            id: podcast.listenNotesId
+            id: podcast.listenNotesId,
+            currentList: list
           });
         }
         i++;

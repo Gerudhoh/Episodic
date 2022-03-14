@@ -67,21 +67,33 @@ class EpisodeCard extends React.Component {
     this.podcastTitle = this.props.podcastTitle;
     this.episodeTitle = this.props.episodeTitle;
 
+    this.description = this.props.description;
+    this.rss = this.props.rss;
+    this.website = this.props.website;
+    this.publisher = this.props.publisher;
+    this.language = this.props.language;
+    this.genre = this.props.genre;
+    this.explicit = this.props.explicit;
+    this.totalEpisodes = this.props.totalEpisodes;
+    this.platforms = this.props.platforms;
+    this.audioLengthSeconds = this.props.audioLengthSeconds;
+
     this.isPodcast = false;
     this.uri = '';
-    if (this.podcastTitle){
+    if (this.podcastTitle) {
       this.isPodcast = true;
       this.uri = `/info/${encodeURIComponent(this.props.podcastTitle)}`;
-    } 
+    }
     if (this.episodeTitle) {
       this.isPodcast = false;
       this.uri = `/info/${encodeURIComponent(this.props.podcastTitle)}/${encodeURIComponent(this.props.episodeTitle)}`;
     }
 
-    
+
 
     this.state = {
       listView: this.props.listView || false,
+      currentList: this.props.currentList || null,
       lists: [],
       listMenuItems: null,
       showSuccess: false
@@ -99,11 +111,32 @@ class EpisodeCard extends React.Component {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ list: this.state.lists[e.target.value], podcastId: this.id }),
+      body: JSON.stringify({ list: this.state.lists[e.target.value], podcastId: this.id, description: this.description, title: this.podcastTitle, image: this.img,
+        rss: this.rss,
+        website: this.website,
+        publisher: this.publisher,
+        language: this.language,
+        genre: this.genre,
+        explicit: this.explicit,
+        totalEpisodes: this.totalEpisodes }),
     });
     const body = await response.json();
     this.setState({ showSuccess: body.success });
-    window.location.reload(false);
+    if (this.state.showSuccess) window.location.reload(false);
+
+  };
+
+  removePodcast = async e =>  {
+    const response = await fetch('/api/v1/lists/remove/podcast', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ list: this.state.currentList, podcastId: this.id }),
+    });
+    const body = await response.json();
+    this.setState({ showSuccess: body.success });
+    if (this.state.showSuccess) window.location.reload(false);
 
   };
 
@@ -156,9 +189,9 @@ class EpisodeCard extends React.Component {
             <Typography variant="p" fontSize={this.size.fontSize}>{this.episodeTitle}</Typography>
             <br />
             <Typography variant="p" fontSize={this.size.fontSize}>{this.podcastTitle}</Typography>
-            
+
           </EpisodeCardStyles>
-          
+
         </Box>
 
         {!this.state.listView && this.isPodcast ? (
@@ -174,6 +207,12 @@ class EpisodeCard extends React.Component {
             </Select>
           </FormControl>
         ) : (null)}
+        {this.state.listView && this.isPodcast ? (
+          <FormControl fullWidth>
+          <button onClick={this.removePodcast}>Remove</button>
+        </FormControl>
+        ) : (null)}
+        
       </Card>
     );
   }

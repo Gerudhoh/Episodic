@@ -1,7 +1,6 @@
 class Episode {
     constructor(
         title,
-        id,
         description, 
         audioLengthSeconds, 
         explicit, 

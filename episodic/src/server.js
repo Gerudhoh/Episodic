@@ -24,11 +24,11 @@ const ListenNotesDataAdapter = require("./lib/api-data/ListenNotesDataAdapter.js
 const port = process.env.PORT || 5000;
 
 const fetcher = new DataFetcher(
-    process.env.SPOTIFY_CLIENT_ID,
-    process.env.SPOTIFY_CLIENT_SECRET,
-    process.env.LISTEN_NOTES_KEY,
-    process.env.PODCAST_INDEX_KEY,
-    process.env.PODCAST_INDEX_SECRET)
+  process.env.SPOTIFY_CLIENT_ID,
+  process.env.SPOTIFY_CLIENT_SECRET,
+  process.env.LISTEN_NOTES_KEY,
+  process.env.PODCAST_INDEX_KEY,
+  process.env.PODCAST_INDEX_SECRET)
 
 
 var bodyParser = require('body-parser');
@@ -50,7 +50,7 @@ let currentUser = new User(null, 1);
 app.post('/api/v1/lists/create', async function (req, res) {
   let name = req.body.name;
 
-  let userId = 1; //Not sure where to find current user atm, do we need to pass this?
+  let userId = currentUser.id;
   let sql = "insert into lists (name, userId) values ('" + name + "', " + userId + ")";
 
   let list = null;
@@ -61,7 +61,9 @@ app.post('/api/v1/lists/create', async function (req, res) {
       let id = result[0].insertId;
       list = new lists(name, id);
       currentUser.addEpisodicList(list);
-      res.send(list);
+      res.send({
+        list: list
+      });
     } catch (err) {
       res.send(err);
     }
@@ -75,107 +77,83 @@ app.post('/api/v1/lists/create', async function (req, res) {
 
 app.post('/api/v1/lists/add/podcast', async function (req, res) {
   let list = req.body.list;
-  let podcastId = req.body.podcastId;
-
+  let podcast = new podcasts(req.body.title, req.body.description, req.body.rss, req.body.image, req.body.website || "N/A", req.body.publisher || "N/A", req.body.language || "N/A", req.body.genre || [], req.body.explicit || false, req.body.totalEpisodes || 0, null, req.body.podcastId);
   list = new lists(list.name, list.id, list);
 
-  if (list.podcasts.some((element) => element.id == podcastId)) {
+  if (list.podcasts.some((element) => element.listenNotesId == podcast.listenNotesId)) {
     res.send({
       success: false
     });
     return;
   }
-
-  let apiClient = fetcher.getListenNotesApi();
-  apiClient.fetchPodcastById({
-    id: podcastId
-  }).then(async (response) => {
-    let adapter = new ListenNotesDataAdapter();
-    let podcast = adapter.adaptPodcast(response.data);
-    podcast.image = response.data.image;
-    await new Promise(async (rem, rej) => {
-      try {
-        let sql = "insert into podcasts (name, listenNotesId) values ('" + podcast.title + "', '" + podcastId + "')";
+  await new Promise(async (rem, rej) => {
+    try {
+      let sql = "insert ignore into podcasts (name, listenNotesId, rss, description, image, website, publisher, language, genre, explicit, totalEpisodes) values ('" + podcast.title + "', '"
+        + podcast.listenNotesId + "', '" + podcast.rss + "', '" + podcast.description + "', '" + podcast.image + "', '" + podcast.website + "', '" + podcast.publisher + "', '" + podcast.language + "', '" + podcast.genre.toString() + "', " + podcast.explicit + ", " + podcast.totalEpisodes + ")";
+      console.log(sql);
+      let result = await promisePool.query(sql);
+      console.log(result);
+      let insertId = result[0].insertId;
+      if (insertId == "0") {
+        let sql = "select id from podcasts where listenNotesId = '" + podcast.listenNotesId + "'";
         let result = await promisePool.query(sql);
-        let id = result[0].insertId;
-        podcast.databaseId = id;
-        list.addPodcast(podcast);
-        let linkSql = "insert into lists_podcasts_link (listsId, podcastsId) values (" + list.id + ", " + podcast.databaseId + ")";
-        await promisePool.query(linkSql);
-        let i = 0;
-        currentUser.episodicLists.forEach((element) => {
-          if (element.id == list.id) {
-            currentUser.episodicLists[i] = list;
-          }
-          i++;
-        });
-        res.send({ success: true });
-      } catch (err) {
-        let sql = "select id from podcasts where listenNotesId = '" + podcastId + "'";
-        try {
-          let result = await promisePool.query(sql);
-          podcast.databaseId = result[0][0].id;
-          list.addPodcast(podcast);
-
-          let linkSql = "insert into lists_podcasts_link (listsId, podcastsId) values (" + list.id + ", " + podcast.databaseId + ")";
-          await promisePool.query(linkSql);
-          let i = 0;
-          currentUser.episodicLists.forEach((element) => {
-            if (element.id == list.id) {
-              currentUser.episodicLists[i] = list;
-            }
-            i++;
-          });
-          res.send({ success: true });
-        } catch (err) {
-          res.send({ success: false });
-        }
+        podcast.databaseId = result[0][0].id;
       }
-    });
-    return;
+      else {
+        podcast.databaseId = insertId;
+      }
+      list.addPodcast(podcast);
+      let linkSql = "insert into lists_podcasts_link (listsId, podcastsId) values (" + list.id + ", " + podcast.databaseId + ")";
+      await promisePool.query(linkSql);
+      let i = 0;
+      currentUser.episodicLists.forEach((element) => {
+        if (element.id == list.id) {
+          currentUser.episodicLists[i] = list;
+        }
+        i++;
+      });
+      res.send({ success: true });
+    } catch (err) {
+      console.log(err);
+      res.send({ success: false });
+    }
+
   });
+  return;
 
 });
 
 app.post('/api/v1/lists/remove/podcast', async function (req, res) {
   let list = req.body.list;
-  let podcast = req.body.podcast;
-
-  podcast = new podcasts("test", 1);  //Remove this line when podcasts are implemented
-
+  let podcastId = req.body.podcastId;
   list = new lists(list.name, list.id, list);
 
-  list.removePodcast(podcast);
-
-  res.send({
-    list: list
+  await new Promise(async (rem, rej) => {
+    try {
+      let sql = "select id from podcasts where listenNotesId = '" + podcastId + "'";
+      let result = await promisePool.query(sql);
+      console.log(result[0][0].id);
+      list.removePodcast(result[0][0].id);
+      console.log(list.podcasts);
+      let i = 0;
+      currentUser.episodicLists.forEach((element) => {
+        if (element.id == list.id) {
+          currentUser.episodicLists[i] = list;
+        }
+        i++;
+      });
+      res.send({ success: true });
+    } catch (err) {
+      res.send({ success: false });
+    }
   });
 
 });
 
-app.post('/api/v1/lists/add/episode', async function (req, res) {
-  let list = req.body.list;
-  let episode = req.body.episode;
-
-  episode = new episodes("test", 1); //Remove this line when episodes are implemented
-
-  list = new lists(list.name, list.id, list);
-  let episodeId = episode.id;
-
-  if (list.episodes.some((element) => element.id == episodeId)) {
-    res.send({
-      list: list
-    });
-    return;
-  }
-
-  list.addEpisode(episode);
-
-  res.send({
-    list: list
-  });
-
-});
+/*app.post('/api/v1/lists/add/episode', async function (req, res) {
+  
+ 
+});*/
 
 app.post('/api/v1/lists/remove/episode', async function (req, res) {
   let list = req.body.list;
@@ -209,17 +187,8 @@ app.get("/api/v1/lists/get/all/temp", async function (req, res) {
           newResult[0].forEach(async (element) => {
             let linkSql = "select * from podcasts where id = " + element.podcastsId + "";
             let linkResult = await promisePool.query(linkSql);
-
-
-            let adapter = new ListenNotesDataAdapter();
-            let apiClient = fetcher.getListenNotesApi();
-            apiClient.fetchPodcastById({
-              id: linkResult[0][0].listenNotesId
-            }).then(async (response) => {
-              let podcast = adapter.adaptPodcast(response.data);
-              podcast.image = response.data.image;
-              list.addPodcast(podcast);
-            });
+            let temp = new podcasts(linkResult[0][0].name, linkResult[0][0].description, linkResult[0][0].rss, linkResult[0][0].image, linkResult[0][0].website, linkResult[0][0].publisher, linkResult[0][0].language, linkResult[0][0].genre.split(","), linkResult[0][0].explicit, linkResult[0][0].totalEpisodes);
+            list.addPodcast(temp);
           });
           sql = "select * from lists_episodes_link where listsId = " + list.id + "";
           newResult = await promisePool.query(sql);
@@ -251,7 +220,7 @@ app.post('/api/v1/search', async function (req, res) {
     only_in: 'title,description',
   }).then((response) => {
     res.send({ data: response.data.results });
-  })
+  }).catch(err => { });
 
 });
 
@@ -260,24 +229,23 @@ app.get("/api/v1/lists/get/all", async function (req, res) {
   res.send({ lists: currentUser.episodicLists });
 });
 
-app.post('/api/v1/search', async function(req, res) {
+app.post('/api/v1/search', async function (req, res) {
   let name = req.body.name;
   let apiClient = fetcher.getListenNotesApi();
   apiClient.search({
-      q: name,
-      type: 'podcast',
-      only_in: 'title,description',
+    q: name,
+    type: 'podcast',
+    only_in: 'title,description',
   }).then((response) => {
-    res.send({data : response.data.results});
-  })
+    res.send({ data: response.data.results });
+  }).catch(err => { console.log(err); });
 });
 
-app.post('/api/v1/searchPodcast', async function(req, res) {
+app.post('/api/v1/searchPodcast', async function (req, res) {
   let name = req.body.name
   await fetcher.fetchPodcastIndexPodcast(name).then((response) => {
-    console.log(response);
-    res.send({pod: response.data});
-  });
+    res.send({ pod: response.data });
+  }).catch(err => { console.log(err); });
 });
 
 
