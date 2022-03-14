@@ -114,7 +114,7 @@ class ListsHighlight extends React.Component {
         if (i < 3) {
           tmp.images.push({
             img: podcast.image,
-            title: podcast.title,
+            podcastTitle: podcast.title,
             listView: true,
             id: podcast.listenNotesId
           });

@@ -64,8 +64,12 @@ class EpisodeCard extends React.Component {
     this.size = episodeCardStyles[this.props.cardSize];
     this.img = this.props.img;
     this.id = this.props.id;
-    this.podcastTitle = this.props.podcastTitle || this.props.title;
-    this.episodeTitle = this.props.episodeTitle || this.props.title
+    this.podcastTitle = this.props.podcastTitle;
+    this.episodeTitle = this.props.episodeTitle;
+
+    this.isPodcast = false;
+    if (this.podcastTitle) this.isPodcast = true;
+    if (this.episodeTitle) this.isPodcast = false;
 
     this.uri = `/info/${encodeURIComponent(this.props.podcastTitle)}/${encodeURIComponent(this.props.episodeTitle)}`;
 
@@ -150,7 +154,7 @@ class EpisodeCard extends React.Component {
           
         </Box>
 
-        {!this.state.listView ? (
+        {!this.state.listView && this.isPodcast ? (
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">Add to List</InputLabel>
             <Select
