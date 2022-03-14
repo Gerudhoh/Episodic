@@ -80,7 +80,7 @@ app.post('/api/v1/lists/add/podcast', async function (req, res) {
   let podcast = new podcasts(req.body.title, req.body.description, req.body.rss, req.body.image, req.body.website || "N/A", req.body.publisher || "N/A", req.body.language || "N/A", req.body.genre || [], req.body.explicit || false, req.body.totalEpisodes || 0, null, req.body.podcastId);
   list = new lists(list.name, list.id, list);
 
-  if (list.podcasts.some((element) => element.listenNotesId == podcast.listenNotesId)) {
+  if (list.podcasts.some((element) => element.listenNotesId === podcast.listenNotesId)) {
     res.send({
       success: false
     });
@@ -94,7 +94,7 @@ app.post('/api/v1/lists/add/podcast', async function (req, res) {
       let result = await promisePool.query(sql);
       console.log(result);
       let insertId = result[0].insertId;
-      if (insertId == "0") {
+      if (insertId === "0") {
         let sql = "select id from podcasts where listenNotesId = '" + podcast.listenNotesId + "'";
         let result = await promisePool.query(sql);
         podcast.databaseId = result[0][0].id;
@@ -107,7 +107,7 @@ app.post('/api/v1/lists/add/podcast', async function (req, res) {
       await promisePool.query(linkSql);
       let i = 0;
       currentUser.episodicLists.forEach((element) => {
-        if (element.id == list.id) {
+        if (element.id === list.id) {
           currentUser.episodicLists[i] = list;
         }
         i++;
@@ -137,7 +137,7 @@ app.post('/api/v1/lists/remove/podcast', async function (req, res) {
       console.log(list.podcasts);
       let i = 0;
       currentUser.episodicLists.forEach((element) => {
-        if (element.id == list.id) {
+        if (element.id === list.id) {
           currentUser.episodicLists[i] = list;
         }
         i++;
@@ -242,10 +242,21 @@ app.post('/api/v1/search', async function (req, res) {
 });
 
 app.post('/api/v1/searchPodcast', async function (req, res) {
-  let name = req.body.name
-  await fetcher.fetchPodcastIndexPodcast(name).then((response) => {
-    res.send({ pod: response.data });
-  }).catch(err => { console.log(err); });
+  let podcastName = req.body.name;
+  let apiClient = fetcher.getPodcastIndexApi();
+  let podcast = await apiClient.search(podcastName).then((response) => {
+    let length = response.feeds.length
+    for(let i = 0; i < length; i++) {
+      let podcast = response.feeds[i];
+      if (podcast.title === podcastName) {
+          return podcast;
+      }
+    }
+  });
+  
+  let episodes = await apiClient.episodesByFeedId(podcast.id);
+
+  res.send({ pod: podcast, eps: episodes });
 });
 
 

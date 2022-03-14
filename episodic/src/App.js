@@ -12,7 +12,6 @@ import ProfileListView from "./Components/ProfileListView.js";
 import ExploreListView from "./Components/ExploreListView.js";
 import PodcastInfoPage from "./Components/PodcastInfoPage.js";
 import EpisodeInfoPage from "./Components/EpisodeInfoPage.js";
-import TestPodInfo from "./Components/TestPodInfoPage.js";
 const theme = createTheme({
   palette: {
     primary: {
@@ -95,7 +94,6 @@ function App() {
 
             <Route path="explorelist/:name" element={<ExploreListView />} />
 
-            <Route exact path="info/Getting%20Literate" element={<TestPodInfo />} />
             <Route path="info/:podcastTitle" element={<PodcastInfoPage />} />
             <Route path="info/:podcastTitle/:episodeTitle" element={<EpisodeInfoPage />} />
           </Routes >
