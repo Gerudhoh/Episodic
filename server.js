@@ -54,10 +54,65 @@ function randomString(length, chars) {
 //When you navigate to the root page, it would use the built react-app
 app.use(express.static(path.resolve(__dirname, "./client/build")));
 
-// Handles any requests that don't match the ones above
-app.get('*', (req,res) =>{
-  res.sendFile(path.join(__dirname+'/client/build/index.html'));
+app.post('/api/v1/user/add', async function (req, res) {
+  let token = randomString(32, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
+
+  let result = await users.addUser(req.body.username, req.body.password, token);
+
+  let myResult = {};
+  myResult.username = req.body.username;
+  myResult.token = token;
+
+  currentUser = myResult;
+
+  res.send(myResult);
 });
+
+
+// Check if a username and password is correct and generate a token
+app.post('/api/v1/user/login', async function(req, res) {
+  let username = req.body.username;
+  let password = req.body.password;
+  let token = randomString(32, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
+
+  let result = await users.checkLogin(username, password);
+
+  if(result !== [] && result !== undefined && result.length > 0) {
+    let update_token = await users.updateToken(username, password, token);
+
+    let myResult = {};
+    myResult.username = username;
+    myResult.token = token;
+
+    currentUser = myResult;
+
+    res.send(myResult);
+  }
+});
+
+// Check if a token and username is correct for login
+app.post('/api/v1/user/auth', async function(req, res) {
+  let username = req.body.username;
+  let token = req.body.token;
+
+  let result = await users.checkExistingLogin(username, token);
+  res.send(result);
+});
+
+// Log a user out by resetting their token
+app.post('/api/v1/user/logout', async function(req, res) {
+  let username = req.body.username;
+  let token = req.body.token;
+  
+  let update_token = await users.removeToken(username, token);
+
+  let myResult = {};
+  myResult.username = username;
+  myResult.token = "";
+
+  res.send(myResult);
+});
+
 
 app.post('/api/v1/lists/create', async function (req, res) {
   let name = req.body.name;
