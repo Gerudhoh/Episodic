@@ -13,11 +13,15 @@ module.exports = {
         });
     },
 
-    addUser: function (username, password, token) {
+    addUser: function (username, email, password, token) {
+        console.log(username);
+        console.log(email);
+        console.log(password);
+        console.log(token);
         return new Promise(async (res, rej) => {
-            let sql = 'INSERT INTO users(username, password, token) VALUES(?,?, ?);'
+            let sql = 'INSERT INTO users(username, email, password, token) VALUES(?,?,?,?);'
             
-            const [rows, fields] = await promisePool.query(sql, [username, password, token]);
+            const [rows, fields] = await promisePool.query(sql, [username, email, password, token]);
 
             console.log(`Rows in addUser: ${JSON.stringify(rows)}`);
 
@@ -44,6 +48,18 @@ module.exports = {
             const [rows, fields] = await promisePool.query(sql, [username, token]);
 
             console.log(`Rows in checkExistingLogin: ${JSON.stringify(rows)}`);
+
+            res(rows);
+        });
+    },
+
+    getUserLists: function (id) {
+        return new Promise(async (res, rej) => {
+            let sql = 'SELECT * FROM lists WHERE userId = (?);'
+            
+            const [rows, fields] = await promisePool.query(sql, [id]);
+
+            console.log(`Rows in getUserLists: ${JSON.stringify(rows)}`);
 
             res(rows);
         });

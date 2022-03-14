@@ -3,14 +3,7 @@ import * as React from 'react';
 //Material UI Components
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import Paper from '@mui/material/Paper';
-import Fab from '@mui/material/Paper';
-
-//Material UI Icons and Styling
-import { styled } from '@mui/material/styles';
+import Divider from '@mui/material/Divider';
 
 //Custom Components
 import ActivityCard from "./ActivityCard.js";
@@ -18,42 +11,87 @@ import ActivityCard from "./ActivityCard.js";
 const friends = [
     {
       name: "name1",
-      activityType: "newList",
-      activityInfo: {}
+      activityType: "newReview",
+      activityInfo: {
+        rating: 5,
+        date: "Feb 22 2022",
+        reviewText: "",
+      }
     },
 
     {
       name: "name2",
       activityType: "newList",
-      activityInfo: {}
+      activityInfo: {
+          listName: "list1",
+          images: [
+            {
+              img: '/pepekingprawn.jpg',
+              title: 'Breakfast',
+            },
+            {
+              img: '/pepekingprawn.jpg',
+              title: 'Burger',
+            },
+            {
+              img: '/pepekingprawn.jpg',
+              title: 'Camera',
+            },
+          ]
+        }
     },
     {
       name: "name3",
       activityType: "newList",
-      activityInfo: {}
+      activityInfo: {
+        listName: "list1",
+        images: [
+          {
+            img: '/pepekingprawn.jpg',
+            title: 'Breakfast',
+          },
+          {
+            img: '/pepekingprawn.jpg',
+            title: 'Burger',
+          },
+          {
+            img: '/pepekingprawn.jpg',
+            title: 'Camera',
+          },
+        ]
+      }
     },
     {
       name: "name4",
       activityType: "listMove",
-      activityInfo: {}
+      activityInfo: {
+        listName: "list1",
+        images: [
+          {
+            img: '/pepekingprawn.jpg',
+            title: 'Breakfast',
+          },
+          {
+            img: '/pepekingprawn.jpg',
+            title: 'Burger',
+          },
+          {
+            img: '/pepekingprawn.jpg',
+            title: 'Camera',
+          },
+        ]
+      }
     },
 ]
 
-//Styling
-const Item = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-}));
 
 
-export default function FriendActivity() {
+export default function FriendActivity(props) {
   return (
-    <Box container>
-      <Typography>Friend Activity</Typography>
-      <Stack spacing={2}>
+    <Box>
+      <Stack spacing={2} divider={<Divider orientation="horizontal" flexItem />}>
       {friends.map((item) => (
-        <ActivityCard key={item.name} activityType={item.activityType} userName={item.name}/>
+        <ActivityCard key={item.name} activityInfo={item.activityInfo} activityType={item.activityType} userName={item.name} activitySize={props.activitySize}/>
       ))}
       </Stack>
 

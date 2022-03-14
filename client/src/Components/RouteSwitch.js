@@ -1,6 +1,5 @@
 import React from 'react';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import history from './history';
 
 //Logged out routes
 import Login from "./LoginForm";
@@ -8,6 +7,9 @@ import SignUp from "./SignUpForm";
 
 //Logged in routes
 import HomePage from './HomePage';
+import ProfilePage from './ProfilePage';
+import SearchPage from './SearchPage';
+import TestPodInfoPage from './TestPodInfoPage';
 
 class RouteSwitch extends React.Component {
   constructor(props) {
@@ -18,10 +20,15 @@ class RouteSwitch extends React.Component {
     };
     this.changeAuth = this.changeAuth.bind(this);
     this.changeRemoveAuth = this.changeRemoveAuth.bind(this);
+    this.checkAuthData = this.checkAuthData.bind(this);
   }
 
-  changeAuth() {
-    this.props.updateAuth();
+  checkAuthData() {
+    this.props.checkAuthData();
+  }
+
+  async changeAuth() {
+    await this.props.updateAuth();
   }
 
   changeRemoveAuth() {
@@ -31,16 +38,17 @@ class RouteSwitch extends React.Component {
   render() {
     return (
       <div>
-        <BrowserRouter history={history}>
             <Routes >
                 {/* Logged Out routes */}
-                <Route exact path="/login" element={<Login changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
-                <Route exact path="/signup" element={<SignUp changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
+                <Route exact path="/login" element={<Login changeAuth={this.changeAuth}  checkAuthData={this.checkAuthData}  changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
+                <Route exact path="/signup" element={<SignUp changeAuth={this.changeAuth} checkAuthData={this.checkAuthData}  changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
 
                 {/* Logged In routes */}
                 <Route exact path="/" element={<HomePage changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
+                <Route exact path="/searchresults" element={<SearchPage changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
+                <Route exact path="/profile" element={<ProfilePage changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent" auth={this.props.auth} username={this.props.username}/>}/>
+                <Route exact path="/info/Getting%20Literate" element={<TestPodInfoPage changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
             </Routes>
-         </BrowserRouter>
       </div>
     );
   }

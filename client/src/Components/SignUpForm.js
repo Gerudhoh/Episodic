@@ -25,11 +25,13 @@ class SignUpForm extends React.Component {
 
     this.state = {
       username: "",
+      email: "",
       password: "",
       errorLabel: "",
     }
 
     this.updateUsername = this.updateUsername.bind(this);
+    this.updateEmail = this.updateEmail.bind(this);
     this.updatePassword = this.updatePassword.bind(this);
     this.submitLogin = this.submitLogin.bind(this);
     this.checkAuthData = this.checkAuthData.bind(this);
@@ -42,18 +44,7 @@ class SignUpForm extends React.Component {
   }
 
   async checkAuthData() {
-    let authData = getCookieData();
-
-    if(authData.username && authData.token) { 
-      let authCheck = await checkAuth(authData.username, authData.token);
-
-      if(authCheck.length > 0) {
-        await history.push("/");
-        window.scrollTo(0, 0);
-        window.location.reload();
-        this.props.changeAuth();
-      }
-    }
+    this.props.checkAuthData();
   }
 
   async login() {
@@ -66,13 +57,17 @@ class SignUpForm extends React.Component {
     this.setState({username: e.target.value, errorLabel: ""})
   }
 
+  updateEmail(e) {
+    this.setState({email: e.target.value, errorLabel: ""})
+  }
+
   updatePassword(e) {
     this.setState({password: e.target.value, errorLabel: ""})
   }
 
   async submitLogin() {
     this.setState({ errorLabel: "" })
-    let response = await signUpUser(this.state.username, this.state.password);
+    let response = await signUpUser(this.state.username, this.state.email, this.state.password);
 
     if(response.err === undefined) {
       var date = new Date();
@@ -80,16 +75,14 @@ class SignUpForm extends React.Component {
       var expires = date.toGMTString();
 
       document.cookie = `username=${response.username}; expires=${expires};`;
+      document.cookie = `email=${response.email}; expires=${expires};`;
+      document.cookie = `id=${response.id}; expires=${expires};`;
       document.cookie = `token=${response.token}; expires=${expires};`;
 
-      this.props.changeAuth();
-
-      await history.push("/");
-      window.scrollTo(0, 0);
-      window.location.reload();
+      await this.props.changeAuth();
     }
     else if(response.err === "no username found") {
-      this.setState({ errorLabel: "Username/password is incorrect." })
+      this.setState({ errorLabel: "Username/email/password is incorrect." })
     }
     else {
       this.setState({ errorLabel: "An unexpected error occured." })
@@ -109,6 +102,14 @@ class SignUpForm extends React.Component {
               >
                 Sign Up
               </Typography>
+              <p >Email:</p>
+                <Input
+                variant="outlined"
+                id="email"
+                type="text"
+                onChange={this.updateEmail}
+                value={this.state.email}
+                />
               <p >Username:</p>
                 <Input
                 variant="outlined"

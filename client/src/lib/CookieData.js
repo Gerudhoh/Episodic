@@ -19,9 +19,10 @@ export async function checkAuth(username, token)  {
         return data;
     }
 
-    export async function signUpUser(username, password, token)  {
+    export async function signUpUser(username, email, password, token)  {
         let myJson = {};
         myJson.username = username;
+        myJson.email = email;
         myJson.password = password;
         myJson.token = token;
         let data = {};

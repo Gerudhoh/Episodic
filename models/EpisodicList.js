@@ -40,10 +40,10 @@ class EpisodicList {
         });
     }
 
-    removePodcast(podcast) {
+    removePodcast(podcastId) {
         let found = false;
         this.podcasts.forEach((element) => {
-            if (element.id == podcast.id) {
+            if (element.databaseId == podcastId) {
                 this.podcasts.pop(element);
                 found = true;
             }
@@ -51,7 +51,6 @@ class EpisodicList {
 
         if (found == false) return;
 
-        let podcastId = podcast.id;
         let sql = "delete from lists_podcasts_link where listsId = " + this.id + " and podcastsId = " + podcastId + ";"
 
         new Promise(async (res, rej) => {

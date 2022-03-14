@@ -42,18 +42,7 @@ class LoginForm extends React.Component {
   }
 
   async checkAuthData() {
-    let authData = getCookieData();
-
-    if(authData.username && authData.token) { 
-      let authCheck = await checkAuth(authData.username, authData.token);
-
-      if(authCheck.length > 0) {
-        await history.push("/");
-        window.scrollTo(0, 0);
-        window.location.reload();
-        this.props.changeAuth();
-      }
-    }
+    this.props.checkAuthData();
   }
 
   async signUp() {
@@ -80,13 +69,10 @@ class LoginForm extends React.Component {
       var expires = date.toGMTString();
 
       document.cookie = `username=${response.username}; expires=${expires};`;
+      document.cookie = `email=${response.email}; expires=${expires};`;
       document.cookie = `token=${response.token}; expires=${expires};`;
 
-      this.props.changeAuth();
-
-      await history.push("/");
-      window.scrollTo(0, 0);
-      window.location.reload();
+      await this.props.changeAuth();
     }
     else if(response.err === "no username found") {
       this.setState({ errorLabel: "Username/password is incorrect." })
