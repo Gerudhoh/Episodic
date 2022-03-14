@@ -22,8 +22,7 @@ import { styled } from '@mui/material/styles';
 const pages = [
   {display:'Home', to:'/'},
   {display:'Search', to:'/searchresults'},
-  {display:'Profile', to:'/profile'},
-  {display:'TestPodInfo', to:'/info/Getting%20Literate'}
+  {display:'Profile', to:'/profile'}
 ];
 const settings = ['Profile', 'Logout'];
 
