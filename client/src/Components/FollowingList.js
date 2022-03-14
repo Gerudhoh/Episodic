@@ -2,6 +2,7 @@ import * as React from 'react';
 
 //Material UI Components
 import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 //Material UI Styles
 
@@ -29,7 +30,7 @@ const following = [
     },
 ];
 
-export default function FollowingList(props) {
+export default function FollowingList() {
   return (
     <Box container>
       <Typography>Following</Typography>

@@ -1,19 +1,17 @@
 class Podcast {
-
-    constructor(title,
+    
+    constructor(title, 
         id,
          description,
-         rss,
-         image,
-         website,
-         publisher,
-         language,
-         genre,
-         explicit,
+         rss,  
+         image,  
+         website,  
+         publisher,  
+         language,  
+         genre,  
+         explicit, 
          totalEpisodes,
-         platforms,
-         listenNotesId,
-         databaseId) { 
+         platforms) { 
             this.title = title;
             this.description = description;
             this.rss = rss;
@@ -27,9 +25,34 @@ class Podcast {
             this.episodes = [];
             this.totalEpisodes = totalEpisodes;
             this.platforms = platforms;
-            this.listenNotesId = listenNotesId;
-            this.databaseId = databaseId;
+            this.id = id;
       }
+
+    get podcastTitle () { return this.title; }
+
+    /*get description () { return this.description; }
+
+    get rss () { return this.rss; }
+
+    get image () { return this.image; }
+
+    get website () { return this.website; }
+
+    get publisher () { return this.publisher; }
+
+    get language () { return this.language; }
+
+    get genre () { return this.genre; }
+
+    get explicit () { return this.explicit; }
+
+    get episodes () { return this.episodes; }
+
+    get totalEpisodes () { return this.totalEpisodes; }
+
+    get rating () { return this.rating; }
+
+    get platforms () { return this.platforms; }*/
 
     updateRating(newRating) {
         this.rating = newRating;
@@ -41,10 +64,6 @@ class Podcast {
 
     updatePlatforms(platforms) {
         this.platforms = platforms;
-    }
-
-    stringify() {
-        return this.title + this.description + this.episodes + this.explicit + this.image + this.website + this.publisher;
     }
 }
 

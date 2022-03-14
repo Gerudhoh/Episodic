@@ -1,5 +1,4 @@
 const promisePool = require('../repositories/mysql');
-const EpisodicList = require('./EpisodicList.js');
 
 module.exports = {
     initUsersTable: async function () {
@@ -69,18 +68,6 @@ module.exports = {
             const [rows, fields] = await promisePool.query(sql, ["", username, token]);
 
             console.log(`Rows in removeToken: ${JSON.stringify(rows)}`);
-
-            res(rows);
-        });
-    },
-
-    getLists: function (id) {
-        return new Promise(async (res, rej) => {
-            let sql = 'SELECT * FROM lists WHERE userId = (?);'
-            
-            const [rows, fields] = await promisePool.query(sql, [id]);
-
-            console.log(`Rows in getLists: ${JSON.stringify(rows)}`);
 
             res(rows);
         });

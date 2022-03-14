@@ -1,6 +1,5 @@
 import React from 'react';
-import { Route, Routes} from "react-router-dom";
-import {BrowserRouter as Router} from "react-router-dom";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
 import history from './history';
 
 //Logged out routes
@@ -9,17 +8,13 @@ import SignUp from "./SignUpForm";
 
 //Logged in routes
 import HomePage from './HomePage';
-import SearchPage from './SearchPage';
-import Profile from "./ProfilePage";
-import TestPodInfo from "./TestPodInfoPage";
-
 
 class RouteSwitch extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      auth: props.auth,
+      auth: props.auth
     };
     this.changeAuth = this.changeAuth.bind(this);
     this.changeRemoveAuth = this.changeRemoveAuth.bind(this);
@@ -35,7 +30,8 @@ class RouteSwitch extends React.Component {
 
   render() {
     return (
-      <Router>
+      <div>
+        <BrowserRouter history={history}>
             <Routes >
                 {/* Logged Out routes */}
                 <Route exact path="/login" element={<Login changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
@@ -43,11 +39,9 @@ class RouteSwitch extends React.Component {
 
                 {/* Logged In routes */}
                 <Route exact path="/" element={<HomePage changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
-                <Route exact path="/searchresults" element={<SearchPage changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
-                <Route exact path="/profile" element={<Profile changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
-                <Route exact path="//info/Getting%20Literate" element={<TestPodInfo changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
             </Routes>
-      </Router>
+         </BrowserRouter>
+      </div>
     );
   }
 }

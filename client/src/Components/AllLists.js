@@ -1,34 +1,30 @@
 import * as React from 'react';
-import { Link, Router } from "react-router-dom";
+
 //Material UI Components
 import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Alert from '@mui/material/Alert';
-import TextField from '@mui/material/TextField';
+
+import ListsHighlight from "./ListsHighlight.js"
 
 class AllLists extends React.Component {
 
   constructor(props) {
     super(props);
-    let success = JSON.parse(localStorage.getItem('showSuccess')) || false;
 
     this.state = {
       listName: "",
       list: {},
       allLists: [],
-      showSuccess: success,
+      showSuccess: JSON.parse(localStorage.getItem('showSuccess')) || false,
       showError: false
     };
-    
   }
 
   componentDidMount() {
     this.getUserLists();
-    localStorage.setItem( 'showSuccess', false );
   }
 
   createList = async e => {
@@ -60,41 +56,37 @@ class AllLists extends React.Component {
     let listNames = [];
     body.lists.map((list) => listNames.push({ name: list.name }));
     this.setState({ allLists: listNames });
-    console.log(this.state.allLists);
   };
   render() {
     return (
-      <Router>
       <Box container>
-      {this.state.showError ? (<Alert severity="error">
-        Error: Could not create list.
-      </Alert>) : (null)}
-      {this.state.showSuccess ? (<React.Fragment></React.Fragment>) : (null)}
-        <Typography variant="h4" ><Link to="/userlist/all">Lists</Link></Typography>
+        {this.state.showError ? (<Alert severity="error">
+          Error: Could not create list.
+        </Alert>) : (null)}
+
+        {this.state.showSuccess ? (<Alert severity="success">
+          Successfully created list!
+        </Alert>) : (null)}
+
+        <Typography>Lists</Typography>
         <List>
           {this.state.allLists.map((item) => (
-            <ListItem key={item.name} id={item.id}>
-                <Link className="listLink" to={`/userlist/${item.name}`}>
-                  {item.name}
-                </Link>
-            </ListItem>
+            <ListItem key={item.name}>{item.name}</ListItem>
           ))}
         </List>
-        <Box component="form" onSubmit={this.createList}>
-          <Stack direction="row" spacing={2} justifyContent="flex-start">
-            <TextField
-              required
-              id="new-list-input"
-              type="text"
-              value={this.state.listName}
-              label="New List Name"
-              onChange={e => this.setState({ listName: e.target.value })}
-            />
-            <Button variant="contained" type="submit">Create</Button>
-          </Stack>
-        </Box>
+
+        <form onSubmit={this.createList}>
+          <p>
+            <strong>Create New List:</strong>
+          </p>
+          <input
+            type="text"
+            value={this.state.listName}
+            onChange={e => this.setState({ listName: e.target.value })}
+          />
+          <button type="submit">Submit</button>
+        </form>
       </Box>
-      </Router>
     );
   }
 }

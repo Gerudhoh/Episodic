@@ -30,13 +30,13 @@ const friends = [
     },
 ]
 
-export default function FriendList(props) {
+export default function FriendList() {
   return (
     <Box container>
       <Typography>Friends</Typography>
       <Stack>
       {friends.map((item) => (
-        <UserInfo userName={item.name} avatarSize={props.userSize} fontSize={props.fontSize}/>
+        <UserInfo userName={item.name}/>
       ))}
       </Stack>
     </Box>
