@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useNavigate  } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -17,10 +17,15 @@ import InputBase from '@mui/material/InputBase';
 
 
 //Material UI Icons and Styling
-import { styled, alpha } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 
-const pages = ['Home', 'Profile'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const pages = [
+  {display:'Home', to:'/'},
+  {display:'Search', to:'/searchresults'},
+  {display:'Profile', to:'/profile'},
+  {display:'TestPodInfo', to:'/info/Getting%20Literate'}
+];
+const settings = ['Profile', 'Logout'];
 
 const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -44,9 +49,9 @@ const ResponsiveAppBar = () => {
   const Search = styled('div')(({ theme }) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
+    backgroundColor: 'rgba(215, 192, 173, 0.25)',
     '&:hover': {
-      backgroundColor: alpha(theme.palette.common.white, 0.25),
+      backgroundColor: 'rgba(215, 192, 173, 0.25)',
     },
     marginLeft: 0,
     width: '100%',
@@ -54,8 +59,9 @@ const ResponsiveAppBar = () => {
       marginLeft: theme.spacing(1),
       width: 'auto',
     },
+    color: '#d7c0ad'
   }));
-  
+
   const SearchIconWrapper = styled('div')(({ theme }) => ({
     padding: theme.spacing(0, 2),
     height: '100%',
@@ -64,8 +70,9 @@ const ResponsiveAppBar = () => {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    color: '#d7c0ad'
   }));
-  
+
   const StyledInputBase = styled(InputBase)(({ theme }) => ({
       color: 'inherit',
       '& .MuiInputBase-input': {
@@ -85,18 +92,18 @@ const ResponsiveAppBar = () => {
 
     const navigate = useNavigate();
 
-    const fetchData = async (data) => {  
+    const fetchData = async (data) => {
       navigate('/searchresults', { state: data })
     };
-  
-  
+
+
 
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
-            variant="h6"
+            variant="h4"
             noWrap
             component="div"
             sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
@@ -134,45 +141,48 @@ const ResponsiveAppBar = () => {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+                <MenuItem component={Link} to={page.to} key={page.display} replace onClick={handleCloseNavMenu}>
+                  <Typography textAlign="center">{page.display}</Typography>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
           <Typography
-            variant="h6"
+            variant="h4"
             noWrap
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
           >
-            LOGO
+            EPISODIC
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
-              <Button
-                key={page}
+              <Button component={Link} to={page.to} replace
+                key={page.display}
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
-                {page}
+                {page.display}
               </Button>
             ))}
           </Box>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter') {
-                  fetchData(event.target.value)
-                }
-              }}
-            />
-        </Search>
+
+          <Box sx={{padding:'10px'}}>
+            <Search>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder="Search…"
+                inputProps={{ 'aria-label': 'search' }}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    fetchData(event.target.value)
+                  }
+                }}
+              />
+          </Search>
+        </Box>
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">

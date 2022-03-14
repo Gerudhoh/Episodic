@@ -25,7 +25,6 @@ class Episode {
         stringify() {
             return this.title + this.description + this.explicit + this.audioLengthSeconds + this.podcast.title
         }
-        
 }
 
 module.exports = Episode;

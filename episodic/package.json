@@ -40,12 +40,14 @@
     "react-dom": ">=17.0.2"
   },
   "scripts": {
-    "start": "npm run dev",
+    "start": "npm run server",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "server": "node src/server.js",
     "frontend": "set PORT=3000 && react-scripts start",
+    "frontend-mac": "PORT=3000 react-scripts start",
+    "dev-mac": "concurrently \"npm run frontend-mac\" \"npm run server\"",
     "dev": "concurrently \"npm run frontend\" \"npm run server\""
   },
   "eslintConfig": {
@@ -65,6 +67,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "proxy": "http://localhost:5000"
+  }
 }

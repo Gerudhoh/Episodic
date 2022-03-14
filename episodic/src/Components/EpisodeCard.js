@@ -1,5 +1,6 @@
 //Packages
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 
 //Material UI Components
 import IconButton from '@mui/material/IconButton';
@@ -9,13 +10,30 @@ import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import Typography from '@mui/material/Typography';
 
-//Material UI Icons and Styling
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import AddIcon from '@mui/icons-material/Add';
-import StarIcon from '@mui/icons-material/Star';
+import { styled } from '@mui/material/styles';
+//import CardActionButtons from './CardActionButtons.js';
+
 
 //Styling
+
+const EpisodeCardStyles = styled(Box)(({ theme }) => ({
+  position: 'absolute',
+  top: 0,
+  backgroundColor: '#533745',
+  opacity: 0,
+  color: '#D7C0AD',
+  width: '100%',
+  height: '100%',
+  textAlign: 'center',
+  '&:hover': {
+    opacity: 0.6,
+  }
+}));
+
 const episodeCardStyles = {
   small:
   {
@@ -25,7 +43,7 @@ const episodeCardStyles = {
     iconSize: { height: '15px', width: '15px' }
   },
   medium: {
-    minSize: 160,
+    minSize: 120,
     buttonSize: "inherit",
     fontSize: 16,
     iconSize: { height: '25px', width: '25px' }
@@ -42,11 +60,14 @@ class EpisodeCard extends React.Component {
 
   constructor(props) {
     super(props);
-    this.size = this.props.listSize;
-    this.imgSize = this.size?.minSize - 20 || 100;
+
+    this.size = episodeCardStyles[this.props.cardSize];
     this.img = this.props.img;
     this.id = this.props.id;
-    this.title = this.props.title;
+    this.podcastTitle = this.props.podcastTitle || this.props.title;
+    this.episodeTitle = this.props.episodeTitle || this.props.title
+
+    this.uri = `/info/${encodeURIComponent(this.props.podcastTitle)}/${encodeURIComponent(this.props.episodeTitle)}`;
 
     this.state = {
       listView: this.props.listView || false,
@@ -67,30 +88,30 @@ class EpisodeCard extends React.Component {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ list: this.state.lists[e.target.value], podcastId: this.id}),
+      body: JSON.stringify({ list: this.state.lists[e.target.value], podcastId: this.id }),
     });
     const body = await response.json();
-    this.setState({showSuccess : body.success});
+    this.setState({ showSuccess: body.success });
     window.location.reload(false);
 
   };
-  
+
   getUserLists = async e => {
     //e.preventDefault();
     const response = await fetch("/api/v1/lists/get/all");
     const body = await response.json();
     let listNames = [];
-    body.lists.map((list, index) => 
+    body.lists.map((list, index) =>
       listNames.push((<MenuItem key={index} value={index}>{list.name}</MenuItem>))
     );
     this.setState({ listMenuItems: listNames });
-    this.setState({ lists:  body.lists });
+    this.setState({ lists: body.lists });
   };
 
   render() {
     return (
 
-      <Stack spacing={1}>
+      /*<Stack spacing={1}>
         <img
           src={`${this.img}?w=${this.imgSize}&h=${this.imgSize}&fit=crop&auto=format`}
           alt={this.title}
@@ -100,22 +121,50 @@ class EpisodeCard extends React.Component {
           Successfully added to list!
         </Alert>) : (null)}
         {!this.state.listView ? (
-        <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">Add to List</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            /*value={this.state.selectedList}*/
-            label="Age"
-            onChange={this.addPodcastToList}
-          >
-            {this.state.listMenuItems}
-          </Select>
-        </FormControl>
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Add to List</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              label="Age"
+              onChange={this.addPodcastToList}
+            >
+              {this.state.listMenuItems}
+            </Select>
+          </FormControl>
         ) : (null)}
-      </Stack>
+      </Stack>*/
+      <Card className="EpisodeCard" >
+        <Box sx={{ position: 'relative' }} component={Link} to={this.uri} replace>
+          < img width={this.size.minSize} height="auto"
+            src={this.img}
+            alt={`${this.episodeTitle} ${this.podcastTitle}`}
+            loading="lazy"
+          />
+          <EpisodeCardStyles>
+            <Typography variant="p" fontSize={this.size.fontSize}>{this.episodeTitle}</Typography>
+            <br />
+            <Typography variant="p" fontSize={this.size.fontSize}>{this.podcastTitle}</Typography>
+            
+          </EpisodeCardStyles>
+          
+        </Box>
+
+        {!this.state.listView ? (
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Add to List</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              label="Age"
+              onChange={this.addPodcastToList}
+            >
+              {this.state.listMenuItems}
+            </Select>
+          </FormControl>
+        ) : (null)}
+      </Card>
     );
   }
 }
-
 export default EpisodeCard;

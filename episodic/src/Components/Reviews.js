@@ -4,7 +4,6 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
-import Typography from '@mui/material/Typography';
 
 //Custom Components
 import ActivityCard from "./ActivityCard.js";
@@ -49,17 +48,15 @@ const reviews = [
     },
 ]
 
-export default function UserReviews() {
+export default function Reviews() {
 
   return (
-    <Box container sx={{maxWidth:"90%"}}>
-      <Typography>Friend Activity</Typography>
-      <Stack flexWrap="wrap" spacing={2} divider={<Divider orientation="horizontal" flexItem />} sx={{maxWidth:"100%"}}>
+    <Box container>
+      <Stack spacing={2} divider={<Divider orientation="horizontal" flexItem />}>
       {reviews.map((item) => (
         <ActivityCard key={item.name} activityType={item.activityType} userName={item.name} activityInfo={item.activityInfo} activitySize="large"/>
       ))}
       </Stack>
-
     </Box>
   );
 }

@@ -14,16 +14,16 @@ function CriticAchievement(){
   return(
     <Stack direction="row" spacing={2}>
       <RateReviewIcon aria-label="Rate Review"/>
-      <Typography>Critic</Typography>
+      <Typography variant="p">Critic</Typography>
     </Stack>
   );
 }
 
-function SocialButterFlyAchievement(){
+function SocialButterflyAchievement(){
   return(
     <Stack direction="row" spacing={2}>
       <GroupsIcon aria-label="Groups"/>
-      <Typography>Social Butterfly</Typography>
+      <Typography variant="p">Social Butterfly</Typography>
     </Stack>
   );
 }
@@ -32,7 +32,7 @@ function OrganizerAchievement(){
   return(
     <Stack direction="row" spacing={2}>
       <FactCheckIcon aria-label="Fact Check" />
-      <Typography>Organizer</Typography>
+      <Typography variant="p">Organizer</Typography>
     </Stack>
   );
 }
@@ -41,7 +41,7 @@ function CloserAchievement(){
   return(
     <Stack direction="row" spacing={2}>
       <CheckCircleIcon aria-label="Check Circle" />
-      <Typography>Closer</Typography>
+      <Typography variant="p">Closer</Typography>
     </Stack>
   );
 }
@@ -49,21 +49,22 @@ function CloserAchievement(){
 
 
 export default function Achievement(props){
+  let reactFragment = <React.Fragment />;
   switch (props.achievement) {
     case 'closer':
-      return(CloserAchievement())
+      reactFragment = CloserAchievement();
       break;
     case 'socialbutterfly':
-      return(SocialButterFlyAchievement())
+      reactFragment = SocialButterflyAchievement();
       break;
     case 'organizer':
-      return(OrganizerAchievement())
+      reactFragment = OrganizerAchievement();
       break;
     case 'critic':
-      return(CriticAchievement())
+      reactFragment = CriticAchievement();
       break;
+    default :
+      console.log('not a valid achievement type!');
   }
-  return(
-    <React.Fragment />
-  );
+  return(reactFragment);
 }

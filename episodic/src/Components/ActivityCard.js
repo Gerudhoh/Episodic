@@ -13,31 +13,25 @@ import UserInfo from "./UserInfo.js";
 import ReviewPreview from "./ReviewPreview.js";
 import EpisodeCardList from "./EpisodeCardList.js";
 
-const item ={
-  img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-  title: 'Breakfast'
-}
-
 //Styling
 const activityCardStyles ={
   small:
   {
     avSize: "small",
     buttonSize:"small",
-    fontSize: 12
+    fontSize: '1em'
   },
   medium:{
     avSize: "medium",
     buttonSize:"inherit",
-    fontSize: 14
+    fontSize: '1em'
   },
   large:{
     avSize: "large",
     buttonSize:"large",
-    fontSize: 16,
+    fontSize: '1em',
   }
 };
-
 
 
 function NewListPreview(props){
@@ -61,17 +55,15 @@ function MoveListPreview(props){
 
 export default function ActivityCard(props){
   const size = activityCardStyles[props.activitySize];
-  console.log(props.activityInfo)
-  const activityType = props.activityType;
 
   const ActivityPreview = (activityType) => {
-    if (activityType === 'newList'){
+    if (props.activityType === 'newList'){
       return (<NewListPreview fontSize={size.fontSize} listName={props.activityInfo.listName} images={props.activityInfo.images} />);
     }
-    else if (activityType === 'listMove') {
+    else if (props.activityType === 'listMove') {
       return (<MoveListPreview fontSize={size.fontSize} listName={props.activityInfo.listName} images={props.activityInfo.images} />);
     }
-    else if (activityType === 'newReview') {
+    else if (props.activityType === 'newReview') {
       return (<ReviewPreview
         reviewText={props.activityInfo.reviewText}
         date={props.activityInfo.date}

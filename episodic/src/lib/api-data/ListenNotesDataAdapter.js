@@ -15,21 +15,21 @@ class ListNotesDataAdapter extends DataAdapter {
         return podcasts;
     }
 
-    adaptPodcast(jsonInformation, id) {
+    adaptPodcast(jsonInformation) {
         // Adapts podcast information returned from a ListNotes API query into a Podcast object
          return new Podcast(
-            jsonInformation.title, 
-            jsonInformation.description,
+            jsonInformation.title_original, 
+            jsonInformation.description_original,
             "N/A",  
             jsonInformation.image,  
             jsonInformation.website,  
-            jsonInformation.publisher,  
+            jsonInformation.publisher_original,  
             "N/A",  
             "Genre needs to be its own user story",  
             jsonInformation.explicit_content, 
             jsonInformation.total_episodes,
             "N/A",
-            id
+            jsonInformation.id
         )
     }
 

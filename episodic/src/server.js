@@ -19,15 +19,17 @@ const episodes = require("./lib/Episode")
 const DataFetcher = require("./lib/api-data/DataFetcher.js");
 const ListenNotesDataAdapter = require("./lib/api-data/ListenNotesDataAdapter.js");
 
+
 // Expose the port specified in .env or port 5000
 const port = process.env.PORT || 5000;
 
 const fetcher = new DataFetcher(
-  process.env.SPOTIFY_CLIENT_ID,
-  process.env.SPOTIFY_CLIENT_SECRET,
-  process.env.LISTEN_NOTES_KEY,
-  process.env.PODCAST_INDEX_KEY,
-  process.env.PODCAST_INDEX_SECRET)
+    process.env.SPOTIFY_CLIENT_ID,
+    process.env.SPOTIFY_CLIENT_SECRET,
+    process.env.LISTEN_NOTES_KEY,
+    process.env.PODCAST_INDEX_KEY,
+    process.env.PODCAST_INDEX_SECRET)
+
 
 var bodyParser = require('body-parser');
 const User = require('./lib/User');
@@ -48,7 +50,7 @@ let currentUser = new User(null, 1);
 app.post('/api/v1/lists/create', async function (req, res) {
   let name = req.body.name;
 
-  let userId = 1; //Not sure where to find current user atm, do we need to pass this? 
+  let userId = 1; //Not sure where to find current user atm, do we need to pass this?
   let sql = "insert into lists (name, userId) values ('" + name + "', " + userId + ")";
 
   let list = null;
@@ -257,6 +259,27 @@ app.post('/api/v1/search', async function (req, res) {
 app.get("/api/v1/lists/get/all", async function (req, res) {
   res.send({ lists: currentUser.episodicLists });
 });
+
+app.post('/api/v1/search', async function(req, res) {
+  let name = req.body.name;
+  let apiClient = fetcher.getListenNotesApi();
+  apiClient.search({
+      q: name,
+      type: 'podcast',
+      only_in: 'title,description',
+  }).then((response) => {
+    res.send({data : response.data.results});
+  })
+});
+
+app.post('/api/v1/searchPodcast', async function(req, res) {
+  let name = req.body.name
+  await fetcher.fetchPodcastIndexPodcast(name).then((response) => {
+    console.log(response);
+    res.send({pod: response.data});
+  });
+});
+
 
 // Listen to the specified port for api requests
 app.listen(port);

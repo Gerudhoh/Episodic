@@ -1,7 +1,7 @@
 import * as React from 'react';
-
+import MediaQuery  from 'react-responsive';
+import {Link} from 'react-router-dom';
 //Material UI Components
-import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
@@ -15,7 +15,7 @@ import { styled } from '@mui/material/styles';
 //Custom Components
 import ListsHighlight from "./ListsHighlight.js";
 import UserInfo from "./UserInfo.js";
-import UserReviews from "./UserReviews.js"
+import Reviews from "./Reviews.js"
 import Achievement from "./Achievement.js"
 
 //Styling
@@ -92,7 +92,7 @@ function UserProfileButton(props){
 function FriendList(props) {
   return (
     <Box container>
-      <Typography>Friends</Typography>
+      <Typography variant="h5">Friends</Typography>
       <Stack spacing={2}>
       {friends.map((item) => (
         <UserInfo userName={item.name} avatarSize={props.userSize} fontSize={props.fontSize}/>
@@ -105,7 +105,7 @@ function FriendList(props) {
 function FollowingList(props) {
   return (
     <Box container>
-      <Typography>Following</Typography>
+      <Typography variant="h5">Following</Typography>
       <Stack spacing={2}>
       {following.map((item) => (
         <UserInfo userName={item.name} avatarSize={props.userSize} fontSize={props.fontSize}/>
@@ -121,13 +121,13 @@ function UserDescription(props){
     <Stack direction="row" spacing={2} justifyContent="flex-start">
       <Avatar sx={{width: 80, height: 80}} alt={props.userName} src={props.profilePic}/>
       <Stack justifyContent="flex-start" alignItems="flex-start">
-        <Typography> {props.userName} </Typography>
+        <Typography variant="h6" > {props.userName} </Typography>
         <Stack direction="row" spacing={1} justifyContent="space-evenly">
-          <Typography>{props.numPodsListened} Podcasts </Typography>
-          <Typography>{props.numEpisListened} Episodes </Typography>
-          <Typography>{props.numLists} Lists </Typography>
+          <Typography variant="p" textAlign="left">{props.numPodsListened} Podcasts </Typography>
+          <Typography variant="p" textAlign="left">{props.numEpisListened} Episodes </Typography>
+          <Typography variant="p" textAlign="left">{props.numLists} Lists </Typography>
         </Stack>
-        <Typography>{props.numReviews} Reviews ({props.ratingAvg} average)</Typography>
+        <Typography variant="p" textAlign="left">{props.numReviews} Reviews ({props.ratingAvg} average)</Typography>
       </Stack>
       <UserProfileButton />
     </Stack>
@@ -137,7 +137,7 @@ function UserDescription(props){
 function Achievements(){
   return(
     <React.Fragment>
-      <Typography>Achievements</Typography>
+      <Typography variant="h5">Achievements</Typography>
       <Stack direction="row" spacing={2} alignItems="center" justifyContent="space-evenly">
         <Stack spacing={2} alignItems="flex-start">
           <Achievement achievement={achievements[0]} />
@@ -154,9 +154,9 @@ function Achievements(){
 
 function profileNormal(){
   return(
-    <Stack flexWrap="wrap" direction="row" spacing={2} padding="20px" alignItems="flex-start" justifyContent="space-evenly">
-      <Stack spacing={2}>
-        <Item><UserDescription
+    <Stack direction="row" spacing={2} padding="10px" alignItems="flex-start" justifyContent="space-evenly">
+      <Stack spacing={2} sx={{maxWidth:"30%"}}>
+        <Item ><UserDescription
         userName={userInfo.name}
         profilePic={userInfo.profilePic}
         numPodsListened={userInfo.numPodsListened}
@@ -171,14 +171,56 @@ function profileNormal(){
           <Item sx={{width:"50%"}}><FriendList userSize="small" fontSize={20}/></Item>
         </Stack>
       </Stack>
-      <Item sx={{maxWidth:"35%"}}><UserReviews /></Item>
-      <ListsHighlight listSize="medium"/>
+      <Item sx={{maxWidth:"30%"}}>
+        <Typography variant="h4">Reviews</Typography>
+        <Reviews />
+      </Item>
+      <Item sx={{maxWidth:"40%"}}>
+        <Typography variant="h4" component={Link} to="/listview/all">Lists</Typography>
+        <ListsHighlight listSize="medium"/>
+      </Item>
     </Stack>
   );
-}
+};
+
+function profileStack(){
+  return(
+    <Stack direction="row" spacing={2} padding="10px" alignItems="flex-start" justifyContent="center">
+      <Stack spacing={2} sx={{maxWidth:"50%"}}>
+        <Item ><UserDescription
+        userName={userInfo.name}
+        profilePic={userInfo.profilePic}
+        numPodsListened={userInfo.numPodsListened}
+        numEpisListened={userInfo.numEpisListened}
+        numLists={userInfo.numLists}
+        numReviews={userInfo.numReviews}
+        ratingAvg={userInfo.ratingAvg}
+        /></Item>
+        <Item>{Achievements()}</Item>
+        <Stack direction="row" spacing={2} justifyContent="center">
+          <Item sx={{width:"50%"}}><FollowingList userSize="small" fontSize={20}/></Item>
+          <Item sx={{width:"50%"}}><FriendList userSize="small" fontSize={20}/></Item>
+        </Stack>
+        <Item sx={{maxWidth:"100%"}}><ListsHighlight listSize="small"/></Item>
+      </Stack>
+      <Item sx={{maxWidth:"40%"}}>
+        <Typography variant="h4">Reviews</Typography>
+        <Reviews />
+      </Item>
+
+    </Stack>
+  );
+};
 
 export default function ProfilePage(){
   return (
-    profileNormal()
+    <React.Fragment>
+        <MediaQuery query='(min-width: 1225px)'>
+          {profileNormal()}
+        </MediaQuery>
+        <MediaQuery query='(max-width: 1224px)'>
+          {profileStack()}
+        </MediaQuery>
+      </React.Fragment>
     );
 }

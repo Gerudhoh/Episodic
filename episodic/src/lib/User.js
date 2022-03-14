@@ -1,21 +1,21 @@
 const EpisodicList = require('./EpisodicList.js');
 
 class User {
-    constructor(profile, id, obj) { 
+    constructor(profile, id, obj) {
         if (obj)
         {
             Object.assign(this, obj);
             return;
         }
-        //let listeningList = new EpisodicList("Listening") 
-        //let onDeckList = new EpisodicList("On Deck") 
-        //let finishedList = new EpisodicList("Finished") 
+        //let listeningList = new EpisodicList("Listening")
+        //let onDeckList = new EpisodicList("On Deck")
+        //let finishedList = new EpisodicList("Finished")
         this.episodicLists = [ /*listeningList, onDeckList, finishedList*/ ] //To make life easier for now, but we need this back when users and lists properly interact
         this.activity = []
-        this.profile = profile; 
+        this.profile = profile;
         this.id = id;
-        this.achievements = [] 
-      }     
+        this.achievements = []
+      }
 
       get userEpisodicLists () { return this.EpisodicLists; }
 
@@ -24,7 +24,7 @@ class User {
       get userProfile () { return this.profile; }
 
       get userAchievements () { return this.achievements; }
-      
+
       get databaseId () { return this.id; }
 
       updateProfile(newProfile) {
@@ -48,7 +48,7 @@ class User {
         let list = this.getEpisodicListByName(listName);
         if (list != null) {
             list.push(item);
-        } 
+        }
       }
 
       addPodcastToList(podcast, listName) {
