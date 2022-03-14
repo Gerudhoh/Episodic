@@ -1,0 +1,85 @@
+:root{
+  /*Colours normal*/
+  --desert-sand: #D7C0AD;
+  --eggplant: #533745;
+  --redwood: #996048;
+  --china-rose: #A84D67;
+  --khaki-web: #B4AB93;
+
+  /*30% opacity*/
+  --desert-sand-30: rgba(215, 192, 173, 0.3);
+  --egglant-30: rgba(83, 55, 69, 0.3);
+  --redwood-30: rgba(153, 96, 72, 0.3);
+  --china-rose-30: rgba(168, 77, 103, 0.3);
+  --khaki-web-30: rgba(180, 171, 147, 0.3);
+
+  /*40% opacity*/
+  --desert-sand-40: rgba(215, 192, 173, 0.4);
+  --egglant-40: rgba(83, 55, 69, 0.4);
+  --redwood-40: rgba(153, 96, 72, 0.4);
+  --china-rose-40: rgba(168, 77, 103, 0.4);
+  --khaki-web-40: rgba(180, 171, 147, 0.4);
+
+  /*50% opacity*/
+  --desert-sand-50: rgba(215, 192, 173, 0.5);
+  --egglant-50: rgba(83, 55, 69, 0.5);
+  --redwood-50: rgba(153, 96, 72, 0.5);
+  --china-rose-50: rgba(168, 77, 103, 0.5);
+  --khaki-web-50: rgba(180, 171, 147, 0.5);
+  background-color: var(--eggplant);
+}
+
+p { font-size: 1.4em;}
+
+
+h4{ font-size: 1.96em; }
+h3{
+  font-size: 2.744em;
+  color: var(--desert-sand);
+}
+h2{ font-size: 3.842em; }
+h1{ font-size: 5.378em; }
+
+.sectionTitle {
+  font-family: Poppins;
+  font-style: normal;
+  font-size: 32px;
+  line-height: 100%;
+  color: var(--eggplant);
+
+  border-bottom-color: var(--desert-sand);
+}
+
+.sectionTitle {
+  font-family: Poppins;
+  font-style: normal;
+  line-height: 100%;
+  color: var(--desert-sand);
+
+  border-bottom-color: var(--desert-sand);
+}
+
+.listLink{
+  font-family: Poppins;
+  font-style: normal;
+  font-size: 20px;
+  color: var(--desertSand);
+}
+.listLink :hover{
+  font-family: Poppins;
+  font-style: normal;
+  font-size: 20px;
+  color: var(--china-rose);
+}
+
+a:hover{
+  color: var(--china-rose);
+}
+
+.EpisodeCardOverlay :hover{
+  opacity:1;
+}
+
+.EpisodeCard :hover >img{
+  opacity: 0.2;
+}
