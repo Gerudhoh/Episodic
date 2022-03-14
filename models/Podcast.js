@@ -11,7 +11,6 @@ class Podcast {
          explicit,
          totalEpisodes,
          platforms,
-         listenNotesId,
          databaseId) { 
             this.title = title;
             this.description = description;
@@ -26,7 +25,6 @@ class Podcast {
             this.episodes = [];
             this.totalEpisodes = totalEpisodes;
             this.platforms = platforms;
-            this.listenNotesId = listenNotesId;
             this.databaseId = databaseId;
       }
 
