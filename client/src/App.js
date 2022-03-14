@@ -4,6 +4,7 @@ import './App.css';
 import {checkAuth, getCookieData} from "./lib/CookieData.js"
 import {BrowserRouter} from "react-router-dom";
 import history from './Components/history';
+import './Components.css';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 //Custom Components
