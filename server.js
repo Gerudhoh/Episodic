@@ -62,8 +62,10 @@ app.post('/api/v1/lists/create', async function (req, res) {
         res.send({
           list: list
         });
+        return;
       } catch (err) {
         res.send(err);
+        return;
       }
     });
   }
@@ -71,6 +73,7 @@ app.post('/api/v1/lists/create', async function (req, res) {
   res.send({
     list: list
   });
+  return;
 
 });
 
@@ -112,9 +115,11 @@ app.post('/api/v1/lists/add/podcast', async function (req, res) {
         i++;
       });*/
       res.send({ success: true });
+      return;
     } catch (err) {
       console.log(err);
       res.send({ success: false });
+      return;
     }
 
   });
@@ -142,8 +147,10 @@ app.post('/api/v1/lists/remove/podcast', async function (req, res) {
         i++;
       });*/
       res.send({ success: true });
+      return;
     } catch (err) {
       res.send({ success: false });
+      return;
     }
   });
 
@@ -202,14 +209,17 @@ app.get("/api/v1/lists/get/all/temp", async function (req, res) {
 
         let userList = await users.getUserLists(currentUser.id);
         res({ lists: userList });
+        return;
 
       } catch (err) {
         res(err);
+        return;
       }
     });
 
     let userList = await users.getUserLists(currentUser.id);
     res.send({ lists: userList });
+    return;
   }
   res.send({ lists: [] });
 
@@ -235,9 +245,11 @@ app.get("/api/v1/lists/get/all", async function (req, res) {
   if(currentUser !== null && currentUser.id !== undefined) {
     let userList = await users.getUserLists(currentUser.id);
     res.send({ lists: userList });
+    return;
   }
   else {
     res.send({ lists: [] });
+    return;
   }
   //res.send({ lists: currentUser.episodicLists });
 });
