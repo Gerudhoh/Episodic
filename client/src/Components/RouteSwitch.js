@@ -1,5 +1,5 @@
 import React from 'react';
-import {Route, Routes} from "react-router-dom";
+import { Route, Routes} from "react-router-dom";
 import {BrowserRouter as Router} from "react-router-dom";
 import history from './history';
 
@@ -35,7 +35,7 @@ class RouteSwitch extends React.Component {
 
   render() {
     return (
-      <div>
+      <Router>
             <Routes >
                 {/* Logged Out routes */}
                 <Route exact path="/login" element={<Login changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
@@ -47,7 +47,7 @@ class RouteSwitch extends React.Component {
                 <Route exact path="/profile" element={<Profile changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
                 <Route exact path="//info/Getting%20Literate" element={<TestPodInfo changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
             </Routes>
-      </div>
+      </Router>
     );
   }
 }
