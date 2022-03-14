@@ -127,6 +127,7 @@ class EpisodeCard extends React.Component {
   };
 
   removePodcast = async e =>  {
+    console.log(this.id);
     const response = await fetch('/api/v1/lists/remove/podcast', {
       method: 'POST',
       headers: {

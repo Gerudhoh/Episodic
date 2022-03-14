@@ -23,6 +23,7 @@ class EpisodicList {
     get listId() { return this.id; }
 
     addPodcast(podcast) {
+        if (!this.podcasts) this.podcasts = [];
         this.podcasts.push(podcast);
 
         let podcastId = podcast.id;
@@ -41,15 +42,11 @@ class EpisodicList {
     }
 
     removePodcast(podcastId) {
-        let found = false;
-        this.podcasts.forEach((element) => {
+        this.podcasts?.forEach((element) => {
             if (element.databaseId == podcastId) {
                 this.podcasts.pop(element);
-                found = true;
             }
         });
-
-        if (found == false) return;
 
         let sql = "delete from lists_podcasts_link where listsId = " + this.id + " and podcastsId = " + podcastId + ";"
 
@@ -58,7 +55,6 @@ class EpisodicList {
                 let result = await promisePool.query(sql);
                 res(result.insertId);
             } catch (err) {
-                console.log(err);
                 res(err);
             }
         });
@@ -70,6 +66,7 @@ class EpisodicList {
     }
 
     addEpisode(episode) {
+        if (!this.episodes) this.episodes = [];
         this.episodes.push(episode);
 
         let episodeId = episode.id; 

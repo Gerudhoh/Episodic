@@ -40,18 +40,17 @@ app.get('/', (req, res) => {
 
 
 // Check if a username and password is correct and generate a token
-
 let currentUser = null;
 
 app.post('/api/v1/lists/create', async function (req, res) {
   let name = req.body.name;
   let list = null;
 
-  if(currentUser !== null && currentUser.id !== undefined) {
+  if (currentUser && currentUser.id !== undefined) {
     let userId = currentUser.id;
     let sql = "insert into lists (name, userId) values ('" + name + "', " + userId + ")";
 
-    
+
     //throw it into the database
     await new Promise(async (rem, rej) => {
       try {
@@ -82,7 +81,7 @@ app.post('/api/v1/lists/add/podcast', async function (req, res) {
   let podcast = new podcasts(req.body.title, req.body.description, req.body.rss, req.body.image, req.body.website || "N/A", req.body.publisher || "N/A", req.body.language || "N/A", req.body.genre || [], req.body.explicit || false, req.body.totalEpisodes || 0, null, req.body.podcastId);
   list = new lists(list.name, list.id, list);
 
-  if (list.podcasts.some((element) => element.listenNotesId == podcast.listenNotesId)) {
+  if (list.podcasts?.some((element) => element.listenNotesId == podcast.listenNotesId)) {
     res.send({
       success: false
     });
@@ -91,10 +90,8 @@ app.post('/api/v1/lists/add/podcast', async function (req, res) {
   await new Promise(async (rem, rej) => {
     try {
       let sql = "insert ignore into podcasts (name, listenNotesId, rss, description, image, website, publisher, language, genre, explicit, totalEpisodes) values ('" + podcast.title + "', '"
-        + podcast.listenNotesId + "', '" + podcast.rss + "', '" + podcast.description + "', '" + podcast.image + "', '" + podcast.website + "', '" + podcast.publisher + "', '" + podcast.language + "', '" + podcast.genre.toString() + "', " + podcast.explicit + ", " + podcast.totalEpisodes + ")";
-      console.log(sql);
+        + podcast.listenNotesId + "', '" + podcast.rss + "', '" + escape(podcast.description) + "', '" + podcast.image + "', '" + podcast.website + "', '" + podcast.publisher + "', '" + podcast.language + "', '" + podcast.genre.toString() + "', " + podcast.explicit + ", " + podcast.totalEpisodes + ")";
       let result = await promisePool.query(sql);
-      console.log(result);
       let insertId = result[0].insertId;
       if (insertId == "0") {
         let sql = "select id from podcasts where listenNotesId = '" + podcast.listenNotesId + "'";
@@ -136,19 +133,11 @@ app.post('/api/v1/lists/remove/podcast', async function (req, res) {
     try {
       let sql = "select id from podcasts where listenNotesId = '" + podcastId + "'";
       let result = await promisePool.query(sql);
-      console.log(result[0][0].id);
       list.removePodcast(result[0][0].id);
-      console.log(list.podcasts);
-      /*let i = 0;
-      currentUser.episodicLists.forEach((element) => {
-        if (element.id == list.id) {
-          currentUser.episodicLists[i] = list;
-        }
-        i++;
-      });*/
       res.send({ success: true });
       return;
     } catch (err) {
+      console.log(err);
       res.send({ success: false });
       return;
     }
@@ -156,74 +145,57 @@ app.post('/api/v1/lists/remove/podcast', async function (req, res) {
 
 });
 
-/*app.post('/api/v1/lists/add/episode', async function (req, res) {
-  
- 
-});*/
+app.post('/api/v1/lists/add/episode', async function (req, res) {
 
-app.post('/api/v1/lists/remove/episode', async function (req, res) {
-  let list = req.body.list;
-  let episode = req.body.episode;
 
-  episode = new episodes("test", 1);  //Remove this line when podcasts are implemented
-
-  list = new lists(list.name, list.id, list);
-
-  list.removeEpisode(episode);
-
-  res.send({
-    list: list
-  });
 
 });
 
-//This endpoint needs to be deleted when we have proper user logging in and out.
-//We need to set the user's lists when they log in instead of when the page loads, which is where this is called.
-app.get("/api/v1/lists/get/all/temp", async function (req, res) {
-  if (currentUser !== null && currentUser.id !== undefined) { //currentUser.episodicLists.length == 0) {
-    let sql = "select * from lists where userId = " + currentUser.id + "";
-    await new Promise(async (res, rej) => {
-      try {
-        let result = await promisePool.query(sql);
-        let i = 0;
-        result[0].forEach(async (element) => {
-          let list = new lists(element.name, element.id);
-          sql = "select * from lists_podcasts_link where listsId = " + list.id + "";
-          let newResult = await promisePool.query(sql);
-          newResult[0].forEach(async (element) => {
-            let linkSql = "select * from podcasts where id = " + element.podcastsId + "";
-            let linkResult = await promisePool.query(linkSql);
-            let temp = new podcasts(linkResult[0][0].name, linkResult[0][0].description, linkResult[0][0].rss, linkResult[0][0].image, linkResult[0][0].website, linkResult[0][0].publisher, linkResult[0][0].language, linkResult[0][0].genre.split(","), linkResult[0][0].explicit, linkResult[0][0].totalEpisodes);
-            list.addPodcast(temp);
-          });
-          sql = "select * from lists_episodes_link where listsId = " + list.id + "";
-          newResult = await promisePool.query(sql);
-          newResult[0].forEach(async (element) => {
-            let linkSql = "select * from episodes where id = " + element.episodesId + "";
-            let linkResult = await promisePool.query(linkSql);
-            /*let newEpisode = new episodes(linkResult[0][0].name, linkResult[0][0].id);
-            list.addEpisode(newEpisode);*/
-          });
-          //currentUser.addEpisodicList(list);
-        });
+app.post('/api/v1/lists/remove/episode', async function (req, res) {
 
-        let userList = await users.getUserLists(currentUser.id);
-        res({ lists: userList });
-        return;
 
-      } catch (err) {
-        res(err);
-        return;
-      }
-    });
+});
+
+app.get("/api/v1/lists/get/all/names", async function (req, res) {
+
+  if (currentUser && currentUser.id !== undefined) {
 
     let userList = await users.getUserLists(currentUser.id);
-    res.send({ lists: userList });
+
+    res.send({ lists: userList, noUser: false });
     return;
   }
-  res.send({ lists: [] });
+  res.send({ lists: [], noUser: true });
 
-  //res.send({ lists: currentUser.episodicLists });
+});
+
+// This endpoint is VERY slow because it needs to pull everything out of the database, not sure if there's a better way to do this but it's good enough for now
+app.get("/api/v1/lists/get/all", async function (req, res) {
+
+  if (currentUser && currentUser.id !== undefined) {
+
+    let userList = await users.getUserLists(currentUser.id);
+
+    let i = 0;
+    for (const element of userList) {
+      let list = new lists(element.name, element.id);
+      let sql = "select * from lists_podcasts_link where listsId = " + list.id + "";
+      let newResult = await promisePool.query(sql);
+      for (const pod of newResult[0]) {
+        let linkSql = "select * from podcasts where id = " + pod.podcastsId + "";
+        let linkResult = await promisePool.query(linkSql);
+        let temp = new podcasts(linkResult[0][0].name, linkResult[0][0].description, linkResult[0][0].rss, linkResult[0][0].image, linkResult[0][0].website, linkResult[0][0].publisher, linkResult[0][0].language, linkResult[0][0].genre.split(","), linkResult[0][0].explicit, linkResult[0][0].totalEpisodes);
+        temp.listenNotesId = linkResult[0][0].listenNotesId;
+        list.addPodcast(temp);
+      }
+      userList[i] = list;
+      i++;
+    }
+
+    res.send({ lists: userList, noUser: false });
+    return;
+  }
+  res.send({ lists: [], noUser: true });
 
 });
 
@@ -240,20 +212,6 @@ app.post('/api/v1/search', async function (req, res) {
 
 });
 
-// You will need to manually refresh the page for this to work atm, because of the fact we're filling this array when the page renders and the page might not have been rendered when this is called
-app.get("/api/v1/lists/get/all", async function (req, res) {
-  if(currentUser !== null && currentUser.id !== undefined) {
-    let userList = await users.getUserLists(currentUser.id);
-    res.send({ lists: userList });
-    return;
-  }
-  else {
-    res.send({ lists: [] });
-    return;
-  }
-  //res.send({ lists: currentUser.episodicLists });
-});
-
 app.post('/api/v1/search', async function (req, res) {
   let name = req.body.name;
   let apiClient = fetcher.getListenNotesApi();
@@ -267,10 +225,24 @@ app.post('/api/v1/search', async function (req, res) {
 });
 
 app.post('/api/v1/searchPodcast', async function (req, res) {
-  let name = req.body.name
-  await fetcher.fetchPodcastIndexPodcast(name).then((response) => {
-    res.send({ pod: response.data });
-  }).catch(err => { console.log(err); });
+  let podcastName = req.body.name;
+  console.log(podcastName);
+  let apiClient = fetcher.getPodcastIndexApi();
+  let episodes = [];
+  await apiClient.search(podcastName).then(async (response) => {
+    let length = response.feeds.length
+    for (let i = 0; i < length; i++) {
+      let podcast = response.feeds[i];
+      if (podcast.title === podcastName) {
+
+        episodes = await apiClient.episodesByFeedId(podcast?.id);
+
+        res.send({ pod: podcast, eps: episodes });
+      }
+    }
+  });
+
+
 });
 
 
@@ -286,8 +258,8 @@ function randomString(length, chars) {
 app.use(express.static(path.resolve(__dirname, "./client/build")));
 
 // Handles any requests that don't match the ones above
-app.get('*', (req,res) =>{
-  res.sendFile(path.join(__dirname+'/client/build/index.html'));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname + '/client/build/index.html'));
 });
 
 
@@ -311,7 +283,7 @@ app.post('/api/v1/user/add', async function (req, res) {
 
 
 // Check if a username and password is correct and generate a token
-app.post('/api/v1/user/login', async function(req, res) {
+app.post('/api/v1/user/login', async function (req, res) {
   let username = req.body.username;
   let password = req.body.password;
   let token = randomString(32, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
@@ -324,7 +296,7 @@ app.post('/api/v1/user/login', async function(req, res) {
 
   console.log(result)
 
-  if(result !== [] && result !== undefined && result.length > 0) {
+  if (result !== [] && result !== undefined && result.length > 0) {
     let update_token = await users.updateToken(username, password, token);
 
     let myResult = {};
@@ -340,19 +312,20 @@ app.post('/api/v1/user/login', async function(req, res) {
 });
 
 // Check if a token and username is correct for login
-app.post('/api/v1/user/auth', async function(req, res) {
+app.post('/api/v1/user/auth', async function (req, res) {
   let username = req.body.username;
   let token = req.body.token;
 
   let result = await users.checkExistingLogin(username, token);
+  currentUser = result[0];
   res.send(result);
 });
 
 // Log a user out by resetting their token
-app.post('/api/v1/user/logout', async function(req, res) {
+app.post('/api/v1/user/logout', async function (req, res) {
   let username = req.body.username;
   let token = req.body.token;
-  
+
   let update_token = await users.removeToken(username, token);
 
   let myResult = {};

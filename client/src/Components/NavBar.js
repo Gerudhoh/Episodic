@@ -170,10 +170,6 @@ const ResponsiveAppBar = (props) => {
                     <Typography textAlign="center">Profile</Typography>
                   </MenuItem>
                 }
-
-                <MenuItem component={Link} to="/info/Getting%20Literate" replace onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">TestPodInfo</Typography>
-                </MenuItem>
             </Menu>
           </Box>
           <Typography

@@ -86,6 +86,13 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
+const delay = (ms) =>
+  new Promise((res) => {
+    setTimeout(() => {
+      res()
+    }, ms)
+  })
+
 class ListsHighlight extends React.Component {
 
   constructor(props) {
@@ -103,14 +110,18 @@ class ListsHighlight extends React.Component {
 
   getUserLists = async e => {
     //e.preventDefault();
-    const response = await fetch("/api/v1/lists/get/all");
-    const body = await response.json();
+    let response = await fetch("/api/v1/lists/get/all");
+    let body = await response.json();
+    if(body.noUser === true) {
+      await delay(1000); //in case user is already logged in, wait for the auth
+      response = await fetch("/api/v1/lists/get/all");
+      body = await response.json();
+    }
     let listNames = [];
     body.lists.map((list) => {
       let tmp = { name: list.name, images: [] };
-
       let i = 0;
-      list.podcasts.map((podcast) => {
+      list.podcasts?.map((podcast) => {
         if (i < 3) {
           
           console.log(podcast.title);

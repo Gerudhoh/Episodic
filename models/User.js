@@ -7,7 +7,7 @@ module.exports = {
             
             const [rows, fields] = await promisePool.query(sql);
 
-            console.log(`Rows in initUsersTable: ${JSON.stringify(rows)}`);
+            //console.log(`Rows in initUsersTable: ${JSON.stringify(rows)}`);
 
             res("Created Users Table");
         });
@@ -21,9 +21,9 @@ module.exports = {
         return new Promise(async (res, rej) => {
             let sql = 'INSERT INTO users(username, email, password, token) VALUES(?,?,?,?);'
             
-            const [rows, fields] = await promisePool.query(sql, [username, email, password, token]);
+            //const [rows, fields] = await promisePool.query(sql, [username, email, password, token]);
 
-            console.log(`Rows in addUser: ${JSON.stringify(rows)}`);
+            //console.log(`Rows in addUser: ${JSON.stringify(rows)}`);
 
             res(rows);
         });        
@@ -35,7 +35,7 @@ module.exports = {
             
             const [rows, fields] = await promisePool.query(sql, [username, password]);
 
-            console.log(`Rows in checkLogin: ${JSON.stringify(rows)}`);
+            //console.log(`Rows in checkLogin: ${JSON.stringify(rows)}`);
 
             res(rows);
         });
@@ -47,7 +47,7 @@ module.exports = {
             
             const [rows, fields] = await promisePool.query(sql, [username, token]);
 
-            console.log(`Rows in checkExistingLogin: ${JSON.stringify(rows)}`);
+            //console.log(`Rows in checkExistingLogin: ${JSON.stringify(rows)}`);
 
             res(rows);
         });
@@ -59,7 +59,7 @@ module.exports = {
             
             const [rows, fields] = await promisePool.query(sql, [id]);
 
-            console.log(`Rows in getUserLists: ${JSON.stringify(rows)}`);
+            //console.log(`Rows in getUserLists: ${JSON.stringify(rows)}`);
 
             res(rows);
         });
@@ -71,7 +71,7 @@ module.exports = {
             
             const [rows, fields] = await promisePool.query(sql, [token, username, password]);
 
-            console.log(`Rows in updateToken: ${JSON.stringify(rows)}`);
+            //console.log(`Rows in updateToken: ${JSON.stringify(rows)}`);
 
             res(rows);
         });
@@ -83,7 +83,7 @@ module.exports = {
             
             const [rows, fields] = await promisePool.query(sql, ["", username, token]);
 
-            console.log(`Rows in removeToken: ${JSON.stringify(rows)}`);
+            //console.log(`Rows in removeToken: ${JSON.stringify(rows)}`);
 
             res(rows);
         });

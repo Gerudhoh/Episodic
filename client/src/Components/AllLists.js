@@ -10,6 +10,13 @@ import ListItem from '@mui/material/ListItem';
 import Alert from '@mui/material/Alert';
 import TextField from '@mui/material/TextField';
 
+const delay = (ms) =>
+  new Promise((res) => {
+    setTimeout(() => {
+      res()
+    }, ms)
+  })
+
 class AllLists extends React.Component {
 
   constructor(props) {
@@ -54,13 +61,16 @@ class AllLists extends React.Component {
 
   getUserLists = async e => {
     //e.preventDefault();
-    const response = await fetch("/api/v1/lists/get/all/temp");
-    const body = await response.json();
-    //const listMap = body.lists.map((list) => {list.name});
+    let response = await fetch("/api/v1/lists/get/all/names");
+    let body = await response.json();
+    if(body.noUser === true) {
+      await delay(1000); //in case user is already logged in, wait for the auth
+      response = await fetch("/api/v1/lists/get/all/names");
+      body = await response.json();
+    }
     let listNames = [];
     body.lists.map((list) => listNames.push({ name: list.name }));
     this.setState({ allLists: listNames });
-    console.log(this.state.allLists);
   };
   render() {
     return (

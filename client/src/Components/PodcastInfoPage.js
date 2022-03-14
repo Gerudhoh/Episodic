@@ -100,6 +100,7 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
+
 function PodcastInfo(props){
   const podcast = props.podcast;
   return(
@@ -123,20 +124,54 @@ function PodcastInfo(props){
 }
 
 export default function PodcastInfoPage(){
-  const location = useLocation();
+  const [value, setValue] = useState(null);
+  const [isLoading, setLoading] = useState(true);
+  const location = useLocation()
+  const podTitle = decodeURIComponent(location.pathname.split('/')[2]);
+  
+  async function getPodcast(data) {
+    console.log("Fetch " + data);
+    const response = await fetch('/api/v1/searchPodcast', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name: data.split("| 2")[0] }),
+    });
+    response.json().then(response => {
+      let podcast = response.pod;
+      let episodes = response.eps;
+      let info = {
+        title : podcast.title,
+        description : podcast.description,
+        rss : podcast.url,
+        image : podcast.image,
+        website : podcast.link,
+        publisher : podcast.author,
+        language : podcast.language,
+        explicit : 'explicit',
+        genre : podcast.categories,
+        episodes : episodes,
+      }
+      return <PodcastInfo podcast={info}/>
+    }).then( resource => {
+      setValue(resource);
+      setLoading(false);
+
+    });
+  }
+
+  useEffect(() => {
+    getPodcast(podTitle);
+  }, [podTitle]);
+
   return(
-    <Stack spacing={2} sx={{pl:"20px", pt:"10px"}} justifyContent="space-evenly">
-      <PodcastInfo podcast={podcast1}/>
-      <Stack direction="row" flexWrap="wrap" spacing={2} justifyContent="left">
-        <Item sx={{width:"45%"}}>
-          <Typography variant="h3">Episodes</Typography>
-          <PodcastEpisodesCard episodes={podcast1.episodes} image={podcast1.image}/>
-          </Item>
-        <Item sx={{width:"45%"}}>
-          <Typography variant="h3">Reviews</Typography>
-          <Reviews />
-        </Item>
-      </Stack>
-    </Stack>
+    <React.Fragment>
+    {isLoading ? (
+        <CircularProgress />
+      ) : (
+        value
+      )}
+    </React.Fragment>
   );
 }

@@ -81,7 +81,7 @@ export default function SearchPage(){
 
   useEffect(() => {
     fetchData(location.state)
-  }, []);
+  }, [location.state]);
 
   return(
     <React.Fragment>
