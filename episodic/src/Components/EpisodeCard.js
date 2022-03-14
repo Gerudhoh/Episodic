@@ -68,10 +68,17 @@ class EpisodeCard extends React.Component {
     this.episodeTitle = this.props.episodeTitle;
 
     this.isPodcast = false;
-    if (this.podcastTitle) this.isPodcast = true;
-    if (this.episodeTitle) this.isPodcast = false;
+    this.uri = '';
+    if (this.podcastTitle){
+      this.isPodcast = true;
+      this.uri = `/info/${encodeURIComponent(this.props.podcastTitle)}`;
+    } 
+    if (this.episodeTitle) {
+      this.isPodcast = false;
+      this.uri = `/info/${encodeURIComponent(this.props.podcastTitle)}/${encodeURIComponent(this.props.episodeTitle)}`;
+    }
 
-    this.uri = `/info/${encodeURIComponent(this.props.podcastTitle)}/${encodeURIComponent(this.props.episodeTitle)}`;
+    
 
     this.state = {
       listView: this.props.listView || false,

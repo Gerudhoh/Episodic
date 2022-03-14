@@ -112,6 +112,8 @@ class ListsHighlight extends React.Component {
       let i = 0;
       list.podcasts.map((podcast) => {
         if (i < 3) {
+          
+          console.log(podcast.title);
           tmp.images.push({
             img: podcast.image,
             podcastTitle: podcast.title,
