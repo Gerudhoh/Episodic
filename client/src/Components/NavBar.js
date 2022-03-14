@@ -202,13 +202,6 @@ const ResponsiveAppBar = (props) => {
                   Profile
                 </Button>
               }
-
-              <Button component={Link} to="/info/Getting%20Literate" replace
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                TestPodInfo
-              </Button>
           </Box>
 
           <Box sx={{padding:'10px'}}>

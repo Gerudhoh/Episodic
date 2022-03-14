@@ -136,7 +136,7 @@ export default function PodcastInfoPage(){
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name: data.split("| 2")[0] }),
+      body: JSON.stringify({ name: data }),
     });
     response.json().then(response => {
       let podcast = response.pod;
