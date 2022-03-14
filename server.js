@@ -273,6 +273,12 @@ function randomString(length, chars) {
 //When you navigate to the root page, it would use the built react-app
 app.use(express.static(path.resolve(__dirname, "./client/build")));
 
+// Handles any requests that don't match the ones above
+app.get('*', (req,res) =>{
+  res.sendFile(path.join(__dirname+'/client/build/index.html'));
+});
+
+
 app.post('/api/v1/user/add', async function (req, res) {
   let token = randomString(32, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
   currentUser = null;
