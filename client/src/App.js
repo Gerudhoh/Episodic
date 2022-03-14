@@ -12,7 +12,7 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-      auth: false
+      auth: false,
     };
 
     this.updateAuth = this.updateAuth.bind(this);

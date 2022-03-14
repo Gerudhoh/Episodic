@@ -3,65 +3,77 @@ import * as React from 'react';
 //Material UI Components
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
+
+import Typography from '@mui/material/Typography';
 
 //Material UI Icons and Styling
 import { styled } from '@mui/material/styles';
 
 //Custom Components
-import ActivityCard from "./ActivityCard.js";
 import ListPreview from "./ListPreview.js";
 
 const lists = [
   {
-    name: "list1",
+    name: "episodes",
+    type: "user",
     images: [
       {
-        img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-        title: 'Breakfast',
+        img: '/pepekingprawn.jpg',
+        podcastTitle: 'podcast',
+        episodeTitle: 'episode1',
       },
       {
-        img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
-        title: 'Burger',
+        img: '/pepekingprawn.jpg',
+        podcastTitle: 'podcast',
+        episodeTitle: 'episode2',
       },
       {
-        img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
-        title: 'Camera',
+        img: '/pepekingprawn.jpg',
+        podcastTitle: 'podcast',
+        episodeTitle: 'episode3',
       },
     ]
   },
   {
-    name: "list2",
+    name: "podcasts",
+    type: "user",
     images: [
       {
-        img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-        title: 'Hats'
+        img: '/pepekingprawn.jpg',
+        podcastTitle: 'podcast1',
+        episodeTitle: ''
       },
       {
-        img: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62',
-        title: 'Honey'
+        img: '/pepekingprawn.jpg',
+        podcastTitle: 'podcast2',
+        episodeTitle: ''
       },
       {
-        img: 'https://images.unsplash.com/photo-1516802273409-68526ee1bdd6',
-        title: 'Basketball',
+        img: '/pepekingprawn.jpg',
+        podcastTitle: 'podcast1',
+        episodeTitle: '',
       },
     ]
   },
   {
-    name: "list3",
+    name: "episodes",
+    type: "user",
     images: [
       {
-        img: 'https://images.unsplash.com/photo-1518756131217-31eb79b20e8f',
-        title: 'Fern',
+        img: '/pepekingprawn.jpg',
+        podcastTitle: 'podcast3',
+        episodeTitle: '',
       },
       {
-        img: 'https://images.unsplash.com/photo-1597645587822-e99fa5d45d25',
-        title: 'Mushrooms',
+        img: '/pepekingprawn.jpg',
+        podcastTitle: 'podcast',
+        episodeTitle: 'episode5',
       },
       {
-        img: 'https://images.unsplash.com/photo-1567306301408-9b74779a11af',
-        title: 'Tomato basil',
+        img: '/pepekingprawn.jpg',
+        podcastTitle: 'podcast',
+        episodeTitle: 'episode6',
       },
     ]
   },
@@ -91,14 +103,27 @@ class ListsHighlight extends React.Component {
 
   getUserLists = async e => {
     //e.preventDefault();
-    const response = await fetch("/api/v1/lists/get/all/temp");
+    const response = await fetch("/api/v1/lists/get/all");
     const body = await response.json();
     let listNames = [];
     body.lists.map((list) => {
       let tmp = { name: list.name, images: [] };
+
+      let i = 0;
+      list.podcasts.map((podcast) => {
+        if (i < 3) {
+          tmp.images.push({
+            img: podcast.image,
+            title: podcast.title,
+            listView: true,
+            id: podcast.listenNotesId
+          });
+        }
+        i++;
+      })
       // Add podcasts/episodes as images if there are any
       // I'm not entirely sure how to do this. We need the podcasts to be clickable (?) but they are just images + titles here
-      listNames.push({ name: list.name })
+      listNames.push(tmp)
     });
     this.setState({ allLists: listNames });
   };
@@ -118,4 +143,5 @@ class ListsHighlight extends React.Component {
     );
   }
 }
+
 export default ListsHighlight;
