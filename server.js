@@ -248,7 +248,8 @@ app.post("/api/v1/lists/get/one", async function (req, res) {
   if (currentUser && currentUser.id !== undefined) {
 
     let userList = await users.getUserLists(currentUser.id);
-    let element = userList.find(element => element.name == name);
+    if (!userList) return;
+    let element = userList.find(element => element?.name == name);
 
     let list = new lists(element.name, element.id);
     let sql = "select * from lists_podcasts_link where listsId = " + list.id + "";
