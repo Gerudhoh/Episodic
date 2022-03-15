@@ -128,8 +128,8 @@ class SignUpForm extends React.Component {
                 />
                 </Grid>
                 <Grid item lg={12} >
-            <Button  onClick={this.submitLogin}>Submit</Button>
             <Button variant="text" color="secondary"  onClick={this.login}>Login</Button>
+            <Button  onClick={this.submitLogin}>Submit</Button>
             <br/><br/><br/>
             <p >{ this.state.errorLabel }</p>
             </Grid>
