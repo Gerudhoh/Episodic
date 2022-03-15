@@ -185,7 +185,7 @@ function PodcastDetails(props){
       <img src={podcast.image} width="350px" height="auto"/>
       <Item>
         <Stack alignItems="center" spacing={2} padding="10px">
-          <Typography variant="h2">{podcast.title}</Typography>
+          <Typography variant="h2" onClick={()=> window.open(podcast.website, "_blank")}><a><u>{podcast.title}</u></a></Typography>
           <AddPodcastToList podcast={podcast}/>
           <Rating readOnly size="large" value={podcast.rating}/>
         </Stack>
