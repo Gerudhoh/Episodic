@@ -248,7 +248,11 @@ app.post("/api/v1/lists/get/one", async function (req, res) {
   if (currentUser && currentUser.id !== undefined) {
 
     let userList = await users.getUserLists(currentUser.id);
-    if (!userList) return;
+    if(userList) {
+      res.send({ list: {} });
+      return;
+    }
+    
     let element = userList.find(element => element?.name == name);
 
     let list = new lists(element.name, element.id);
