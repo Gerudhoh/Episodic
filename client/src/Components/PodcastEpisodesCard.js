@@ -21,7 +21,7 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 function PodcastEpisode(props){
-  const uri = `/info/${encodeURIComponent(props.podcastTitle)}/${encodeURIComponent(props.title)}`
+  const uri = `/episodeinfo/${encodeURIComponent(props.podcastTitle)}/${encodeURIComponent(props.title)}`
   return(
     <Stack spacing={1} justifyContent="flex-start">
       <Typography variant="h4" textAlign="left" component={Link} to={uri} replace>{props.title}</Typography>

@@ -9,9 +9,11 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
 import Rating from '@mui/material/Rating';
-
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 import CircularProgress from '@mui/material/CircularProgress';
 
 
@@ -28,8 +30,89 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
+class AddEpisodeToList extends React.Component{
+  constructor(props) {
+    super(props);
+    this.episode = this.props.episode;
+    this.image = this.props.image;
+
+    this.state = {
+      listView: this.props.listView || false,
+      currentList: this.props.currentList || null,
+      lists: [],
+      listMenuItems: null,
+      showSuccess: false
+    };
+  }
+
+  componentDidMount() {
+    this.getUserLists();
+  }
+
+  addEpisodeToList = async e => {
+    e.preventDefault();
+    const response = await fetch('/api/v1/lists/add/episode', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ list: this.state.lists[e.target.value], episode: this.episode, image: this.image}),
+    });
+    const body = await response.json();
+    this.setState({ showSuccess: body.success });
+    if (this.state.showSuccess) window.location.reload(false);
+
+  };
+
+  removeEpisode = async e =>  {
+    return;
+    const response = await fetch('/api/v1/lists/remove/podcast', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ list: this.state.currentList, podcastId: this.id }),
+    });
+    const body = await response.json();
+    this.setState({ showSuccess: body.success });
+    if (this.state.showSuccess) window.location.reload(false);
+
+  };
+
+  getUserLists = async e => {
+    //e.preventDefault();
+    const response = await fetch("/api/v1/lists/get/all/names");
+    const body = await response.json();
+    let listNames = [];
+    body.lists.map((list, index) =>
+      listNames.push((<MenuItem key={index} value={index}>{list.name}</MenuItem>))
+    );
+    this.setState({ listMenuItems: listNames });
+    this.setState({ lists: body.lists });
+  };
+
+  render() {
+    return (
+      <React.Fragment>
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Add to List</InputLabel>
+            <Select variant="outlined"
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              label="Age"
+              onChange={this.addEpisodeToList}
+            >
+              {this.state.listMenuItems}
+            </Select>
+          </FormControl>
+      </React.Fragment>
+    );
+  }
+};
+
 function EpisodeDetails(props){
   const episode = props.episode;
+  console.log(episode);
   const podcast = episode.podcast;
   const podURI =`/info/${encodeURIComponent(podcast.title)}`;
   return(
@@ -39,6 +122,8 @@ function EpisodeDetails(props){
         <Stack alignItems="flex-start" spacing={2} padding="10px">
           <Typography textAlign="left" variant="h3">{episode.title}</Typography>
           <Typography variant="h4" component={Link} to={podURI} replace>{podcast.title}</Typography>
+          
+          <AddEpisodeToList episode={episode} image={podcast.image}/>
           <Rating readOnly size="large" value={episode.rating}/>
           <Typography component="div" textAlign="left" variant="p">{episode.description}</Typography>
         </Stack>

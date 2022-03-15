@@ -67,7 +67,7 @@ class EpisodeCard extends React.Component {
     this.podcastTitle = this.props.podcastTitle;
     this.episodeTitle = this.props.episodeTitle;
 
-    this.description = this.props.description;
+    /*this.description = this.props.description;
     this.rss = this.props.rss;
     this.website = this.props.website;
     this.publisher = this.props.publisher;
@@ -76,17 +76,16 @@ class EpisodeCard extends React.Component {
     this.explicit = this.props.explicit;
     this.totalEpisodes = this.props.totalEpisodes;
     this.platforms = this.props.platforms;
-    this.audioLengthSeconds = this.props.audioLengthSeconds;
-
+    this.audioLengthSeconds = this.props.audioLengthSeconds;*/
     this.isPodcast = false;
     this.uri = '';
-    if (this.podcastTitle) {
+    if (this.podcastTitle && !this.episodeTitle) {
       this.isPodcast = true;
       this.uri = `/info/${encodeURIComponent(this.props.podcastTitle)}`;
     }
     if (this.episodeTitle) {
       this.isPodcast = false;
-      this.uri = `/info/${encodeURIComponent(this.props.podcastTitle)}/${encodeURIComponent(this.props.episodeTitle)}`;
+      this.uri = `/episodeinfo/${encodeURIComponent(this.props.podcastTitle)}/${encodeURIComponent(this.props.episodeTitle)}`;
     }
 
 
@@ -104,21 +103,13 @@ class EpisodeCard extends React.Component {
     this.getUserLists();
   }
 
-  addPodcastToList = async e => {
-    e.preventDefault();
-    const response = await fetch('/api/v1/lists/add/podcast', {
+  removePodcast = async e => {
+    const response = await fetch('/api/v1/lists/remove/podcast', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ list: this.state.lists[e.target.value], podcastId: this.id, description: this.description, title: this.podcastTitle, image: this.img,
-        rss: this.rss,
-        website: this.website,
-        publisher: this.publisher,
-        language: this.language,
-        genre: this.genre,
-        explicit: this.explicit,
-        totalEpisodes: this.totalEpisodes }),
+      body: JSON.stringify({ list: this.state.currentList, name: this.podcastTitle }),
     });
     const body = await response.json();
     this.setState({ showSuccess: body.success });
@@ -126,14 +117,13 @@ class EpisodeCard extends React.Component {
 
   };
 
-  removePodcast = async e =>  {
-    console.log(this.id);
-    const response = await fetch('/api/v1/lists/remove/podcast', {
+  removeEpisode = async e => {
+    const response = await fetch('/api/v1/lists/remove/episode', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ list: this.state.currentList, name: this.podcastTitle }),
+      body: JSON.stringify({ list: this.state.currentList, name: this.episodeTitle }),
     });
     const body = await response.json();
     this.setState({ showSuccess: body.success });
@@ -156,64 +146,55 @@ class EpisodeCard extends React.Component {
   render() {
     return (
 
-      /*<Stack spacing={1}>
-        <img
-          src={`${this.img}?w=${this.imgSize}&h=${this.imgSize}&fit=crop&auto=format`}
-          alt={this.title}
-          loading="lazy"
-        />
-        {this.state.showSuccess ? (<Alert severity="success">
-          Successfully added to list!
-        </Alert>) : (null)}
-        {!this.state.listView ? (
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Add to List</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              label="Age"
-              onChange={this.addPodcastToList}
-            >
-              {this.state.listMenuItems}
-            </Select>
-          </FormControl>
-        ) : (null)}
-      </Stack>*/
       <Card className="EpisodeCard" >
-        <Box sx={{ position: 'relative' }} component={Link} to={this.uri} replace>
-          < img width={this.size.minSize} height="auto"
-            src={this.img}
-            alt={`${this.episodeTitle} ${this.podcastTitle}`}
-            loading="lazy"
-          />
-          <EpisodeCardStyles>
-            <Typography variant="p" fontSize={this.size.fontSize}>{this.episodeTitle}</Typography>
-            <br />
-            <Typography variant="p" fontSize={this.size.fontSize}>{this.podcastTitle}</Typography>
+        <Stack>
 
-          </EpisodeCardStyles>
+          {this.isPodcast ? (
+            <Box>
+              <center><b>PODCAST</b>
+                <br />
+                {this.podcastTitle}</center>
+            </Box>
+          ) : (null)}
 
-        </Box>
+          {!this.isPodcast && this.episodeTitle ? (
+            <Box>
+              <center><b>EPISODE</b>
+                <br />
+                {this.podcastTitle}
+                <br />
+                {this.episodeTitle}</center>
+            </Box>
+          ) : (null)}
 
-        {!this.state.listView && this.isPodcast ? (
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Add to List</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              label="Age"
-              onChange={this.addPodcastToList}
-            >
-              {this.state.listMenuItems}
-            </Select>
-          </FormControl>
-        ) : (null)}
-        {this.state.listView && this.isPodcast ? (
-          <FormControl fullWidth>
-          <button onClick={this.removePodcast}>Remove</button>
-        </FormControl>
-        ) : (null)}
-        
+          <Box sx={{ position: 'relative' }} component={Link} to={this.uri} replace>
+            < img width={this.size.minSize} height="auto"
+              src={this.img}
+              alt={`${this.episodeTitle} ${this.podcastTitle}`}
+              loading="lazy"
+            />
+            <EpisodeCardStyles>
+              <Typography variant="p" fontSize={this.size.fontSize}>{this.episodeTitle}</Typography>
+              <br />
+              <Typography variant="p" fontSize={this.size.fontSize}>{this.podcastTitle}</Typography>
+
+            </EpisodeCardStyles>
+
+          </Box>
+
+
+          {this.state.listView && this.isPodcast ? (
+            <FormControl fullWidth>
+              <button onClick={this.removePodcast}>Remove</button>
+            </FormControl>
+          ) : (null)}
+
+          {this.state.listView && !this.isPodcast ? (
+            <FormControl fullWidth>
+              <button onClick={this.removeEpisode}>Remove</button>
+            </FormControl>
+          ) : (null)}
+        </Stack>
       </Card>
     );
   }

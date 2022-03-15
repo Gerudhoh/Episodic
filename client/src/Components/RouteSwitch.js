@@ -10,6 +10,8 @@ import HomePage from './HomePage';
 import ProfilePage from './ProfilePage';
 import SearchPage from './SearchPage';
 import PodcastInfoPage from './PodcastInfoPage';
+import EpisodeInfoPage from './EpisodeInfoPage';
+import ExploreListView from './ExploreListView';
 
 class RouteSwitch extends React.Component {
   constructor(props) {
@@ -42,12 +44,15 @@ class RouteSwitch extends React.Component {
                 {/* Logged Out routes */}
                 <Route exact path="/login" element={<Login changeAuth={this.changeAuth}  checkAuthData={this.checkAuthData}  changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
                 <Route exact path="/signup" element={<SignUp changeAuth={this.changeAuth} checkAuthData={this.checkAuthData}  changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
+                
+                <Route path="/episodeinfo/*" element={<EpisodeInfoPage changeAuth={this.changeAuth} checkAuthData={this.checkAuthData}  changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
                 <Route path="/info/*" element={<PodcastInfoPage changeAuth={this.changeAuth} checkAuthData={this.checkAuthData}  changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
 
                 {/* Logged In routes */}
                 <Route exact path="/" element={<HomePage changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
                 <Route exact path="/searchresults" element={<SearchPage changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
                 <Route exact path="/profile" element={<ProfilePage changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent" auth={this.props.auth} username={this.props.username}/>}/>
+                <Route path="/userlist/*" element={<ExploreListView changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
             </Routes>
       </div>
     );
