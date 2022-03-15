@@ -1,6 +1,8 @@
 //Packages
 import * as React from 'react';
 
+import { Route, Link } from "react-router-dom";
+
 //import {useLocation, withRouter} from 'react-router-dom';
 
 //Material UI Components
@@ -19,11 +21,12 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 function PodcastEpisode(props){
+  const uri = `/info/${encodeURIComponent(props.podcastTitle)}/${encodeURIComponent(props.title)}`
   return(
-    <Stack direction="row" alignItems="center" >
-      <img src={props.image} width="20%" height="auto" alt={`Cover for ${props.title}`}/>
-      <Stack padding="10px">
-        <Typography variant="h4">{props.title}</Typography>
+    <Stack spacing={1} justifyContent="flex-start">
+      <Typography variant="h4" textAlign="left" component={Link} to={uri} replace>{props.title}</Typography>
+      <Stack direction="row" padding="10px" spacing={2}>
+          <img src={props.image} width="20%" height="auto" alt={`Cover for ${props.title}`}/>
         <Typography variant="p" textAlign="left">{props.description}</Typography>
       </Stack>
     </Stack>
@@ -32,11 +35,14 @@ function PodcastEpisode(props){
 
 
 export default function PodcastEpisodesCard(props){
+  ;
+
   return(
     <Box component="div" height="45vh" m={2} sx={{overflow:'auto'}}>
       <Stack spacing={2} padding="10px">
         {props.episodes.map((episode) =>
           <Item><PodcastEpisode
+          podcastTitle = {props.podcastTitle}
           image={episode.feedImage}
           title={episode.title}
           description={episode.description}/></Item>
