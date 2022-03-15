@@ -72,12 +72,12 @@ app.post('/api/v1/lists/create', async function (req, res) {
 
 app.post('/api/v1/lists/add/podcast', async function (req, res) {
   let list = req.body.list;
-  let podcast = new podcasts(req.body.title, req.body.description, req.body.rss, req.body.image, req.body.website || "N/A", req.body.publisher || "N/A", req.body.language || "N/A", req.body.genre || [], req.body.explicit || false, req.body.totalEpisodes || 0, null, req.body.podcastId);
+  let podcast = new podcasts(req.body.title, req.body.description, req.body.rss, req.body.image, req.body.website || "N/A", req.body.publisher || "N/A", req.body.language || "N/A", req.body.genre || [], req.body.explicit == "explicit", req.body.totalEpisodes || 0, null, req.body.podcastId);
   list = new lists(list.name, list.id, list);
 
   await new Promise(async (rem, rej) => {
     try {
-      let sql = "insert ignore into podcasts (name, rss, description, image, website, publisher, language, genre, explicit, totalEpisodes) values ('" + podcast.title + "', '" + podcast.rss + "', '" + escape(podcast.description) + "', '" + podcast.image + "', '" + podcast.website + "', '" + podcast.publisher + "', '" + podcast.language + "', '" + podcast.genre.toString() + "', " + podcast.explicit + ", " + podcast.totalEpisodes + ")";
+      let sql = "insert ignore into podcasts (name, rss, description, image, website, publisher, language, genre, explicit, totalEpisodes) values ('" + escape(podcast.title) + "', '" + podcast.rss + "', '" + escape(podcast.description) + "', '" + podcast.image + "', '" + podcast.website + "', '" + podcast.publisher + "', '" + podcast.language + "', '" + podcast.genre.toString() + "', " + podcast.explicit + ", " + podcast.totalEpisodes + ")";
       let result = await promisePool.query(sql);
       let insertId = result[0].insertId;
       if (insertId == "0") {
@@ -133,7 +133,7 @@ app.post('/api/v1/lists/add/episode', async function (req, res) {
 
   await new Promise(async (rem, rej) => {
     try {
-      let sql = "insert ignore into episodes (name, rss, description, image, explicit, podcastName) values ('" + episode.title + "','" + episode.rss + "','" + escape(episode.description) + "', '" + episode.image + "'," + episode.explicit + ",'" + episode.podcast + "')";
+      let sql = "insert ignore into episodes (name, rss, description, image, explicit, podcastName) values ('" + escape(episode.title) + "','" + episode.rss + "','" + escape(episode.description) + "', '" + episode.image + "'," + episode.explicit + ",'" + episode.podcast + "')";
       let result = await promisePool.query(sql);
       let insertId = result[0].insertId;
       if (insertId == "0") {
@@ -201,8 +201,8 @@ app.post("/api/v1/lists/get/all", async function (req, res) {
   if (userId != null) {
 
     let userList = await users.getUserLists(userId);
-
     let i = 0;
+
     for (const element of userList) {
       let list = new lists(element.name, element.id);
       let sql = "select * from lists_podcasts_link where listsId = " + list.id + "";
@@ -210,7 +210,7 @@ app.post("/api/v1/lists/get/all", async function (req, res) {
       for (const pod of newResult[0]) {
         let linkSql = "select * from podcasts where id = " + pod.podcastsId + "";
         let linkResult = await promisePool.query(linkSql);
-        let temp = new podcasts(linkResult[0][0].name, linkResult[0][0].description, linkResult[0][0].rss, linkResult[0][0].image, linkResult[0][0].website, linkResult[0][0].publisher, linkResult[0][0].language, linkResult[0][0].genre.split(","), linkResult[0][0].explicit, linkResult[0][0].totalEpisodes);
+        let temp = new podcasts(unescape(linkResult[0][0].name), linkResult[0][0].description, linkResult[0][0].rss, linkResult[0][0].image, linkResult[0][0].website, linkResult[0][0].publisher, linkResult[0][0].language, linkResult[0][0].genre.split(","), linkResult[0][0].explicit, linkResult[0][0].totalEpisodes);
         list.addPodcast(temp);
       }
 
@@ -219,14 +219,12 @@ app.post("/api/v1/lists/get/all", async function (req, res) {
       for (const ep of newResult[0]) {
         let linkSql = "select * from episodes where id = " + ep.episodesId + "";
         let linkResult = await promisePool.query(linkSql);
-        let temp = new episodes(linkResult[0][0].name, linkResult[0][0].image, linkResult[0][0].description, linkResult[0][0].explicit, linkResult[0][0].rss, linkResult[0][0].podcastName, linkResult[0][0].id);
+        let temp = new episodes(unescape(linkResult[0][0].name), linkResult[0][0].image, linkResult[0][0].description, linkResult[0][0].explicit, linkResult[0][0].rss, linkResult[0][0].podcastName, linkResult[0][0].id);
         list.addEpisode(temp);
       }
 
       userList[i] = list;
       i++;
-
-      if (i >= 3) break;
     }
 
     res.send({ lists: userList, noUser: false });
@@ -242,10 +240,6 @@ app.post("/api/v1/lists/get/one", async function (req, res) {
   if (userId != null) {
 
     let userList = await users.getUserLists(userId);
-    if(userList) {
-      res.send({ list: {} });
-      return;
-    }
     
     let element = userList.find(element => element?.name == name);
 
@@ -255,7 +249,7 @@ app.post("/api/v1/lists/get/one", async function (req, res) {
     for (const pod of newResult[0]) {
       let linkSql = "select * from podcasts where id = " + pod.podcastsId + "";
       let linkResult = await promisePool.query(linkSql);
-      let temp = new podcasts(linkResult[0][0].name, linkResult[0][0].description, linkResult[0][0].rss, linkResult[0][0].image, linkResult[0][0].website, linkResult[0][0].publisher, linkResult[0][0].language, linkResult[0][0].genre.split(","), linkResult[0][0].explicit, linkResult[0][0].totalEpisodes);
+      let temp = new podcasts(unescape(linkResult[0][0].name), linkResult[0][0].description, linkResult[0][0].rss, linkResult[0][0].image, linkResult[0][0].website, linkResult[0][0].publisher, linkResult[0][0].language, linkResult[0][0].genre.split(","), linkResult[0][0].explicit, linkResult[0][0].totalEpisodes);
       list.addPodcast(temp);
     }
 
@@ -264,7 +258,7 @@ app.post("/api/v1/lists/get/one", async function (req, res) {
     for (const ep of newResult[0]) {
       let linkSql = "select * from episodes where id = " + ep.episodesId + "";
       let linkResult = await promisePool.query(linkSql);
-      let temp = new episodes(linkResult[0][0].name, linkResult[0][0].image, linkResult[0][0].description, linkResult[0][0].explicit, linkResult[0][0].rss, linkResult[0][0].podcastName, linkResult[0][0].id);
+      let temp = new episodes(unescape(linkResult[0][0].name), linkResult[0][0].image, linkResult[0][0].description, linkResult[0][0].explicit, linkResult[0][0].rss, linkResult[0][0].podcastName, linkResult[0][0].id);
       list.addEpisode(temp);
     }
 
@@ -308,7 +302,7 @@ app.post('/api/v1/searchPodcast', async function (req, res) {
     let length = response.feeds.length
     for (let i = 0; i < length; i++) {
       let podcast = response.feeds[i];
-      if (podcast.title === podcastName) {
+      if (podcast.title.trim() === podcastName.trim()) {
         episodes = await apiClient.episodesByFeedId(podcast?.id);
         res.send({ pod: podcast, eps: episodes });
         return;

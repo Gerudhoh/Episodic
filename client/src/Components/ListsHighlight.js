@@ -115,7 +115,7 @@ class ListsHighlight extends React.Component {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ id: this.props.userId}),
+      body: JSON.stringify({ id: this.props.userId }),
     });
     let body = await response.json();
     if (body.noUser === true) {
@@ -125,7 +125,7 @@ class ListsHighlight extends React.Component {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id: this.props.userId}),
+        body: JSON.stringify({ id: this.props.userId }),
       });
       body = await response.json();
     }
@@ -148,14 +148,18 @@ class ListsHighlight extends React.Component {
       })
 
       list.episodes?.map((episode) => {
+        i = 0;
+        if (i < 3) {
+          tmp.images.push({
+            img: episode.image,
+            episodeTitle: episode.title,
+            podcastTitle: episode.podcast,
+            listView: true,
+            currentList: list,
+          });
+        }
 
-        tmp.images.push({
-          img: episode.image,
-          episodeTitle: episode.title,
-          podcastTitle: episode.podcast,
-          listView: true,
-          currentList: list,
-        });
+        i++;
 
       })
       // Add podcasts/episodes as images if there are any
@@ -172,7 +176,7 @@ class ListsHighlight extends React.Component {
         <Stack spacing={2}>
           {this.state.allLists.map((item) => (
             <Item key={item.name}>
-              <ListPreview listName={item.name} images={item.images} listSize={this.size} userId={this.props.userId}/>
+              <ListPreview listName={item.name} images={item.images} listSize={this.size} userId={this.props.userId} />
             </Item>
           ))}
         </Stack>
