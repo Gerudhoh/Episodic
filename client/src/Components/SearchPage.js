@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom'
 
@@ -10,7 +11,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 //Custom Components
 import EpisodeCardList from "./EpisodeCardList.js"
 
-function searchPageStack(){
+/*function searchPageStack(){
   return(
     <React.Fragment>
     <Stack alignItems="flex-start" justifyContent="space-evenly" direction="row" spacing={2}>
@@ -29,9 +30,9 @@ function searchPageNormal(){
       </Stack>
     </Stack>
   );
-}
+}*/
 
-export default function SearchPage(){
+export default function SearchPage(props){
   const [value, setValue] = useState(null);
   const [isLoading, setLoading] = useState(true);
   const location = useLocation()
@@ -47,9 +48,7 @@ export default function SearchPage(){
     response.json().then(data => {
       let images = [];
       let length = data.data.length;
-      console.log(length);
       for(let i = 0; i < length; i++) {
-        console.log(data.data[i]);
         images.push({
           img: data.data[i].image,
           podcastTitle: data.data[i].title_original,
@@ -68,7 +67,7 @@ export default function SearchPage(){
       return(
         <Stack spacing={2} padding="20px">
           <Typography variant="h4">Search Results</Typography>
-          <EpisodeCardList images={images} listSize={"large"}/>
+          <EpisodeCardList images={images} listSize={"large"} userId={props.userId}/>
         </Stack>
         );
     }).then( resource => {

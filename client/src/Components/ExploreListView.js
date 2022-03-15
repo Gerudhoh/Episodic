@@ -77,9 +77,8 @@ class ExploreListView extends React.Component {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name: this.state.location }),
+      body: JSON.stringify({ name: this.state.location, id: this.props.userId }),
     });
-    //let response = await fetch("/api/v1/lists/get/one");
     let body = await response.json();
     let tmp = { name: body.list.name, images: [] };
     body.list.podcasts?.map((podcast) => {
@@ -114,7 +113,7 @@ class ExploreListView extends React.Component {
           <Typography variant="h4">{this.state.list.name}</Typography>
         </Stack>
         <Stack>
-          <EpisodeCardList images={this.state.list.images} listSize={"large"} listView={true} />
+          <EpisodeCardList images={this.state.list.images} listSize={"large"} userId={this.props.userId} listView={true} />
         </Stack>
       </Stack>
     );

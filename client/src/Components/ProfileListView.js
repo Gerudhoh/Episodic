@@ -52,7 +52,13 @@ class ProfileListViewClass extends React.Component {
 
   getUserLists = async e => {
     //e.preventDefault();
-    const response = await fetch("/api/v1/lists/get/all/temp");
+    let response = await fetch('/api/v1/lists/get/all/temp', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: props.userId}),
+    });
     const body = await response.json();
     //const listMap = body.lists.map((list) => {list.name});
     let userLists = [];
@@ -97,7 +103,7 @@ class ProfileListViewClass extends React.Component {
             <Typography variant="h4">{list.name}</Typography>
           </Stack>
           <Stack>
-            <EpisodeCardList images={list.images} listSize={"large"}/>
+            <EpisodeCardList images={list.images} listSize={"large"} userId={this.props.userId}/>
           </Stack>
         </Stack>
       </Item>
@@ -116,7 +122,7 @@ class ProfileListViewClass extends React.Component {
               <UserInfo avatarSize="large" fontSize="20px" userName="userName" />
             </Stack>
           </Item>
-          <Item><AllLists /></Item>
+          <Item><AllLists userId={this.props.userId} /></Item>
         </Stack>
         {  this.ShowList(this.props.location.split('/')[2])}
       </Stack>
@@ -124,9 +130,9 @@ class ProfileListViewClass extends React.Component {
     };
 }
 
-export default function ProfileListView(){
+export default function ProfileListView(props){
   const location = useLocation();
   return(
-    <ProfileListViewClass location={location.pathname}/>
+    <ProfileListViewClass location={location.pathname} userId={props.userId}/>
   );
 }

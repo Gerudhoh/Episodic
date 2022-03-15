@@ -7,7 +7,7 @@ import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
-import {getCookieData, checkAuth, signUpUser} from "../lib/CookieData.js"
+import {signUpUser} from "../lib/CookieData.js"
 
 
 //Styling
@@ -76,7 +76,7 @@ class SignUpForm extends React.Component {
 
       document.cookie = `username=${response.username}; expires=${expires};`;
       document.cookie = `email=${response.email}; expires=${expires};`;
-      document.cookie = `id=${response.id}; expires=${expires};`;
+      document.cookie = `userId=${response.userId}; expires=${expires};`;
       document.cookie = `token=${response.token}; expires=${expires};`;
 
       await this.props.changeAuth();

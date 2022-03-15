@@ -24,7 +24,15 @@ import { styled } from '@mui/material/styles';
 import PodcastEpisodesCard from './PodcastEpisodesCard.js';
 import Reviews from './Reviews.js'
 
-const reviews = [
+const delay = (ms) =>
+  new Promise((res) => {
+    setTimeout(() => {
+      res()
+    }, ms)
+  })
+
+
+/*const reviews = [
     {
       name: "name1",
       activityType: "newReview",
@@ -62,7 +70,7 @@ const reviews = [
         reviewText: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
       }
     },
-]
+]*/
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -142,8 +150,25 @@ class AddPodcastToList extends React.Component{
 
   getUserLists = async e => {
     //e.preventDefault();
-    const response = await fetch("/api/v1/lists/get/all/names");
-    const body = await response.json();
+    let response = await fetch('/api/v1/lists/get/all/names', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: this.props.userId}),
+    });
+    let body = await response.json();
+    if(body.noUser === true) {
+      await delay(1000); //in case user is already logged in, wait for the auth
+      let response = await fetch('/api/v1/lists/get/all/names', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: this.props.userId}),
+      });
+      body = await response.json();
+    }
     let listNames = [];
     body.lists.map((list, index) =>
       listNames.push((<MenuItem key={index} value={index}>{list.name}</MenuItem>))
@@ -182,11 +207,11 @@ function PodcastDetails(props){
   const podcast = props.podcast;
   return(
     <Stack direction="row" spacing={2} padding="10px" justifyContent="flex-start">
-      <img src={podcast.image} width="350px" height="auto"/>
+      <img src={podcast.image} alt={podcast.image} width="350px" height="auto"/>
       <Item>
         <Stack alignItems="center" spacing={2} padding="10px">
-          <Typography variant="h2" onClick={()=> window.open(podcast.website, "_blank")}><a><u>{podcast.title}</u></a></Typography>
-          <AddPodcastToList podcast={podcast}/>
+          <Typography variant="h2" ><a href={podcast.website} target="_blank" rel="noreferrer"><u>{podcast.title}</u></a></Typography>
+          <AddPodcastToList podcast={podcast} userId={props.userId}/>
           <Rating readOnly size="large" value={podcast.rating}/>
         </Stack>
       </Item>
@@ -201,11 +226,11 @@ function PodcastInfo(props){
   const podcast = props.podcast;
   return(
     <Stack spacing={2} padding="10px" justifyContent="center">
-      <Item><PodcastDetails podcast={podcast} /></Item>
+      <Item><PodcastDetails podcast={podcast} userId={props.userId} /></Item>
       <Stack direction="row" padding="10px" spacing={2} justifyContent="center">
         <Item sx={{maxWidth:"45%"}}>
           <Typography variant="h3" textAlign="left">Episodes</Typography>
-          <PodcastEpisodesCard episodes={podcast.episodes.items} image={podcast.image} podcastTitle={podcast.title}/>
+          <PodcastEpisodesCard episodes={podcast.episodes.items} image={podcast.image} podcastTitle={podcast.title} userId={props.userId}/>
         </Item>
         <Item >
           <Typography variant="h3" textAlign="left">Reviews</Typography>
@@ -219,14 +244,13 @@ function PodcastInfo(props){
 }
 
 
-export default function PodcastInfoPage(){
+export default function PodcastInfoPage(props){
   const [value, setValue] = useState(null);
   const [isLoading, setLoading] = useState(true);
   const location = useLocation()
   const podTitle = decodeURIComponent(location.pathname.split('/')[2]);
 
-  async function getPodcast(data) {
-    console.log("Fetch " + data);
+  async function getPodcast(data, userId) {
     const response = await fetch('/api/v1/searchPodcast', {
       method: 'POST',
       headers: {
@@ -249,7 +273,7 @@ export default function PodcastInfoPage(){
         genre : podcast.categories,
         episodes : episodes,
       }
-      return <PodcastInfo podcast={info}/>
+      return <PodcastInfo podcast={info} userId={userId}/>
     }).then( resource => {
       setValue(resource);
       setLoading(false);
@@ -258,8 +282,8 @@ export default function PodcastInfoPage(){
   }
 
   useEffect(() => {
-    getPodcast(podTitle);
-  }, [podTitle]);
+    getPodcast(podTitle, props.userId);
+  }, [podTitle, props.userId]);
 
   return(
     <React.Fragment>

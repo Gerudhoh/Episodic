@@ -47,7 +47,7 @@ class AllLists extends React.Component {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name: this.state.listName }),
+      body: JSON.stringify({ name: this.state.listName, id: this.props.userId}),
     });
     const body = await response.json();
     if (!body.list) {
@@ -61,11 +61,23 @@ class AllLists extends React.Component {
 
   getUserLists = async e => {
     //e.preventDefault();
-    let response = await fetch("/api/v1/lists/get/all/names");
+    let response = await fetch('/api/v1/lists/get/all/names', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: this.props.userId}),
+    });
     let body = await response.json();
     if(body.noUser === true) {
       await delay(1000); //in case user is already logged in, wait for the auth
-      response = await fetch("/api/v1/lists/get/all/names");
+      let response = await fetch('/api/v1/lists/get/all/names', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: this.props.userId}),
+      });
       body = await response.json();
     }
     let listNames = [];

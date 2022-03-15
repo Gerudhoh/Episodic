@@ -38,18 +38,13 @@ app.get('/', (req, res) => {
   res.sendFile(process.cwd() + "/client/build/index.html");
 });
 
-
-// Check if a username and password is correct and generate a token
-let currentUser = null;
-
 app.post('/api/v1/lists/create', async function (req, res) {
   let name = req.body.name;
   let list = null;
+  let userId = req.body.id;
 
-  if (currentUser && currentUser.id !== undefined) {
-    let userId = currentUser.id;
+  if (userId != null) {
     let sql = "insert into lists (name, userId) values ('" + name + "', " + userId + ")";
-
 
     //throw it into the database
     await new Promise(async (rem, rej) => {
@@ -57,7 +52,6 @@ app.post('/api/v1/lists/create', async function (req, res) {
         let result = await promisePool.query(sql);
         let id = result[0].insertId;
         list = new lists(name, id);
-        //currentUser.addEpisodicList(list);
         res.send({
           list: list
         });
@@ -187,11 +181,11 @@ app.post('/api/v1/lists/remove/episode', async function (req, res) {
 
 });
 
-app.get("/api/v1/lists/get/all/names", async function (req, res) {
+app.post("/api/v1/lists/get/all/names", async function (req, res) {
+  let userId = req.body.id;
 
-  if (currentUser && currentUser.id !== undefined) {
-
-    let userList = await users.getUserLists(currentUser.id);
+  if (userId != null) {
+    let userList = await users.getUserLists(userId);
 
     res.send({ lists: userList, noUser: false });
     return;
@@ -201,11 +195,12 @@ app.get("/api/v1/lists/get/all/names", async function (req, res) {
 });
 
 // This endpoint is VERY slow because it needs to pull everything out of the database, not sure if there's a better way to do this but it's good enough for now
-app.get("/api/v1/lists/get/all", async function (req, res) {
+app.post("/api/v1/lists/get/all", async function (req, res) {
+  let userId = req.body.id;
 
-  if (currentUser && currentUser.id !== undefined) {
+  if (userId != null) {
 
-    let userList = await users.getUserLists(currentUser.id);
+    let userList = await users.getUserLists(userId);
 
     let i = 0;
     for (const element of userList) {
@@ -242,12 +237,11 @@ app.get("/api/v1/lists/get/all", async function (req, res) {
 });
 
 app.post("/api/v1/lists/get/one", async function (req, res) {
+  let userId = req.body.id;
 
-  let name = req.body.name;
+  if (userId != null) {
 
-  if (currentUser && currentUser.id !== undefined) {
-
-    let userList = await users.getUserLists(currentUser.id);
+    let userList = await users.getUserLists(userId);
     if(userList) {
       res.send({ list: {} });
       return;
@@ -308,7 +302,6 @@ app.post('/api/v1/search', async function (req, res) {
 
 app.post('/api/v1/searchPodcast', async function (req, res) {
   let podcastName = req.body.name;
-  console.log(podcastName);
   let apiClient = fetcher.getPodcastIndexApi();
   let episodes = [];
   await apiClient.search(podcastName).then(async (response) => {
@@ -346,18 +339,13 @@ app.get('*', (req, res) => {
 
 app.post('/api/v1/user/add', async function (req, res) {
   let token = randomString(32, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
-  currentUser = null;
-
   let result = await users.addUser(req.body.username, req.body.email, req.body.password, token);
 
   let myResult = {};
   myResult.username = req.body.username;
   myResult.email = req.body.email;
   myResult.token = token;
-  myResult.id = result.insertId;
-
-
-  currentUser = myResult;
+  myResult.userId = result.insertId;
 
   res.send(myResult);
 });
@@ -368,14 +356,7 @@ app.post('/api/v1/user/login', async function (req, res) {
   let username = req.body.username;
   let password = req.body.password;
   let token = randomString(32, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
-  currentUser = null;
-
-  console.log(username)
-  console.log(password)
-
   let result = await users.checkLogin(username, password);
-
-  console.log(result)
 
   if (result !== [] && result !== undefined && result.length > 0) {
     let update_token = await users.updateToken(username, password, token);
@@ -383,10 +364,8 @@ app.post('/api/v1/user/login', async function (req, res) {
     let myResult = {};
     myResult.username = username;
     myResult.token = token;
-    myResult.email = req.body.email;
-    myResult.id = result[0].id;
-
-    currentUser = myResult;
+    myResult.email = result[0].email;
+    myResult.userId = result[0].id;
 
     res.send(myResult);
   }
@@ -396,9 +375,7 @@ app.post('/api/v1/user/login', async function (req, res) {
 app.post('/api/v1/user/auth', async function (req, res) {
   let username = req.body.username;
   let token = req.body.token;
-
   let result = await users.checkExistingLogin(username, token);
-  currentUser = result[0];
   res.send(result);
 });
 
@@ -406,18 +383,16 @@ app.post('/api/v1/user/auth', async function (req, res) {
 app.post('/api/v1/user/logout', async function (req, res) {
   let username = req.body.username;
   let token = req.body.token;
-
   let update_token = await users.removeToken(username, token);
 
   let myResult = {};
   myResult.username = "";
-  myResult.username = "";
+  myResult.email = "";
   myResult.token = "";
-  myResult.id = undefined;
+  myResult.userId = undefined;
 
   res.send(myResult);
 });
-
 
 
 // Listen to the specified port for api requests
