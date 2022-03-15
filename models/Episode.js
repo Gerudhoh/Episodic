@@ -1,18 +1,18 @@
 class Episode {
     constructor(
         title,
+        image,
         description, 
-        audioLengthSeconds, 
         explicit, 
+        rss,
         podcast,
-        listenNotesId,
         databaseId) { 
+            this.rss = rss;
             this.title = title;
             this.description = description;
-            this.audioLengthSeconds = audioLengthSeconds;
             this.explicit = explicit;
             this.podcast = podcast;
-            this.listenNotesId = listenNotesId; 
+            this.image = image;
             this.rating = null;
             this.databaseId = databaseId;
         }

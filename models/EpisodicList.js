@@ -83,18 +83,13 @@ class EpisodicList {
         });
     }
 
-    removeEpisode(episode) {
-        let found = false;
+    removeEpisode(episodeId) {
         this.episodes.forEach((element) => {
-            if (element.id == episode.id) {
+            if (element.databaseId == episodeId) {
                 this.episodes.pop(element);
-                found = true;
             }
         });
 
-        if (found == false) return;
-
-        let episodeId = episode.id; 
         let sql = "delete from lists_episodes_link where listsId = " + this.id + " and episodesId = " + episodeId + ";"
 
         new Promise(async (res, rej) => {

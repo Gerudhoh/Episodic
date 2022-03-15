@@ -112,7 +112,7 @@ class ListsHighlight extends React.Component {
     //e.preventDefault();
     let response = await fetch("/api/v1/lists/get/all");
     let body = await response.json();
-    if(body.noUser === true) {
+    if (body.noUser === true) {
       await delay(1000); //in case user is already logged in, wait for the auth
       response = await fetch("/api/v1/lists/get/all");
       body = await response.json();
@@ -123,8 +123,7 @@ class ListsHighlight extends React.Component {
       let i = 0;
       list.podcasts?.map((podcast) => {
         if (i < 3) {
-          
-          console.log(podcast.title);
+
           tmp.images.push({
             img: podcast.image,
             podcastTitle: podcast.title,
@@ -134,6 +133,18 @@ class ListsHighlight extends React.Component {
           });
         }
         i++;
+      })
+
+      list.episodes?.map((episode) => {
+
+        tmp.images.push({
+          img: episode.image,
+          episodeTitle: episode.title,
+          podcastTitle: episode.podcast,
+          listView: true,
+          currentList: list,
+        });
+
       })
       // Add podcasts/episodes as images if there are any
       // I'm not entirely sure how to do this. We need the podcasts to be clickable (?) but they are just images + titles here

@@ -93,6 +93,17 @@ class ExploreListView extends React.Component {
       });
 
     })
+    body.list.episodes?.map((episode) => {
+
+      tmp.images.push({
+        img: episode.image,
+        episodeTitle: episode.title,
+        podcastTitle: episode.podcast,
+        listView: true,
+        currentList: list,
+      });
+
+    })
     this.setState({ list: tmp });
   };
 

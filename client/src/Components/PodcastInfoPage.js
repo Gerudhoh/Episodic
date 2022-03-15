@@ -88,7 +88,6 @@ class AddPodcastToList extends React.Component{
     this.explicit = this.podcast.explicit;
     this.totalEpisodes = this.podcast.totalEpisodes;
     this.platforms = this.podcast.platforms;
-    this.audioLengthSeconds = this.podcast.audioLengthSeconds;
     this.isPodcast = true;
     this.uri = `/info/${encodeURIComponent(this.props.podcastTitle)}`;
 
