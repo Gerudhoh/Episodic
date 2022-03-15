@@ -279,31 +279,22 @@ app.post("/api/v1/lists/get/one", async function (req, res) {
 app.post('/api/v1/search', async function (req, res) {
   let name = req.body.name;
   let apiClient = fetcher.getListenNotesApi();
-  apiClient.search({
+  let podcasts = await apiClient.search({
     q: name,
     type: 'podcast',
     only_in: 'title,description',
-  }).then((response) => {
-    res.send({ data: response.data.results });
-  }).catch(err => { });
-
-});
-
-app.post('/api/v1/search', async function (req, res) {
-  let name = req.body.name;
-  let apiClient = fetcher.getListenNotesApi();
-  apiClient.search({
+  });
+  let episodes = await apiClient.search({
     q: name,
-    type: 'podcast',
     only_in: 'title,description',
-  }).then((response) => {
-    res.send({ data: response.data.results });
-  }).catch(err => { console.log(err); });
+  });
+  let data = podcasts.data.results.concat(episodes.data.results);
+  res.send({ data: data });
+
 });
 
 app.post('/api/v1/searchPodcast', async function (req, res) {
   let podcastName = req.body.name;
-  console.log(podcastName);
   let apiClient = fetcher.getPodcastIndexApi();
   let episodes = [];
   await apiClient.search(podcastName).then(async (response) => {
@@ -317,8 +308,6 @@ app.post('/api/v1/searchPodcast', async function (req, res) {
       }
     }
   });
-
-
 });
 
 
