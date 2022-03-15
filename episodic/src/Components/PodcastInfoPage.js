@@ -24,39 +24,6 @@ import { styled } from '@mui/material/styles';
 import PodcastEpisodesCard from './PodcastEpisodesCard.js';
 import Reviews from './Reviews.js'
 
-const podcast1 = {
-  title : 'podcastTitle',
-  description : 'description',
-  rss : 'rss',
-  image : '/pepekingprawn.jpg',
-  website : 'website',
-  publisher : 'publisher',
-  language : 'language',
-  explicit : 'explicit',
-  rating : 0,
-  genre : 'genre',
-  episodes : [
-    {
-      title: 'title1',
-      description: 'description',
-      podcast: 'podcast'
-    },
-    {
-      title: 'title2',
-      description: 'description',
-      podcast: 'podcast'
-    },
-    {
-      title: 'title3',
-      description: 'description',
-      podcast: 'podcast'
-    },
-  ],
-  totalEpisodes : 'totalEpisodes',
-  platforms : 'platforms',
-  id : 'id',
-}
-
 const reviews = [
     {
       name: "name1",
@@ -216,7 +183,7 @@ function PodcastDetails(props){
   const podcast = props.podcast;
   return(
     <Stack direction="row" spacing={2} padding="10px" justifyContent="flex-start">
-      <img src={podcast.image} width="300px" height="auto"/>
+      <img src={podcast.image} width="350px" height="auto"/>
       <Item>
         <Stack alignItems="center" spacing={2} padding="10px">
           <Typography variant="h2">{podcast.title}</Typography>
@@ -239,7 +206,7 @@ function PodcastInfo(props){
       <Stack direction="row" padding="10px" spacing={2} justifyContent="center">
         <Item sx={{maxWidth:"45%"}}>
           <Typography variant="h3" textAlign="left">Episodes</Typography>
-          <PodcastEpisodesCard episodes={podcast.episodes.items} image={podcast.image}/>
+          <PodcastEpisodesCard episodes={podcast.episodes.items} image={podcast.image} podcastTitle={podcast.title}/>
         </Item>
         <Item >
           <Typography variant="h3" textAlign="left">Reviews</Typography>
