@@ -197,6 +197,34 @@ app.get("/api/v1/lists/get/all", async function (req, res) {
 
 });
 
+app.post("/api/v1/lists/get/one", async function (req, res) {
+
+  let name = req.body.name;
+
+  if (currentUser && currentUser.id !== undefined) {
+
+    let userList = await users.getUserLists(currentUser.id);
+    let element = userList.find(element => element.name == name);
+
+    let i = 0;
+    let list = new lists(element.name, element.id);
+    let sql = "select * from lists_podcasts_link where listsId = " + list.id + "";
+    let newResult = await promisePool.query(sql);
+    for (const pod of newResult[0]) {
+      let linkSql = "select * from podcasts where id = " + pod.podcastsId + "";
+      let linkResult = await promisePool.query(linkSql);
+      let temp = new podcasts(linkResult[0][0].name, linkResult[0][0].description, linkResult[0][0].rss, linkResult[0][0].image, linkResult[0][0].website, linkResult[0][0].publisher, linkResult[0][0].language, linkResult[0][0].genre.split(","), linkResult[0][0].explicit, linkResult[0][0].totalEpisodes);
+      list.addPodcast(temp);
+      i++;
+    }
+
+    res.send({ list: list });
+    return;
+  }
+  res.send({ list: {} });
+
+});
+
 app.post('/api/v1/search', async function (req, res) {
   let name = req.body.name;
   let apiClient = fetcher.getListenNotesApi();
@@ -234,7 +262,7 @@ app.post('/api/v1/searchPodcast', async function (req, res) {
       if (podcast.title === podcastName) {
         episodes = await apiClient.episodesByFeedId(podcast?.id);
         res.send({ pod: podcast, eps: episodes });
-        return; 
+        return;
       }
     }
   });
