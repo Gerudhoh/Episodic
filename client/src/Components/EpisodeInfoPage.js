@@ -69,6 +69,7 @@ function EpisodeInfo(props){
 }
 
 export default function EpisodeInfoPage(){
+  console.log("hiiii");
   const [value, setValue] = useState(null);
   const [isLoading, setLoading] = useState(true);
   const location = useLocation()

@@ -10,6 +10,7 @@ import HomePage from './HomePage';
 import ProfilePage from './ProfilePage';
 import SearchPage from './SearchPage';
 import PodcastInfoPage from './PodcastInfoPage';
+import EpisodeInfoPage from './EpisodeInfoPage';
 import ExploreListView from './ExploreListView';
 
 class RouteSwitch extends React.Component {
@@ -43,6 +44,8 @@ class RouteSwitch extends React.Component {
                 {/* Logged Out routes */}
                 <Route exact path="/login" element={<Login changeAuth={this.changeAuth}  checkAuthData={this.checkAuthData}  changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
                 <Route exact path="/signup" element={<SignUp changeAuth={this.changeAuth} checkAuthData={this.checkAuthData}  changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
+                
+                <Route path="/episodeinfo/*" element={<EpisodeInfoPage changeAuth={this.changeAuth} checkAuthData={this.checkAuthData}  changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
                 <Route path="/info/*" element={<PodcastInfoPage changeAuth={this.changeAuth} checkAuthData={this.checkAuthData}  changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
 
                 {/* Logged In routes */}
