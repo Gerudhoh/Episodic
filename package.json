@@ -12,7 +12,6 @@
     "spotify-web-api-node": "^5.0.2"
   },
   "scripts": {
-    "prestart": "next build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
     "server": "node server.js",
