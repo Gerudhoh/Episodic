@@ -72,7 +72,7 @@ app.post('/api/v1/lists/create', async function (req, res) {
 
 app.post('/api/v1/lists/add/podcast', async function (req, res) {
   let list = req.body.list;
-  let podcast = new podcasts(req.body.title, req.body.description, req.body.rss, req.body.image, req.body.website || "N/A", req.body.publisher || "N/A", req.body.language || "N/A", req.body.genre || [], req.body.explicit == "explicit", req.body.totalEpisodes || 0, null, req.body.podcastId);
+  let podcast = new podcasts(req.body.title, req.body.description, req.body.rss, req.body.image, req.body.website || "N/A", req.body.publisher || "N/A", req.body.language || "N/A", req.body.genre || [], Boolean(req.body.explicit) || false, req.body.totalEpisodes || 0, null, req.body.podcastId);
   list = new lists(list.name, list.id, list);
 
   await new Promise(async (rem, rej) => {
@@ -130,7 +130,8 @@ app.post('/api/v1/lists/add/episode', async function (req, res) {
   let list = req.body.list;
   list = new lists(list.name, list.id, list);
   let episodejson = req.body.episode;
-  let episode = new episodes(episodejson.title, req.body.image, episodejson.description, episodejson.explicit == "explicit", episodejson.website, episodejson.podcast.title);
+  console.log(episodejson);
+  let episode = new episodes(episodejson.title, req.body.image, episodejson.description, episodejson.explicit === "explicit" || false, episodejson.website, episodejson.podcast.title);
 
   await new Promise(async (rem, rej) => {
     try {
@@ -281,7 +282,7 @@ app.post('/api/v1/search', async function (req, res) {
     only_in: 'title,description',
   }).then((response) => {
     res.send({ data: response.data.results });
-  }).catch(err => { });
+  }).catch(err => { console.log(err); });
 
 });
 
