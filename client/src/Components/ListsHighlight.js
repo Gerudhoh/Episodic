@@ -147,8 +147,8 @@ class ListsHighlight extends React.Component {
         i++;
       })
 
+      i = 0;
       list.episodes?.map((episode) => {
-        i = 0;
         if (i < 3) {
           tmp.images.push({
             img: episode.image,

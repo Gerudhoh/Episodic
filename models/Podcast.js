@@ -7,8 +7,6 @@ class Podcast {
          website,
          publisher,
          language,
-         genre,
-         explicit,
          totalEpisodes,
          platforms,
          databaseId) { 
@@ -19,9 +17,7 @@ class Podcast {
             this.website = website;
             this.publisher = publisher;
             this.language = language;
-            this.explicit = explicit;
             this.rating = null;
-            this.genre = genre;
             this.episodes = [];
             this.totalEpisodes = totalEpisodes;
             this.platforms = platforms;

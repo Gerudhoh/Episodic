@@ -3,14 +3,10 @@ class Episode {
         title,
         image,
         description, 
-        explicit, 
-        rss,
         podcast,
         databaseId) { 
-            this.rss = rss;
             this.title = title;
             this.description = description;
-            this.explicit = explicit;
             this.podcast = podcast;
             this.image = image;
             this.rating = null;
