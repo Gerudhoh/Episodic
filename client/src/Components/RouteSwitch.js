@@ -11,7 +11,8 @@ import ProfilePage from './ProfilePage';
 import SearchPage from './SearchPage';
 import PodcastInfoPage from './PodcastInfoPage';
 import EpisodeInfoPage from './EpisodeInfoPage';
-import ExploreListView from './ExploreListView';
+import SingleListView from './SingleListView';
+import ProfileListView from './ProfileListView';
 
 class RouteSwitch extends React.Component {
   constructor(props) {
@@ -50,7 +51,8 @@ class RouteSwitch extends React.Component {
                 <Route exact path="/" element={<HomePage changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent" auth={this.props.auth} email={this.props.email} username={this.props.username} userId={this.props.userId}/>}/>
                 <Route exact path="/searchresults" element={<SearchPage changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent" auth={this.props.auth} email={this.props.email} username={this.props.username} userId={this.props.userId}/>}/>
                 <Route exact path="/profile" element={<ProfilePage changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent" auth={this.props.auth} email={this.props.email} username={this.props.username} userId={this.props.userId}/>}/>
-                <Route path="/userlist/*" element={<ExploreListView changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent" auth={this.props.auth} email={this.props.email} username={this.props.username} userId={this.props.userId}/>}/>
+                <Route path="/userlist/*" element={<SingleListView changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent" auth={this.props.auth} email={this.props.email} username={this.props.username} userId={this.props.userId}/>}/>
+                <Route path="/alluserlists/*" element={<ProfileListView changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent" auth={this.props.auth} email={this.props.email} username={this.props.username} userId={this.props.userId}/>}/>
             </Routes>
       </div>
     );

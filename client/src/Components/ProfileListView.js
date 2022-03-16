@@ -57,7 +57,7 @@ class ProfileListViewClass extends React.Component {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ id: props.userId}),
+      body: JSON.stringify({ id: this.props.userId}),
     });
     const body = await response.json();
     //const listMap = body.lists.map((list) => {list.name});
@@ -119,7 +119,7 @@ class ProfileListViewClass extends React.Component {
         <Stack spacing={2} sx={{width:"25%"}}>
           <Item >
             <Stack spacing={2} direction="row" justifyContent="space-between" >
-              <UserInfo avatarSize="large" fontSize="20px" userName="userName" />
+              <UserInfo avatarSize="large" fontSize="20px" userName={this.props.userName} />
             </Stack>
           </Item>
           <Item><AllLists userId={this.props.userId} /></Item>
@@ -133,6 +133,6 @@ class ProfileListViewClass extends React.Component {
 export default function ProfileListView(props){
   const location = useLocation();
   return(
-    <ProfileListViewClass location={location.pathname} userId={props.userId}/>
+    <ProfileListViewClass location={location.pathname} userId={props.userId} userName={props.username}/>
   );
 }

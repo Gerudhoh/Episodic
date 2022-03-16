@@ -91,7 +91,7 @@ class AllLists extends React.Component {
         Error: Could not create list.
       </Alert>) : (null)}
       {this.state.showSuccess ? (<React.Fragment></React.Fragment>) : (null)}
-        <Typography variant="h4" component={Link} to="/userlist/all">Lists</Typography>
+        <Typography variant="h4" component={Link} to="/alluserlists">Lists</Typography>
         <List>
           {this.state.allLists.map((item) => (
             <ListItem key={item.name} id={item.id}>

@@ -56,7 +56,7 @@ const delay = (ms) =>
     }, ms)
   })
 
-class ExploreListView extends React.Component {
+class SingleListView extends React.Component {
 
   constructor(props) {
     super(props);
@@ -126,4 +126,4 @@ class ExploreListView extends React.Component {
   }
 }
 
-export default ExploreListView;
+export default SingleListView;
