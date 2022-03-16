@@ -5,6 +5,8 @@ import Typography from '@mui/material/Typography';
 
 import EpisodeCardList from './EpisodeCardList.js';
 
+import {useLocation} from 'react-router-dom';
+
 
 const list = {
   name: 'list1',
@@ -56,11 +58,13 @@ const delay = (ms) =>
     }, ms)
   })
 
-class SingleListView extends React.Component {
+class SingleListViewClass extends React.Component {
 
   constructor(props) {
     super(props);
     this.size = this.props.listSize;
+    
+    this.location = decodeURIComponent(this.props.location.split('/')[2]);
 
     this.state = {
       list: { name: 'Loading...', images: [] },
@@ -75,14 +79,12 @@ class SingleListView extends React.Component {
 
   getUserList = async e => {
     await delay(500);
-    let location = window.location.href.split("/");
-    location = location[location.length - 1];
     const response = await fetch('/api/v1/lists/get/one', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name: decodeURIComponent(location), id: this.props.userId }),
+      body: JSON.stringify({ name: this.location, id: this.props.userId }),
     });
     let body = await response.json();
     this.setState({ listObj: body.list });
@@ -126,4 +128,9 @@ class SingleListView extends React.Component {
   }
 }
 
-export default SingleListView;
+export default function SingleListView(props){
+  const location = useLocation();
+  return(
+    <SingleListViewClass location={location.pathname} listSize={props.listSize} userId={props.userId}/>
+  );
+}
