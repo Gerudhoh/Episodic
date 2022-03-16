@@ -49,17 +49,22 @@ const list = {
 };
 
 
+const delay = (ms) =>
+  new Promise((res) => {
+    setTimeout(() => {
+      res()
+    }, ms)
+  })
+
 class ExploreListView extends React.Component {
 
   constructor(props) {
     super(props);
     this.size = this.props.listSize;
 
-    let location = window.location.href.split("/");
-
     this.state = {
       list: { name: 'Loading...', images: [] },
-      location: location[location.length - 1]
+      listObj: {}
     };
   }
 
@@ -68,18 +73,19 @@ class ExploreListView extends React.Component {
     this.getUserList();
   }
 
-
-
   getUserList = async e => {
-
+    await delay(500);
+    let location = window.location.href.split("/");
+    location = location[location.length - 1];
     const response = await fetch('/api/v1/lists/get/one', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name: this.state.location, id: this.props.userId }),
+      body: JSON.stringify({ name: decodeURIComponent(location), id: this.props.userId }),
     });
     let body = await response.json();
+    this.setState({ listObj: body.list });
     let tmp = { name: body.list.name, images: [] };
     body.list.podcasts?.map((podcast) => {
 
@@ -88,7 +94,7 @@ class ExploreListView extends React.Component {
         podcastTitle: podcast.title,
         listView: true,
         id: podcast.listenNotesId,
-        currentList: list
+        currentList: this.state.listObj
       });
 
     })
@@ -99,7 +105,7 @@ class ExploreListView extends React.Component {
         episodeTitle: episode.title,
         podcastTitle: episode.podcast,
         listView: true,
-        currentList: list,
+        currentList: this.state.listObj,
       });
 
     })

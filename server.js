@@ -81,7 +81,7 @@ app.post('/api/v1/lists/add/podcast', async function (req, res) {
       let result = await promisePool.query(sql);
       let insertId = result[0].insertId;
       if (insertId == "0") {
-        let sql = "select id from podcasts where name = '" + podcast.title + "'";
+        let sql = "select id from podcasts where name = '" + escape(podcast.title) + "'";
         let result = await promisePool.query(sql);
         podcast.databaseId = result[0][0].id;
       }
@@ -111,9 +111,10 @@ app.post('/api/v1/lists/remove/podcast', async function (req, res) {
 
   await new Promise(async (rem, rej) => {
     try {
-      let sql = "select id from podcasts where name = '" + name + "'";
+      let sql = "select id from podcasts where name = '" + escape(name) + "'";
       let result = await promisePool.query(sql);
-      list.removePodcast(result[0][0].id);
+      let linkSql = "delete from lists_podcasts_link where listsId = " + list.id + " and podcastsId = " + result[0][0].id + ";"
+      await promisePool.query(linkSql);
       res.send({ success: true });
       return;
     } catch (err) {
@@ -137,7 +138,7 @@ app.post('/api/v1/lists/add/episode', async function (req, res) {
       let result = await promisePool.query(sql);
       let insertId = result[0].insertId;
       if (insertId == "0") {
-        let sql = "select id from episodes where name = '" + episode.title + "'";
+        let sql = "select id from episodes where name = '" + escape(episode.title) + "'";
         let result = await promisePool.query(sql);
         episode.databaseId = result[0][0].id;
       }
@@ -167,9 +168,10 @@ app.post('/api/v1/lists/remove/episode', async function (req, res) {
 
   await new Promise(async (rem, rej) => {
     try {
-      let sql = "select id from episodes where name = '" + name + "'";
+      let sql = "select id from episodes where name = '" + escape(name) + "'";
       let result = await promisePool.query(sql);
-      list.removeEpisode(result[0][0].id);
+      let linkSql = "delete from lists_episodes_link where listsId = " + list.id + " and episodesId = " + result[0][0].id + ";"
+      await promisePool.query(linkSql);
       res.send({ success: true });
       return;
     } catch (err) {
@@ -236,6 +238,7 @@ app.post("/api/v1/lists/get/all", async function (req, res) {
 
 app.post("/api/v1/lists/get/one", async function (req, res) {
   let userId = req.body.id;
+  let name = req.body.name;
 
   if (userId != null) {
 
