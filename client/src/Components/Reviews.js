@@ -48,13 +48,13 @@ const reviews = [
     },
 ]
 
-export default function Reviews() {
+export default function Reviews(props) {
 
   return (
     <Box container>
       <Stack spacing={2} divider={<Divider orientation="horizontal" flexItem />}>
       {reviews.map((item) => (
-        <ActivityCard key={item.name} activityType={item.activityType} userName={item.name} activityInfo={item.activityInfo} activitySize="large"/>
+        <ActivityCard key={item.name} activityType={item.activityType} userName={item.name} userId={props.userId} activityInfo={item.activityInfo} activitySize="large"/>
       ))}
       </Stack>
     </Box>

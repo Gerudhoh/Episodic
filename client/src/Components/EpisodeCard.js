@@ -3,13 +3,13 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 //Material UI Components
-import IconButton from '@mui/material/IconButton';
+//import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import Select from '@mui/material/Select';
+//import InputLabel from '@mui/material/InputLabel';
+//import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import Alert from '@mui/material/Alert';
+//import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
@@ -109,7 +109,7 @@ class EpisodeCard extends React.Component {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ list: this.state.currentList, name: this.podcastTitle }),
+      body: JSON.stringify({ list: this.state.currentList, name: this.podcastTitle, id: this.props.props.userId }),
     });
     const body = await response.json();
     this.setState({ showSuccess: body.success });
@@ -123,7 +123,7 @@ class EpisodeCard extends React.Component {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ list: this.state.currentList, name: this.episodeTitle }),
+      body: JSON.stringify({ list: this.state.currentList, name: this.episodeTitle, id: this.props.props.userId }),
     });
     const body = await response.json();
     this.setState({ showSuccess: body.success });
@@ -133,7 +133,13 @@ class EpisodeCard extends React.Component {
 
   getUserLists = async e => {
     //e.preventDefault();
-    const response = await fetch("/api/v1/lists/get/all");
+    const response = await fetch('/api/v1/lists/get/all', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({  id: this.props.props.userId }),
+    });
     const body = await response.json();
     let listNames = [];
     body.lists.map((list, index) =>

@@ -161,9 +161,9 @@ const ResponsiveAppBar = (props) => {
                 <MenuItem component={Link} to="/" replace onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">Home</Typography>
                 </MenuItem>
-                <MenuItem component={Link} to="/searchresults" replace onClick={handleCloseNavMenu}>
+                {/*<MenuItem component={Link} to="/searchresults" replace onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">Search</Typography>
-                </MenuItem>
+            </MenuItem>*/}
 
                 {props.auth === true &&
                   <MenuItem component={Link} to="/profile" replace onClick={handleCloseNavMenu}>
@@ -187,12 +187,12 @@ const ResponsiveAppBar = (props) => {
               >
                 Home
               </Button>
-              <Button component={Link} to="/searchresults" replace
+              {/*<Button component={Link} to="/searchresults" replace
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
                 Search
-              </Button>
+              </Button>*/}
 
               {props.auth === true &&
                 <Button component={Link} to="/profile" replace

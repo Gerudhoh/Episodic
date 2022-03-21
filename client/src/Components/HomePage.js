@@ -22,13 +22,13 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 
-function homePageStack(){
+function homePageStack(props){
   return(
     <React.Fragment>
     <Stack alignItems="flex-start" justifyContent="center" direction="row" spacing={1} sx={{padding:"10px"}}>
         <Item sx={{maxWidth:"60%"}}>
           <Typography variant="h4">Explore</Typography>
-          <ListsHighlight listSize="small"/>
+          <ListsHighlight listSize="small" userId={props.userId}/>
         </Item>
         <Item sx={{maxWidth:"40%"}}><FriendActivity activitySize="small" /></Item>
     </Stack>
@@ -36,38 +36,38 @@ function homePageStack(){
   );
 }
 
-function homePageNormal(){
+function homePageNormal(props){
   return(
 
     <Stack direction="row" spacing={1} alignItems="flex-start" justifyContent="center" padding="10px">
       <Stack sx={{maxWidth:"30%"}} spacing={2}>
-        <Item><AllLists /></Item>
+        <Item><AllLists userId={props.userId} /></Item>
         <Item >
           <Typography variant="h4">My Activity</Typography>
-          <FriendActivity activitySize="small" />
+          <FriendActivity activitySize="small" userId={props.userId}/>
         </Item>
       </Stack>
       <Item sx={{maxWidth:"40%"}}>
         <Typography variant="h4">Explore</Typography>
-        <ListsHighlight listSize="medium"/>
+        <ListsHighlight listSize="medium" userId={props.userId}/>
       </Item>
       <Item sx={{maxWidth:"30%"}}>
         <Typography variant="h4">Friend Activity</Typography>
-        <FriendActivity activitySize="small" />
+        <FriendActivity activitySize="small" userId={props.userId}/>
       </Item>
     </Stack>
   );
 }
 
-export default function HomePage(){
+export default function HomePage(props){
 
   return(
     <React.Fragment>
       <MediaQuery query='(min-width: 1225px)'>
-        {homePageNormal()}
+        {homePageNormal(props)}
       </MediaQuery>
       <MediaQuery query='(max-width: 1224px)'>
-        {homePageStack()}
+        {homePageStack(props)}
       </MediaQuery>
     </React.Fragment>
   );
