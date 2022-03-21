@@ -193,6 +193,12 @@ const ResponsiveAppBar = (props) => {
               >
                 Trending
               </Button>
+              {/*<Button component={Link} to="/searchresults" replace
+                onClick={handleCloseNavMenu}
+                sx={{ my: 2, color: 'white', display: 'block' }}
+              >
+                Search
+              </Button>*/}
 
               {props.auth === true &&
                 <Button component={Link} to="/profile" replace

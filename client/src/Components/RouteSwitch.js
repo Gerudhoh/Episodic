@@ -1,5 +1,5 @@
 import React from 'react';
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {Route, Routes} from "react-router-dom";
 
 //Logged out routes
 import Login from "./LoginForm";
@@ -11,16 +11,15 @@ import ProfilePage from './ProfilePage';
 import SearchPage from './SearchPage';
 import PodcastInfoPage from './PodcastInfoPage';
 import EpisodeInfoPage from './EpisodeInfoPage';
-import ExploreListView from './ExploreListView';
 import TrendingPage from './TrendingPage';
+import SingleListView from './SingleListView';
+import ProfileListView from './ProfileListView';
 
 class RouteSwitch extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      auth: props.auth
-    };
+    this.state = {};
     this.changeAuth = this.changeAuth.bind(this);
     this.changeRemoveAuth = this.changeRemoveAuth.bind(this);
     this.checkAuthData = this.checkAuthData.bind(this);
@@ -51,10 +50,11 @@ class RouteSwitch extends React.Component {
                 <Route path="/trending" element={<TrendingPage changeAuth={this.changeAuth} checkAuthData={this.checkAuthData}  changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
 
                 {/* Logged In routes */}
-                <Route exact path="/" element={<HomePage changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
-                <Route exact path="/searchresults" element={<SearchPage changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
-                <Route exact path="/profile" element={<ProfilePage changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent" auth={this.props.auth} username={this.props.username}/>}/>
-                <Route path="/userlist/*" element={<ExploreListView changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
+                <Route exact path="/" element={<HomePage changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent" auth={this.props.auth} email={this.props.email} username={this.props.username} userId={this.props.userId}/>}/>
+                <Route exact path="/searchresults" element={<SearchPage changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent" auth={this.props.auth} email={this.props.email} username={this.props.username} userId={this.props.userId}/>}/>
+                <Route exact path="/profile" element={<ProfilePage changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent" auth={this.props.auth} email={this.props.email} username={this.props.username} userId={this.props.userId}/>}/>
+                <Route path="/userlist/*" element={<SingleListView changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent" auth={this.props.auth} email={this.props.email} username={this.props.username} userId={this.props.userId}/>}/>
+                <Route path="/alluserlists/*" element={<ProfileListView changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent" auth={this.props.auth} email={this.props.email} username={this.props.username} userId={this.props.userId}/>}/>
             </Routes>
       </div>
     );

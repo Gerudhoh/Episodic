@@ -53,6 +53,7 @@ class EpisodicList {
         new Promise(async (res, rej) => {
             try {
                 let result = await promisePool.query(sql);
+                console.log(result);
                 res(result.insertId);
             } catch (err) {
                 res(err);
