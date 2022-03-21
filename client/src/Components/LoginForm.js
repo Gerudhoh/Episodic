@@ -7,7 +7,7 @@ import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 
-import {checkLogin, getCookieData, checkAuth} from "../lib/CookieData.js"
+import { checkLogin } from "../lib/CookieData.js"
 
 
 //Styling
@@ -71,6 +71,7 @@ class LoginForm extends React.Component {
       document.cookie = `username=${response.username}; expires=${expires};`;
       document.cookie = `email=${response.email}; expires=${expires};`;
       document.cookie = `token=${response.token}; expires=${expires};`;
+      document.cookie = `userId=${response.userId}; expires=${expires};`;
 
       await this.props.changeAuth();
     }
@@ -113,8 +114,8 @@ class LoginForm extends React.Component {
                 />
                 </Grid>
                 <Grid item lg={12} >
-            <Button  onClick={this.submitLogin}>Submit</Button>
             <Button variant="text" color="secondary"  onClick={this.signUp}>Sign Up</Button>
+            <Button  onClick={this.submitLogin}>Submit</Button>
             <br/><br/><br/>
             <p >{ this.state.errorLabel }</p>
             </Grid>

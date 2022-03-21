@@ -25,6 +25,14 @@ import { styled } from '@mui/material/styles';
 import PodcastEpisodesCard from './PodcastEpisodesCard.js';
 import Reviews from './Reviews.js'
 
+const delay = (ms) =>
+  new Promise((res) => {
+    setTimeout(() => {
+      res()
+    }, ms)
+  })
+
+
 const Item = styled(Paper)(({ theme }) => ({
   padding: 10,
   textAlign: 'center',
@@ -67,7 +75,7 @@ class AddEpisodeToList extends React.Component{
 
   removeEpisode = async e =>  {
     return;
-    const response = await fetch('/api/v1/lists/remove/podcast', {
+    /*const response = await fetch('/api/v1/lists/remove/podcast', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -76,14 +84,31 @@ class AddEpisodeToList extends React.Component{
     });
     const body = await response.json();
     this.setState({ showSuccess: body.success });
-    if (this.state.showSuccess) window.location.reload(false);
+    if (this.state.showSuccess) window.location.reload(false);*/
 
   };
 
   getUserLists = async e => {
     //e.preventDefault();
-    const response = await fetch("/api/v1/lists/get/all/names");
-    const body = await response.json();
+    let response = await fetch('/api/v1/lists/get/all/names', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: this.props.userId}),
+    });
+    let body = await response.json();
+    if(body.noUser === true) {
+      await delay(1000); //in case user is already logged in, wait for the auth
+      let response = await fetch('/api/v1/lists/get/all/names', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: this.props.userId}),
+      });
+      body = await response.json();
+    }
     let listNames = [];
     body.lists.map((list, index) =>
       listNames.push((<MenuItem key={index} value={index}>{list.name}</MenuItem>))
@@ -114,7 +139,6 @@ class AddEpisodeToList extends React.Component{
 
 function EpisodeDetails(props){
   const episode = props.episode;
-  console.log(episode);
   const podcast = episode.podcast;
   const podURI =`/info/${encodeURIComponent(podcast.title)}`;
   return(
@@ -125,7 +149,7 @@ function EpisodeDetails(props){
           <Typography textAlign="left" variant="h3">{episode.title}</Typography>
           <Typography variant="h4" component={Link} to={podURI} replace>{podcast.title}</Typography>
           
-          <AddEpisodeToList episode={episode} image={podcast.image}/>
+          <AddEpisodeToList episode={episode} image={podcast.image} userId={props.userId}/>
           <Rating readOnly size="large" value={episode.rating}/>
           <Typography component="div" textAlign="left" variant="p">{episode.description}</Typography>
         </Stack>
@@ -138,16 +162,16 @@ function EpisodeInfo(props){
   const episode = props.episode;
   return(
     <Stack spacing={2} padding="10px" justifyContent="center" alignItems="center">
-      <Item sx={{width:"80%"}}><EpisodeDetails episode={episode}/></Item>
+      <Item sx={{width:"80%"}}><EpisodeDetails episode={episode} userId={props.userId}/></Item>
       <Stack direction="row" flexWrap="wrap" spacing={2} justifyContent="center">
         <Item sx={{width:"45%"}}>
           <Typography variant="h3">More From {episode.podcast.title}</Typography>
-          <PodcastEpisodesCard episodes={episode.podcast.episodes.items} image={episode.podcast.image} podcastTitle={episode.podcast.title}/>
+          <PodcastEpisodesCard episodes={episode.podcast.episodes.items} userId={props.userId} image={episode.podcast.image} podcastTitle={episode.podcast.title}/>
         </Item>
         <Item sx={{width:"45%"}} height="45vh">
           <Typography variant="h3">Reviews</Typography>
           <Box component="div" height="45vh" sx={{overflow:'auto', padding:'10px'}}>
-            <Reviews />
+            <Reviews userId={props.userId}/>
           </Box>
         </Item>
       </Stack>
@@ -155,7 +179,7 @@ function EpisodeInfo(props){
   );
 }
 
-export default function EpisodeInfoPage(){
+export default function EpisodeInfoPage(props){
   const [value, setValue] = useState(null);
   const [isLoading, setLoading] = useState(true);
   const location = useLocation()
@@ -196,8 +220,7 @@ export default function EpisodeInfoPage(){
           episodes : podEpisodes,
         }
       }
-      console.log(info)
-      return <EpisodeInfo episode={info}/>
+      return <EpisodeInfo episode={info} userId={props.userId}/>
     }).then( resource => {
       setValue(resource);
       setLoading(false);
