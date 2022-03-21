@@ -26,7 +26,7 @@ const episodeCardStuff= {
   title: 'Breakfast'
 }
 
-export default function AllComponents(){
+export default function AllComponents(props){
   return(
     <React.Fragment>
     <Stack direction="row" spacing ={2} padding="10px">
@@ -52,7 +52,7 @@ export default function AllComponents(){
         <Fab> <StarIcon sx={{width:'25px', height:'25px'}}/> </Fab>
       </Item>
       <Item>
-        <EpisodeCard cardSize="large" img={episodeCardStuff.img} title={episodeCardStuff.title}/>
+        <EpisodeCard cardSize="large" img={episodeCardStuff.img} title={episodeCardStuff.title} props={props}/>
       </Item>
     </Stack>
     </React.Fragment>

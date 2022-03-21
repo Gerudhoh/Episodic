@@ -38,7 +38,7 @@ function NewListPreview(props){
   return(
     <Stack alignItems="flex-start" spacing={2}>
       <Typography fontSize={props.fontSize}> made new list listName </Typography>
-      <EpisodeCardList listName={props.listName} images={props.images} listSize="small"/>
+      <EpisodeCardList listName={props.listName} images={props.images} userId={props.userId} listSize="small"/>
     </Stack>
   );
 }
@@ -47,7 +47,7 @@ function MoveListPreview(props){
   return(
     <Stack alignItems="flex-start" spacing={2}>
       <Typography fontSize={props.fontSize}>moved podcastName from listName to listName</Typography>
-      <EpisodeCardList listName={props.listName} images={props.images} listSize="small"/>
+      <EpisodeCardList listName={props.listName} images={props.images} userId={props.userId} listSize="small"/>
     </Stack>
   );
 }

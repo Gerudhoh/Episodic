@@ -38,18 +38,13 @@ app.get('/', (req, res) => {
   res.sendFile(process.cwd() + "/client/build/index.html");
 });
 
-
-// Check if a username and password is correct and generate a token
-let currentUser = null;
-
 app.post('/api/v1/lists/create', async function (req, res) {
   let name = req.body.name;
   let list = null;
+  let userId = req.body.id;
 
-  if (currentUser && currentUser.id !== undefined) {
-    let userId = currentUser.id;
+  if (userId != null) {
     let sql = "insert into lists (name, userId) values ('" + name + "', " + userId + ")";
-
 
     //throw it into the database
     await new Promise(async (rem, rej) => {
@@ -57,7 +52,6 @@ app.post('/api/v1/lists/create', async function (req, res) {
         let result = await promisePool.query(sql);
         let id = result[0].insertId;
         list = new lists(name, id);
-        //currentUser.addEpisodicList(list);
         res.send({
           list: list
         });
@@ -78,16 +72,17 @@ app.post('/api/v1/lists/create', async function (req, res) {
 
 app.post('/api/v1/lists/add/podcast', async function (req, res) {
   let list = req.body.list;
-  let podcast = new podcasts(req.body.title, req.body.description, req.body.rss, req.body.image, req.body.website || "N/A", req.body.publisher || "N/A", req.body.language || "N/A", req.body.genre || [], req.body.explicit || false, req.body.totalEpisodes || 0, null, req.body.podcastId);
+  let podcast = new podcasts(req.body.title, req.body.description, req.body.rss, req.body.image, req.body.website || "N/A", req.body.publisher || "N/A", req.body.language || "N/A", req.body.totalEpisodes || 0, null, req.body.podcastId);
   list = new lists(list.name, list.id, list);
+
 
   await new Promise(async (rem, rej) => {
     try {
-      let sql = "insert ignore into podcasts (name, rss, description, image, website, publisher, language, genre, explicit, totalEpisodes) values ('" + podcast.title + "', '" + podcast.rss + "', '" + escape(podcast.description) + "', '" + podcast.image + "', '" + podcast.website + "', '" + podcast.publisher + "', '" + podcast.language + "', '" + podcast.genre.toString() + "', " + podcast.explicit + ", " + podcast.totalEpisodes + ")";
+      let sql = "insert ignore into podcasts (name, rss, description, image, website, publisher, language, totalEpisodes) values ('" + escape(podcast.title) + "', '" + podcast.rss + "', '" + escape(podcast.description) + "', '" + podcast.image + "', '" + podcast.website + "', '" + podcast.publisher + "', '" + podcast.language + "', " + podcast.totalEpisodes + ")";
       let result = await promisePool.query(sql);
       let insertId = result[0].insertId;
       if (insertId == "0") {
-        let sql = "select id from podcasts where name = '" + podcast.title + "'";
+        let sql = "select id from podcasts where name = '" + escape(podcast.title) + "'";
         let result = await promisePool.query(sql);
         podcast.databaseId = result[0][0].id;
       }
@@ -117,9 +112,10 @@ app.post('/api/v1/lists/remove/podcast', async function (req, res) {
 
   await new Promise(async (rem, rej) => {
     try {
-      let sql = "select id from podcasts where name = '" + name + "'";
+      let sql = "select id from podcasts where name = '" + escape(name) + "'";
       let result = await promisePool.query(sql);
-      list.removePodcast(result[0][0].id);
+      let linkSql = "delete from lists_podcasts_link where listsId = " + list.id + " and podcastsId = " + result[0][0].id + ";"
+      await promisePool.query(linkSql);
       res.send({ success: true });
       return;
     } catch (err) {
@@ -135,15 +131,15 @@ app.post('/api/v1/lists/add/episode', async function (req, res) {
   let list = req.body.list;
   list = new lists(list.name, list.id, list);
   let episodejson = req.body.episode;
-  let episode = new episodes(episodejson.title, req.body.image, episodejson.description, episodejson.explicit == "explicit", episodejson.website, episodejson.podcast.title);
+  let episode = new episodes(episodejson.title, req.body.image, episodejson.description, episodejson.podcast.title);
 
   await new Promise(async (rem, rej) => {
     try {
-      let sql = "insert ignore into episodes (name, rss, description, image, explicit, podcastName) values ('" + episode.title + "','" + episode.rss + "','" + escape(episode.description) + "', '" + episode.image + "'," + episode.explicit + ",'" + episode.podcast + "')";
+      let sql = "insert ignore into episodes (name, description, image, podcastName) values ('" + escape(episode.title) + "','" + escape(episode.description) + "', '" + episode.image + "','" + escape(episode.podcast) + "')";
       let result = await promisePool.query(sql);
       let insertId = result[0].insertId;
       if (insertId == "0") {
-        let sql = "select id from episodes where name = '" + episode.title + "'";
+        let sql = "select id from episodes where name = '" + escape(episode.title) + "'";
         let result = await promisePool.query(sql);
         episode.databaseId = result[0][0].id;
       }
@@ -173,9 +169,10 @@ app.post('/api/v1/lists/remove/episode', async function (req, res) {
 
   await new Promise(async (rem, rej) => {
     try {
-      let sql = "select id from episodes where name = '" + name + "'";
+      let sql = "select id from episodes where name = '" + escape(name) + "'";
       let result = await promisePool.query(sql);
-      list.removeEpisode(result[0][0].id);
+      let linkSql = "delete from lists_episodes_link where listsId = " + list.id + " and episodesId = " + result[0][0].id + ";"
+      await promisePool.query(linkSql);
       res.send({ success: true });
       return;
     } catch (err) {
@@ -187,11 +184,11 @@ app.post('/api/v1/lists/remove/episode', async function (req, res) {
 
 });
 
-app.get("/api/v1/lists/get/all/names", async function (req, res) {
+app.post("/api/v1/lists/get/all/names", async function (req, res) {
+  let userId = req.body.id;
 
-  if (currentUser && currentUser.id !== undefined) {
-
-    let userList = await users.getUserLists(currentUser.id);
+  if (userId != null) {
+    let userList = await users.getUserLists(userId);
 
     res.send({ lists: userList, noUser: false });
     return;
@@ -201,13 +198,14 @@ app.get("/api/v1/lists/get/all/names", async function (req, res) {
 });
 
 // This endpoint is VERY slow because it needs to pull everything out of the database, not sure if there's a better way to do this but it's good enough for now
-app.get("/api/v1/lists/get/all", async function (req, res) {
+app.post("/api/v1/lists/get/all", async function (req, res) {
+  let userId = req.body.id;
 
-  if (currentUser && currentUser.id !== undefined) {
+  if (userId != null) {
 
-    let userList = await users.getUserLists(currentUser.id);
-
+    let userList = await users.getUserLists(userId);
     let i = 0;
+
     for (const element of userList) {
       let list = new lists(element.name, element.id);
       let sql = "select * from lists_podcasts_link where listsId = " + list.id + "";
@@ -215,7 +213,7 @@ app.get("/api/v1/lists/get/all", async function (req, res) {
       for (const pod of newResult[0]) {
         let linkSql = "select * from podcasts where id = " + pod.podcastsId + "";
         let linkResult = await promisePool.query(linkSql);
-        let temp = new podcasts(linkResult[0][0].name, linkResult[0][0].description, linkResult[0][0].rss, linkResult[0][0].image, linkResult[0][0].website, linkResult[0][0].publisher, linkResult[0][0].language, linkResult[0][0].genre.split(","), linkResult[0][0].explicit, linkResult[0][0].totalEpisodes);
+        let temp = new podcasts(unescape(linkResult[0][0].name), linkResult[0][0].description, linkResult[0][0].rss, linkResult[0][0].image, linkResult[0][0].website, linkResult[0][0].publisher, linkResult[0][0].language, linkResult[0][0].totalEpisodes);
         list.addPodcast(temp);
       }
 
@@ -224,14 +222,12 @@ app.get("/api/v1/lists/get/all", async function (req, res) {
       for (const ep of newResult[0]) {
         let linkSql = "select * from episodes where id = " + ep.episodesId + "";
         let linkResult = await promisePool.query(linkSql);
-        let temp = new episodes(linkResult[0][0].name, linkResult[0][0].image, linkResult[0][0].description, linkResult[0][0].explicit, linkResult[0][0].rss, linkResult[0][0].podcastName, linkResult[0][0].id);
+        let temp = new episodes(unescape(linkResult[0][0].name), linkResult[0][0].image, linkResult[0][0].description, unescape(linkResult[0][0].podcastName), linkResult[0][0].id);
         list.addEpisode(temp);
       }
 
       userList[i] = list;
       i++;
-
-      if (i >= 3) break;
     }
 
     res.send({ lists: userList, noUser: false });
@@ -242,13 +238,14 @@ app.get("/api/v1/lists/get/all", async function (req, res) {
 });
 
 app.post("/api/v1/lists/get/one", async function (req, res) {
-
+  let userId = req.body.id;
   let name = req.body.name;
 
-  if (currentUser && currentUser.id !== undefined) {
+  if (userId != null) {
 
-    let userList = await users.getUserLists(currentUser.id);
-    let element = userList.find(element => element.name == name);
+    let userList = await users.getUserLists(userId);
+    
+    let element = userList.find(element => element?.name == name);
 
     let list = new lists(element.name, element.id);
     let sql = "select * from lists_podcasts_link where listsId = " + list.id + "";
@@ -256,7 +253,7 @@ app.post("/api/v1/lists/get/one", async function (req, res) {
     for (const pod of newResult[0]) {
       let linkSql = "select * from podcasts where id = " + pod.podcastsId + "";
       let linkResult = await promisePool.query(linkSql);
-      let temp = new podcasts(linkResult[0][0].name, linkResult[0][0].description, linkResult[0][0].rss, linkResult[0][0].image, linkResult[0][0].website, linkResult[0][0].publisher, linkResult[0][0].language, linkResult[0][0].genre.split(","), linkResult[0][0].explicit, linkResult[0][0].totalEpisodes);
+      let temp = new podcasts(unescape(linkResult[0][0].name), linkResult[0][0].description, linkResult[0][0].rss, linkResult[0][0].image, linkResult[0][0].website, linkResult[0][0].publisher, linkResult[0][0].language, linkResult[0][0].totalEpisodes);
       list.addPodcast(temp);
     }
 
@@ -265,7 +262,7 @@ app.post("/api/v1/lists/get/one", async function (req, res) {
     for (const ep of newResult[0]) {
       let linkSql = "select * from episodes where id = " + ep.episodesId + "";
       let linkResult = await promisePool.query(linkSql);
-      let temp = new episodes(linkResult[0][0].name, linkResult[0][0].image, linkResult[0][0].description, linkResult[0][0].explicit, linkResult[0][0].rss, linkResult[0][0].podcastName, linkResult[0][0].id);
+      let temp = new episodes(unescape(linkResult[0][0].name), linkResult[0][0].image, linkResult[0][0].description, unescape(linkResult[0][0].podcastName), linkResult[0][0].id);
       list.addEpisode(temp);
     }
 
@@ -290,6 +287,14 @@ app.post('/api/v1/search', async function (req, res) {
   });
   let data = podcasts.data.results.concat(episodes.data.results);
   res.send({ data: data });
+});
+
+app.get('/api/v1/trending', async function (req, res) {
+  let apiClient = fetcher.getPodcastIndexApi();
+  apiClient.raw("/podcasts/trending")
+    .then((response) => {
+      res.send({data: response.feeds });
+    });
 
 });
 
@@ -301,7 +306,7 @@ app.post('/api/v1/searchPodcast', async function (req, res) {
     let length = response.feeds.length
     for (let i = 0; i < length; i++) {
       let podcast = response.feeds[i];
-      if (podcast.title === podcastName) {
+      if (podcast.title.trim() === podcastName.trim()) {
         episodes = await apiClient.episodesByFeedId(podcast?.id);
         res.send({ pod: podcast, eps: episodes });
         return;
@@ -330,18 +335,13 @@ app.get('*', (req, res) => {
 
 app.post('/api/v1/user/add', async function (req, res) {
   let token = randomString(32, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
-  currentUser = null;
-
   let result = await users.addUser(req.body.username, req.body.email, req.body.password, token);
 
   let myResult = {};
   myResult.username = req.body.username;
   myResult.email = req.body.email;
   myResult.token = token;
-  myResult.id = result.insertId;
-
-
-  currentUser = myResult;
+  myResult.userId = result.insertId;
 
   res.send(myResult);
 });
@@ -352,14 +352,7 @@ app.post('/api/v1/user/login', async function (req, res) {
   let username = req.body.username;
   let password = req.body.password;
   let token = randomString(32, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
-  currentUser = null;
-
-  console.log(username)
-  console.log(password)
-
   let result = await users.checkLogin(username, password);
-
-  console.log(result)
 
   if (result !== [] && result !== undefined && result.length > 0) {
     let update_token = await users.updateToken(username, password, token);
@@ -367,10 +360,8 @@ app.post('/api/v1/user/login', async function (req, res) {
     let myResult = {};
     myResult.username = username;
     myResult.token = token;
-    myResult.email = req.body.email;
-    myResult.id = result[0].id;
-
-    currentUser = myResult;
+    myResult.email = result[0].email;
+    myResult.userId = result[0].id;
 
     res.send(myResult);
   }
@@ -380,9 +371,7 @@ app.post('/api/v1/user/login', async function (req, res) {
 app.post('/api/v1/user/auth', async function (req, res) {
   let username = req.body.username;
   let token = req.body.token;
-
   let result = await users.checkExistingLogin(username, token);
-  currentUser = result[0];
   res.send(result);
 });
 
@@ -390,18 +379,16 @@ app.post('/api/v1/user/auth', async function (req, res) {
 app.post('/api/v1/user/logout', async function (req, res) {
   let username = req.body.username;
   let token = req.body.token;
-
   let update_token = await users.removeToken(username, token);
 
   let myResult = {};
   myResult.username = "";
-  myResult.username = "";
+  myResult.email = "";
   myResult.token = "";
-  myResult.id = undefined;
+  myResult.userId = undefined;
 
   res.send(myResult);
 });
-
 
 
 // Listen to the specified port for api requests

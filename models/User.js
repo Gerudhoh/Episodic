@@ -21,7 +21,7 @@ module.exports = {
         return new Promise(async (res, rej) => {
             let sql = 'INSERT INTO users(username, email, password, token) VALUES(?,?,?,?);'
             
-            //const [rows, fields] = await promisePool.query(sql, [username, email, password, token]);
+            const [rows, fields] = await promisePool.query(sql, [username, email, password, token]);
 
             //console.log(`Rows in addUser: ${JSON.stringify(rows)}`);
 

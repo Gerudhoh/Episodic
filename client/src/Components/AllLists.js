@@ -47,7 +47,7 @@ class AllLists extends React.Component {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name: this.state.listName }),
+      body: JSON.stringify({ name: this.state.listName, id: this.props.userId}),
     });
     const body = await response.json();
     if (!body.list) {
@@ -61,11 +61,23 @@ class AllLists extends React.Component {
 
   getUserLists = async e => {
     //e.preventDefault();
-    let response = await fetch("/api/v1/lists/get/all/names");
+    let response = await fetch('/api/v1/lists/get/all/names', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: this.props.userId}),
+    });
     let body = await response.json();
     if(body.noUser === true) {
       await delay(1000); //in case user is already logged in, wait for the auth
-      response = await fetch("/api/v1/lists/get/all/names");
+      let response = await fetch('/api/v1/lists/get/all/names', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: this.props.userId}),
+      });
       body = await response.json();
     }
     let listNames = [];
@@ -79,7 +91,7 @@ class AllLists extends React.Component {
         Error: Could not create list.
       </Alert>) : (null)}
       {this.state.showSuccess ? (<React.Fragment></React.Fragment>) : (null)}
-        <Typography variant="h4" component={Link} to="/userlist/all">Lists</Typography>
+        <Typography variant="h4" component={Link} to="/alluserlists">Lists</Typography>
         <List>
           {this.state.allLists.map((item) => (
             <ListItem key={item.name} id={item.id}>

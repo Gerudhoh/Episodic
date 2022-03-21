@@ -91,7 +91,7 @@ export default function FriendActivity(props) {
     <Box>
       <Stack spacing={2} divider={<Divider orientation="horizontal" flexItem />}>
       {friends.map((item) => (
-        <ActivityCard key={item.name} activityInfo={item.activityInfo} activityType={item.activityType} userName={item.name} activitySize={props.activitySize}/>
+        <ActivityCard key={item.name} activityInfo={item.activityInfo} activityType={item.activityType} userName={item.name} userId={props.userId} activitySize={props.activitySize}/>
       ))}
       </Stack>
 

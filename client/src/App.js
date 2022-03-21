@@ -84,6 +84,7 @@ class App extends React.Component {
       auth: false,
       username: "",
       email: "",
+      id: null,
     };
 
     this.updateAuth = this.updateAuth.bind(this);
@@ -105,8 +106,7 @@ class App extends React.Component {
       console.log(authCheck);
       console.log(authCheck.length > 0)
 
-      this.setState({username: authData.username});
-      this.setState({email: authData.email});
+      this.setState({username: authData.username, email: authData.email, userId: authData.userId});
 
       if(authCheck.length > 0) {
         this.setState({auth: true})
@@ -137,6 +137,11 @@ class App extends React.Component {
 
   removeAuth() {
     console.log("Remove auth")
+    document.cookie = `username=;`;
+    document.cookie = `email=;`;
+    document.cookie = `token=;`;
+    document.cookie = `userId=;`;
+
     this.setState({
       auth: false
     })
@@ -147,8 +152,8 @@ class App extends React.Component {
       <div>
         <ThemeProvider theme={theme}>
           <BrowserRouter history={history}>
-          <NavBar auth={this.state.auth}  checkAuthData={this.checkAuthData} updateAuth={this.updateAuth} removeAuth={this.removeAuth} username={this.state.username} email={this.state.email}/>
-          <RouteSwitch auth={this.state.auth} checkAuthData={this.checkAuthData}  updateAuth={this.updateAuth} removeAuth={this.removeAuth} username={this.state.username} email={this.state.email}/>
+          <NavBar auth={this.state.auth}  checkAuthData={this.checkAuthData} updateAuth={this.updateAuth} removeAuth={this.removeAuth} username={this.state.username} email={this.state.email} userId={this.state.userId}/>
+          <RouteSwitch auth={this.state.auth} checkAuthData={this.checkAuthData}  updateAuth={this.updateAuth} removeAuth={this.removeAuth} username={this.state.username} email={this.state.email} userId={this.state.userId}/>
           </BrowserRouter>
         </ThemeProvider>
       </div>
