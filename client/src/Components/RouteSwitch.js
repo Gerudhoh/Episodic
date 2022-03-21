@@ -11,6 +11,7 @@ import ProfilePage from './ProfilePage';
 import SearchPage from './SearchPage';
 import PodcastInfoPage from './PodcastInfoPage';
 import EpisodeInfoPage from './EpisodeInfoPage';
+import TrendingPage from './TrendingPage';
 import SingleListView from './SingleListView';
 import ProfileListView from './ProfileListView';
 
@@ -44,8 +45,9 @@ class RouteSwitch extends React.Component {
                 <Route exact path="/login" element={<Login changeAuth={this.changeAuth}  checkAuthData={this.checkAuthData}  changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
                 <Route exact path="/signup" element={<SignUp changeAuth={this.changeAuth} checkAuthData={this.checkAuthData}  changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
                 
-                <Route path="/episodeinfo/*" element={<EpisodeInfoPage changeAuth={this.changeAuth} checkAuthData={this.checkAuthData}  changeRemoveAuth={this.changeRemoveAuth} className="tabContent" auth={this.props.auth} email={this.props.email} username={this.props.username} userId={this.props.userId}/>}/>
-                <Route path="/info/*" element={<PodcastInfoPage changeAuth={this.changeAuth} checkAuthData={this.checkAuthData}  changeRemoveAuth={this.changeRemoveAuth} className="tabContent" auth={this.props.auth} email={this.props.email} username={this.props.username} userId={this.props.userId}/>}/>
+                <Route path="/episodeinfo/*" element={<EpisodeInfoPage changeAuth={this.changeAuth} checkAuthData={this.checkAuthData}  changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
+                <Route path="/info/*" element={<PodcastInfoPage changeAuth={this.changeAuth} checkAuthData={this.checkAuthData}  changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
+                <Route path="/trending" element={<TrendingPage changeAuth={this.changeAuth} checkAuthData={this.checkAuthData}  changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
 
                 {/* Logged In routes */}
                 <Route exact path="/" element={<HomePage changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent" auth={this.props.auth} email={this.props.email} username={this.props.username} userId={this.props.userId}/>}/>

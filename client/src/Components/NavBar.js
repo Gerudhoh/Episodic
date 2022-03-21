@@ -161,9 +161,9 @@ const ResponsiveAppBar = (props) => {
                 <MenuItem component={Link} to="/" replace onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">Home</Typography>
                 </MenuItem>
-                {/*<MenuItem component={Link} to="/searchresults" replace onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">Search</Typography>
-            </MenuItem>*/}
+                <MenuItem component={Link} to="/trending" replace onClick={handleCloseNavMenu}>
+                  <Typography textAlign="center">Trending</Typography>
+                </MenuItem>
 
                 {props.auth === true &&
                   <MenuItem component={Link} to="/profile" replace onClick={handleCloseNavMenu}>
@@ -186,6 +186,12 @@ const ResponsiveAppBar = (props) => {
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
                 Home
+              </Button>
+              <Button component={Link} to="/trending" replace
+                onClick={handleCloseNavMenu}
+                sx={{ my: 2, color: 'white', display: 'block' }}
+              >
+                Trending
               </Button>
               {/*<Button component={Link} to="/searchresults" replace
                 onClick={handleCloseNavMenu}

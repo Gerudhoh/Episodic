@@ -298,6 +298,15 @@ app.post('/api/v1/search', async function (req, res) {
   }).catch(err => { console.log(err); });
 });
 
+app.get('/api/v1/trending', async function (req, res) {
+  let apiClient = fetcher.getPodcastIndexApi();
+  apiClient.raw("/podcasts/trending")
+    .then((response) => {
+      res.send({data: response.feeds });
+    });
+
+});
+
 app.post('/api/v1/searchPodcast', async function (req, res) {
   let podcastName = req.body.name;
   let apiClient = fetcher.getPodcastIndexApi();
@@ -313,8 +322,6 @@ app.post('/api/v1/searchPodcast', async function (req, res) {
       }
     }
   });
-
-
 });
 
 
