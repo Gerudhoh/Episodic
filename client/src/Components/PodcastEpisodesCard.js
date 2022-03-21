@@ -14,6 +14,7 @@ import Paper from '@mui/material/Paper';
 //Material UI Icons and Styling
 import { styled } from '@mui/material/styles';
 
+
 const Item = styled(Paper)(({ theme }) => ({
   padding: '10px',
   textAlign: 'center',
@@ -41,7 +42,8 @@ export default function PodcastEpisodesCard(props){
     <Box component="div" height="45vh" m={2} sx={{overflow:'auto'}}>
       <Stack spacing={2} padding="10px">
         {props.episodes.map((episode) =>
-          <Item><PodcastEpisode
+          <Item>
+            <PodcastEpisode
           podcastTitle = {props.podcastTitle}
           image={episode.feedImage}
           title={episode.title}
