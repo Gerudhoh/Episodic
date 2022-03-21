@@ -49,19 +49,35 @@ export default function SearchPage(props){
       let images = [];
       let length = data.data.length;
       for(let i = 0; i < length; i++) {
-        images.push({
-          img: data.data[i].image,
-          podcastTitle: data.data[i].title_original,
-          id: data.data[i].id,
-          description: data.data[i].description_original,
-          rss: data.data[i].rss,
-          website: data.data[i].website,
-          publisher: data.data[i].publisher,
-          language: data.data[i].language,
-          genre: data.data[i].genre_ids,
-          explicit: data.data[i].explicit_content,
-          totalEpisodes: data.data[i].total_episodes
-        });
+        if(data.data[i].podcast) { // if it's an episode
+          images.push({
+            img: data.data[i].image,
+            episodeTitle: data.data[i].title_original,
+            podcastTitle: data.data[i].podcast.title_original,
+            id: data.data[i].id,
+            description: data.data[i].description_original,
+            rss: data.data[i].rss,
+            website: data.data[i].website,
+            publisher: data.data[i].publisher,
+            language: data.data[i].language,
+            genre: data.data[i].genre_ids,
+            explicit: data.data[i].explicit_content
+          });
+        } else { // else it's a podcast
+          images.push({
+            img: data.data[i].image,
+            podcastTitle: data.data[i].title_original,
+            id: data.data[i].id,
+            description: data.data[i].description_original,
+            rss: data.data[i].rss,
+            website: data.data[i].website,
+            publisher: data.data[i].publisher,
+            language: data.data[i].language,
+            genre: data.data[i].genre_ids,
+            explicit: data.data[i].explicit_content,
+            totalEpisodes: data.data[i].total_episodes
+          });
+        }
       }
 
       return(
