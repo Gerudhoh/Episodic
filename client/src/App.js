@@ -73,6 +73,11 @@ const theme = createTheme({
         color: 'secondary',
       },
     },
+    MuiCardMedia: {
+      props:{
+        color: '#d7c0ad',
+      },
+    }
   }
 })
 

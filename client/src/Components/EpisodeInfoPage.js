@@ -15,6 +15,7 @@ import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import CircularProgress from '@mui/material/CircularProgress';
+import CardMedia from "@mui/material/CardMedia";
 
 
 //Material UI Icons and Styling
@@ -119,6 +120,7 @@ class AddEpisodeToList extends React.Component{
   render() {
     return (
       <React.Fragment>
+        <CardMedia component="audio" controls src={this.episode.audio} />
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">Add to List</InputLabel>
             <Select variant="outlined"
@@ -185,21 +187,24 @@ export default function EpisodeInfoPage(props){
   const episodeTitle = decodeURIComponent(location.pathname.split('/')[3]);
 
   async function getEpisodeFromPodcast(podTitle, epTitle) {
-    const response = await fetch('/api/v1/searchPodcast', {
+    console.log(`Fetch ${epTitle} from ${podTitle}`);
+    const response = await fetch('/api/v1/get_episode_from_podcast', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name: podTitle }),
+      body: JSON.stringify({ podName: podTitle, epName: epTitle }),
     });
     response.json().then(response => {
+      console.log(response);
       let epPod = response.pod;
       let podEpisodes = response.eps;
-      let episode = podEpisodes.items.find(ep => ep.title === epTitle);
+      let episode = response.episode;
       let info = {
         title : episode.title,
         description : episode.description,
         date: episode.datePublishedPretty,
+        audio : episode.enclosureUrl,
         language : episode.feedLanguage,
         explicit : 'explicit',
         podcast: {

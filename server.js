@@ -289,6 +289,22 @@ app.post('/api/v1/search', async function (req, res) {
   res.send({ data: data });
 });
 
+app.post('/api/v1/get_episode_from_podcast', async function (req, res) {
+  let podcastName = req.body.podName;
+  let episodeName = req.body.epName;
+  let apiClient = fetcher.getPodcastIndexApi();
+  let episodes = [];
+  apiClient.search(podcastName).then(async (response) => {
+    let podcast = response.feeds.find(pod => pod.title === podcastName);
+    episodes = await apiClient.episodesByFeedId(podcast?.id);
+    console.log(episodes);
+    let episode = episodes.items.find(ep => ep.title === episodeName);
+    apiClient.episodeById(episode.id).then(async (response) => {
+      res.send({ pod: podcast, episode: response.episode, eps: episodes });
+    });
+  });
+});
+
 app.get('/api/v1/trending', async function (req, res) {
   let apiClient = fetcher.getPodcastIndexApi();
   apiClient.raw("/podcasts/trending")
@@ -302,7 +318,7 @@ app.post('/api/v1/searchPodcast', async function (req, res) {
   let podcastName = req.body.name;
   let apiClient = fetcher.getPodcastIndexApi();
   let episodes = [];
-  await apiClient.search(podcastName).then(async (response) => {
+  apiClient.search(podcastName).then(async (response) => {
     let length = response.feeds.length
     for (let i = 0; i < length; i++) {
       let podcast = response.feeds[i];
