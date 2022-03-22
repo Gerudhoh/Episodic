@@ -280,9 +280,13 @@ app.post('/api/v1/search', async function (req, res) {
     q: name,
     type: 'podcast',
     only_in: 'title,description',
-  }).then((response) => {
-    res.send({ data: response.data.results });
-  }).catch(err => { console.log(err); });
+  });
+  let episodes = await apiClient.search({
+    q: name,
+    only_in: 'title,description',
+  });
+  let data = podcasts.data.results.concat(episodes.data.results);
+  res.send({ data: data });
 });
 
 app.post('/api/v1/get_episode_from_podcast', async function (req, res) {
