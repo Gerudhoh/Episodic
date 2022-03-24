@@ -170,7 +170,7 @@ class EpisodeCard extends React.Component {
             ) : (null)}
               <Typography variant="p" fontSize={this.size.fontSize}><em>{this.episodeTitle}</em></Typography>
               <br />
-              <Typography variant="p" fontSize={this.size.fontSize}>{this.podcastTitle}</Typography>
+              <Typography variant="p" fontSize={this.size.fontSize}><b>{this.podcastTitle}</b></Typography>
 
 
             </EpisodeCardStyles>
