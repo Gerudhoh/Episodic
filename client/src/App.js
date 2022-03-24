@@ -73,9 +73,9 @@ const theme = createTheme({
         color: 'secondary',
       },
     },
-    MuiCardMedia: {
+    MuiLink: {
       props:{
-        color: '#d7c0ad',
+        color: 'primary.contrastText',
       },
     }
   }
@@ -106,7 +106,7 @@ class App extends React.Component {
     let authData = getCookieData();
     console.log(authData);
 
-    if(authData.username && authData.token) { 
+    if(authData.username && authData.token) {
       let authCheck = await checkAuth(authData.username, authData.token);
       console.log(authCheck);
       console.log(authCheck.length > 0)
@@ -129,11 +129,11 @@ class App extends React.Component {
     let authData = getCookieData();
     console.log(authData);
 
-    if(authData.username && authData.token) { 
+    if(authData.username && authData.token) {
       this.setState({
         auth: true
       })
-      
+
       await history.push("/");
       window.scrollTo(0, 0);
       window.location.reload();

@@ -72,6 +72,19 @@ h1{ font-size: 5.378em; }
   color: var(--china-rose);
 }
 
+.podcastPlayer{
+  color: var(--desert-sand);
+  font-size: 20px;
+}
+
+audio::-webkit-media-controls-panel{
+  background-color: var(--desert-sand);
+  color: var(--china-rose);
+}
+audio::-webkit-media-controls{
+  color: var(--china-rose);
+}
+
 a:hover{
   color: var(--china-rose);
 }

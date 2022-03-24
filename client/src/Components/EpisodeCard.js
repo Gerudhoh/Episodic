@@ -3,13 +3,10 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 //Material UI Components
-//import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import FormControl from '@mui/material/FormControl';
-//import InputLabel from '@mui/material/InputLabel';
-//import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-//import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
@@ -155,23 +152,7 @@ class EpisodeCard extends React.Component {
       <Card className="EpisodeCard" >
         <Stack>
 
-          {this.isPodcast ? (
-            <Box>
-              <center><b>PODCAST</b>
-                <br />
-                {this.podcastTitle}</center>
-            </Box>
-          ) : (null)}
 
-          {!this.isPodcast && this.episodeTitle ? (
-            <Box>
-              <center><b>EPISODE</b>
-                <br />
-                {this.podcastTitle}
-                <br />
-                {this.episodeTitle}</center>
-            </Box>
-          ) : (null)}
 
           <Box sx={{ position: 'relative' }} component={Link} to={this.uri} replace>
             < img width={this.size.minSize} height="auto"
@@ -180,9 +161,17 @@ class EpisodeCard extends React.Component {
               loading="lazy"
             />
             <EpisodeCardStyles>
-              <Typography variant="p" fontSize={this.size.fontSize}>{this.episodeTitle}</Typography>
+            {this.isPodcast ? (
+              <Typography><b>PODCAST</b></Typography>
+            ) : (null)}
+
+            {!this.isPodcast && this.episodeTitle ? (
+              <Typography><b>EPISODE</b></Typography>
+            ) : (null)}
+              <Typography variant="p" fontSize={this.size.fontSize}><em>{this.episodeTitle}</em></Typography>
               <br />
               <Typography variant="p" fontSize={this.size.fontSize}>{this.podcastTitle}</Typography>
+
 
             </EpisodeCardStyles>
 
@@ -191,13 +180,13 @@ class EpisodeCard extends React.Component {
 
           {this.state.listView && this.isPodcast ? (
             <FormControl fullWidth>
-              <button onClick={this.removePodcast}>Remove</button>
+              <Button variant="contained" onClick={this.removePodcast}>Remove</Button>
             </FormControl>
           ) : (null)}
 
           {this.state.listView && !this.isPodcast ? (
             <FormControl fullWidth>
-              <button onClick={this.removeEpisode}>Remove</button>
+              <Button variant="contained" onClick={this.removeEpisode}>Remove</Button>
             </FormControl>
           ) : (null)}
         </Stack>
