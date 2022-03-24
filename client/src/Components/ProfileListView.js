@@ -24,15 +24,6 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 
-// function NewListButton(props){
-//   if(flag === "ownProfile"){
-//     return(<Button variant="contained" style={{height: "35px", width:"auto"}}>New List</Button>);
-//   }
-//   else {
-//     return(<React.Fragment></React.Fragment>);
-//   }
-// }
-
 
 class ProfileListViewClass extends React.Component {
   constructor(props) {
@@ -91,6 +82,7 @@ class ProfileListViewClass extends React.Component {
 
   };
 
+<<<<<<< HEAD
   ShowList(listName){
     if(listName === 'all'){
       return (<React.Fragment></React.Fragment>);
@@ -113,6 +105,8 @@ class ProfileListViewClass extends React.Component {
     return (<React.Fragment></React.Fragment>);
 
   };
+=======
+>>>>>>> kinda fixed all list views, kinda not
 
   render(){
     return(
@@ -125,7 +119,9 @@ class ProfileListViewClass extends React.Component {
           </Item>
           <Item><AllLists userId={this.props.userId} /></Item>
         </Stack>
-        {  this.ShowList(this.props.location.split('/')[2])}
+        {this.props.location != '/alluserlists/' ? (
+          <SingleListView location={this.props.location} username={this.props.userName} />
+          ) : (null)}
       </Stack>
     )
     };
