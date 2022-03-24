@@ -13,71 +13,7 @@ import { styled } from '@mui/material/styles';
 //Custom Components
 import ListPreview from "./ListPreview.js";
 
-const lists = [
-  {
-    name: "episodes",
-    type: "user",
-    images: [
-      {
-        img: '/pepekingprawn.jpg',
-        podcastTitle: 'podcast',
-        episodeTitle: 'episode1',
-      },
-      {
-        img: '/pepekingprawn.jpg',
-        podcastTitle: 'podcast',
-        episodeTitle: 'episode2',
-      },
-      {
-        img: '/pepekingprawn.jpg',
-        podcastTitle: 'podcast',
-        episodeTitle: 'episode3',
-      },
-    ]
-  },
-  {
-    name: "podcasts",
-    type: "user",
-    images: [
-      {
-        img: '/pepekingprawn.jpg',
-        podcastTitle: 'podcast1',
-        episodeTitle: ''
-      },
-      {
-        img: '/pepekingprawn.jpg',
-        podcastTitle: 'podcast2',
-        episodeTitle: ''
-      },
-      {
-        img: '/pepekingprawn.jpg',
-        podcastTitle: 'podcast1',
-        episodeTitle: '',
-      },
-    ]
-  },
-  {
-    name: "episodes",
-    type: "user",
-    images: [
-      {
-        img: '/pepekingprawn.jpg',
-        podcastTitle: 'podcast3',
-        episodeTitle: '',
-      },
-      {
-        img: '/pepekingprawn.jpg',
-        podcastTitle: 'podcast',
-        episodeTitle: 'episode5',
-      },
-      {
-        img: '/pepekingprawn.jpg',
-        podcastTitle: 'podcast',
-        episodeTitle: 'episode6',
-      },
-    ]
-  },
-]
+
 
 //Styling
 const Item = styled(Paper)(({ theme }) => ({
