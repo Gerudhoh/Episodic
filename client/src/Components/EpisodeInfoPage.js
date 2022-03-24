@@ -120,7 +120,7 @@ class AddEpisodeToList extends React.Component{
   render() {
     return (
       <React.Fragment>
-        <CardMedia component="audio" controls src={this.episode.audio} />
+        <CardMedia className="podcastPlayer" component="audio" controls src={this.episode.audio} />
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">Add to List</InputLabel>
             <Select variant="outlined"
@@ -148,7 +148,7 @@ function EpisodeDetails(props){
         <Stack alignItems="flex-start" spacing={2} padding="10px">
           <Typography textAlign="left" variant="h3">{episode.title}</Typography>
           <Typography variant="h4" component={Link} to={podURI} replace>{podcast.title}</Typography>
-          
+
           <AddEpisodeToList episode={episode} image={podcast.image} userId={props.userId}/>
           <Rating readOnly size="large" value={episode.rating}/>
           <Typography component="div" textAlign="left" variant="p">{episode.description}</Typography>
