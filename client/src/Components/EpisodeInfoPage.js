@@ -120,7 +120,7 @@ class AddEpisodeToList extends React.Component{
   render() {
     return (
       <React.Fragment>
-        <CardMedia component="audio" controls src={this.episode.audio} />
+        <CardMedia className="podcastPlayer" component="audio" controls src={this.episode.audio} />
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">Add to List</InputLabel>
             <Select variant="outlined"

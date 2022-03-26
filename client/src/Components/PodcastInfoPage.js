@@ -7,6 +7,7 @@ import { useLocation } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Rating from '@mui/material/Rating';
@@ -30,48 +31,6 @@ const delay = (ms) =>
       res()
     }, ms)
   })
-
-
-/*const reviews2 = [
-    {
-      name: "name1",
-      activityType: "newReview",
-      activityInfo: {
-        rating: 5,
-        date: "Feb 22 2022",
-        reviewText: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-      }
-    },
-
-    {
-      name: "name2",
-      activityType: "newReview",
-      activityInfo: {
-        rating: 5,
-        date: "Feb 22 2022",
-        reviewText: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-      }
-    },
-    {
-      name: "name3",
-      activityType: "newReview",
-      activityInfo: {
-        rating: 5,
-        date: "Feb 22 2022",
-        reviewText: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-      }
-    },
-    {
-      name: "name4",
-      activityType: "newReview",
-      activityInfo: {
-        rating: 5,
-        date: "Feb 22 2022",
-        reviewText: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-      }
-    },
-]*/
-
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: '10px',
@@ -212,7 +171,7 @@ function PodcastDetails(props) {
       <img src={podcast.image} alt={podcast.image} width="350px" height="auto" />
       <Item>
         <Stack alignItems="center" spacing={2} padding="10px">
-          <Typography variant="h2" ><a href={podcast.website} target="_blank" rel="noreferrer"><u>{podcast.title}</u></a></Typography>
+          <Typography variant="h2" ><Link href={podcast.website} target="_blank" rel="noreferrer" sx={{ color: 'primary.contrastText' }}>{podcast.title}</Link></Typography>
           {props.userId ? (
             <AddPodcastToList podcast={podcast} userId={props.userId} />
           ) : (null)}
