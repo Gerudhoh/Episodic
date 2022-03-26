@@ -149,7 +149,9 @@ function EpisodeDetails(props){
           <Typography textAlign="left" variant="h3">{episode.title}</Typography>
           <Typography variant="h4" component={Link} to={podURI} replace>{podcast.title}</Typography>
           
+          {props.userId ? (
           <AddEpisodeToList episode={episode} image={podcast.image} userId={props.userId}/>
+          ) : (null)}
           <Rating readOnly size="large" value={episode.rating}/>
           <Typography component="div" textAlign="left" variant="p">{episode.description}</Typography>
         </Stack>

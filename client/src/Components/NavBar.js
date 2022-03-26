@@ -99,6 +99,7 @@ const ResponsiveAppBar = (props) => {
         props.removeAuth();
         navigate('/login')
         window.scrollTo(0, 0);
+        document.cookie = undefined;
         window.location.reload();
   
         if(response.error !== undefined) {
