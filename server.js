@@ -70,11 +70,11 @@ app.post('/api/v1/lists/create', async function (req, res) {
 
 });
 
-async function addPodcast(podcast, list) {
+async function addPodcast(podcast, rating, list) {
   let insertId = 0;
   return await new Promise(async (res, rej) => {
     try {
-      let sql = "insert ignore into podcasts (name, rss, description, image, website, publisher, language, totalEpisodes) values ('" + escape(podcast.title) + "', '" + podcast.rss + "', '" + escape(podcast.description) + "', '" + podcast.image + "', '" + podcast.website + "', '" + podcast.publisher + "', '" + podcast.language + "', " + podcast.totalEpisodes + ")";
+      let sql = "insert ignore into podcasts (name, rss, description, image, website, publisher, language, totalEpisodes, rating) values ('" + escape(podcast.title) + "', '" + podcast.rss + "', '" + escape(podcast.description) + "', '" + podcast.image + "', '" + podcast.website + "', '" + podcast.publisher + "', '" + podcast.language + "', " + podcast.totalEpisodes + ", " + rating + ")";
       let result = await promisePool.query(sql);
       insertId = result[0].insertId;
       if (insertId == "0") {
@@ -98,11 +98,11 @@ async function addPodcast(podcast, list) {
   });
 }
 
-async function addEpisode(episode, list) {
+async function addEpisode(episode, rating, list) {
   let insertId = 0;
   return await new Promise(async (res, rej) => {
     try {
-      let sql = "insert ignore into episodes (name, description, image, podcastName) values ('" + escape(episode.title) + "','" + escape(episode.description) + "', '" + episode.image + "','" + escape(episode.podcast) + "')";
+      let sql = "insert ignore into episodes (name, description, image, podcastName, rating) values ('" + escape(episode.title) + "','" + escape(episode.description) + "', '" + episode.image + "','" + escape(episode.podcast) + "', " + rating + ")";
       let result = await promisePool.query(sql);
       insertId = result[0].insertId;
       if (insertId == "0") {
@@ -131,7 +131,7 @@ app.post('/api/v1/lists/add/podcast', async function (req, res) {
   let podcast = new podcasts(req.body.title, req.body.description, req.body.rss, req.body.image, req.body.website || "N/A", req.body.publisher || "N/A", req.body.language || "N/A", req.body.totalEpisodes || 0, null, req.body.podcastId);
   list = new lists(list.name, list.id, list);
 
-  await addPodcast(podcast, list).then(result => {
+  await addPodcast(podcast, 0, list).then(result => {
     res.send({ success: result.success });
   });
 });
@@ -164,7 +164,7 @@ app.post('/api/v1/lists/add/episode', async function (req, res) {
   let episodejson = req.body.episode;
   let episode = new episodes(episodejson.title, req.body.image, episodejson.description, episodejson.podcast.title);
 
-  await addEpisode(episode, list).then(result => {
+  await addEpisode(episode, 0, list).then(result => {
     res.send({ success: result.success });
   });
   return;
@@ -281,6 +281,10 @@ app.post("/api/v1/lists/get/one", async function (req, res) {
 
 });
 
+app.post("/api/v1/reviews/add/podcast", async function (req, res) {
+  console.log(req.body);
+})
+
 app.post('/api/v1/search', async function (req, res) {
   let name = req.body.name;
   let apiClient = fetcher.getListenNotesApi();
@@ -338,6 +342,25 @@ app.post('/api/v1/searchPodcast', async function (req, res) {
   });
 });
 
+app.post('/api/v1/rating/get/podcast', async function (req, res) {
+  let sql = "select rating from podcasts where name = '" + escape(req.body.name) + "'";
+  let result = await promisePool.query(sql);
+  if (result.length <= 0 || result[0].length <= 0 ){
+    res.send({rating: 0});
+    return;
+  }
+  res.send({rating: result[0][0].rating});
+})
+
+app.post('/api/v1/rating/get/episode', async function (req, res) {
+  let sql = "select rating from episodes where name = '" + escape(req.body.name) + "' and podcastName = '" + escape(req.body.podcastName) + "'";
+  let result = await promisePool.query(sql);
+  if (result.length <= 0 || result[0].length <= 0 ){
+    res.send({rating: 0});
+    return;
+  }
+  res.send({rating: result[0][0].rating});
+})
 
 function randomString(length, chars) {
   var result = '';

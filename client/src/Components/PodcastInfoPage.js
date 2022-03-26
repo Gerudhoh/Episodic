@@ -175,7 +175,7 @@ function PodcastDetails(props) {
           {props.userId ? (
             <AddPodcastToList podcast={podcast} userId={props.userId} />
           ) : (null)}
-          <Rating readOnly size="large" value={podcast.rating} />
+          <Rating readOnly size="large" value={props.rating} />
         </Stack>
       </Item>
       <Item sx={{ maxWidth: "40%" }}>
@@ -189,7 +189,7 @@ function PodcastInfo(props) {
   const podcast = props.podcast;
   return (
     <Stack spacing={2} padding="10px" justifyContent="center">
-      <Item><PodcastDetails podcast={podcast} userId={props.userId} /></Item>
+      <Item><PodcastDetails podcast={podcast} userId={props.userId} rating = {props.rating}/></Item>
       <Stack direction="row" padding="10px" spacing={2} justifyContent="center">
         <Item sx={{ maxWidth: "45%" }}>
           <Typography variant="h3" textAlign="left">Episodes</Typography>
@@ -198,7 +198,7 @@ function PodcastInfo(props) {
         <Item >
           <Typography variant="h3" textAlign="left">Reviews</Typography>
           <Box component="div" height="45vh" sx={{ overflow: 'auto', padding: '10px' }}>
-            <Reviews userId={props.userId} />
+            <Reviews userId={props.userId} currentRating={props.rating} />
           </Box>
         </Item>
       </Stack>
@@ -221,7 +221,7 @@ export default function PodcastInfoPage(props) {
       },
       body: JSON.stringify({ name: data }),
     });
-    response.json().then(response => {
+    response.json().then(async response => {
       let podcast = response.pod;
       let episodes = response.eps;
       let info = {
@@ -236,11 +236,24 @@ export default function PodcastInfoPage(props) {
         genre: podcast.categories,
         episodes: episodes,
       }
-      return <PodcastInfo podcast={info} userId={userId} />
-    }).then(resource => {
-      setValue(resource);
-      setLoading(false);
 
+      const ratingResponse = await fetch('/api/v1/rating/get/podcast', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name: data }),
+      });
+
+      ratingResponse.json().then(response => {
+        let rating = response.rating;
+
+        return <PodcastInfo podcast={info} userId={userId} rating={rating} />
+      }).then(resource => {
+        setValue(resource);
+        setLoading(false);
+
+      });
     });
   }
 

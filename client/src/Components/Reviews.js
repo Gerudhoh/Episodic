@@ -9,6 +9,8 @@ import Button from '@mui/material/Button';
 import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';
 
+import {useLocation} from 'react-router-dom';
+
 //Custom Components
 import ActivityCard from "./ActivityCard.js";
 
@@ -52,12 +54,17 @@ const reviews = [
   },
 ]
 
-export default class Reviews extends React.Component {
+class ReviewsClass extends React.Component {
   constructor(props) {
     super(props);
-    this.userId = props.userId;
-    this.username = props.username;
+    this.userId = this.props.userId;
+    this.location = this.props.location.split('/');
+    this.currentRating = this.props.currentRating;
 
+    this.podcastName = decodeURIComponent(this.location[2]);
+    this.episodeName = decodeURIComponent(this.location[3]);
+    this.isEpisode = false;
+    if (this.location.length > 3) this.isEpisode = true;
 
     this.state = {
       reviews: reviews,
@@ -68,7 +75,7 @@ export default class Reviews extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     this.userId = nextProps.userId;
-    this.username = nextProps.username;
+    this.currentRating = nextProps.currentRating;
   }
 
   createReview = async e => {
@@ -114,4 +121,11 @@ export default class Reviews extends React.Component {
       </Box>
     )
   }
+}
+
+export default function Reviews(props){
+  const location = useLocation();
+  return(
+    <ReviewsClass location={location.pathname} userId = {props.userId} />
+  );
 }
