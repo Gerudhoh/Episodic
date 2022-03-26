@@ -70,39 +70,70 @@ app.post('/api/v1/lists/create', async function (req, res) {
 
 });
 
+async function addPodcast(podcast, list) {
+  let insertId = 0;
+  return await new Promise(async (res, rej) => {
+    try {
+      let sql = "insert ignore into podcasts (name, rss, description, image, website, publisher, language, totalEpisodes) values ('" + escape(podcast.title) + "', '" + podcast.rss + "', '" + escape(podcast.description) + "', '" + podcast.image + "', '" + podcast.website + "', '" + podcast.publisher + "', '" + podcast.language + "', " + podcast.totalEpisodes + ")";
+      let result = await promisePool.query(sql);
+      insertId = result[0].insertId;
+      if (insertId == "0") {
+        let sql = "select id from podcasts where name = '" + escape(podcast.title) + "'";
+        let result = await promisePool.query(sql);
+        insertId = result[0][0].id;
+      }
+      podcast.databaseId = insertId;
+      if (list){
+        list.addPodcast(podcast);
+        let linkSql = "insert into lists_podcasts_link (listsId, podcastsId) values (" + list.id + ", " + podcast.databaseId + ")";
+        await promisePool.query(linkSql);
+      }
+      res({ success: true, id: insertId });
+      return;
+    } catch (err) {
+      console.log(err);
+      res({ success: false, id: insertId });
+      return;
+    }
+  });
+}
+
+async function addEpisode(episode, list) {
+  let insertId = 0;
+  return await new Promise(async (res, rej) => {
+    try {
+      let sql = "insert ignore into episodes (name, description, image, podcastName) values ('" + escape(episode.title) + "','" + escape(episode.description) + "', '" + episode.image + "','" + escape(episode.podcast) + "')";
+      let result = await promisePool.query(sql);
+      insertId = result[0].insertId;
+      if (insertId == "0") {
+        let sql = "select id from episodes where name = '" + escape(episode.title) + "'";
+        let result = await promisePool.query(sql);
+        insertId = result[0][0].id;
+      }
+      episode.databaseId = insertId;
+      if (list) {
+        list.addEpisode(episode);
+        let linkSql = "insert into lists_episodes_link (listsId, episodesId) values (" + list.id + ", " + episode.databaseId + ")";
+        await promisePool.query(linkSql);
+      }
+      res({ success: true, id: insertId });
+      return;
+    } catch (err) {
+      console.log(err);
+      res({ success: false, id: insertId });
+      return;
+    }
+  });
+}
+
 app.post('/api/v1/lists/add/podcast', async function (req, res) {
   let list = req.body.list;
   let podcast = new podcasts(req.body.title, req.body.description, req.body.rss, req.body.image, req.body.website || "N/A", req.body.publisher || "N/A", req.body.language || "N/A", req.body.totalEpisodes || 0, null, req.body.podcastId);
   list = new lists(list.name, list.id, list);
 
-
-  await new Promise(async (rem, rej) => {
-    try {
-      let sql = "insert ignore into podcasts (name, rss, description, image, website, publisher, language, totalEpisodes) values ('" + escape(podcast.title) + "', '" + podcast.rss + "', '" + escape(podcast.description) + "', '" + podcast.image + "', '" + podcast.website + "', '" + podcast.publisher + "', '" + podcast.language + "', " + podcast.totalEpisodes + ")";
-      let result = await promisePool.query(sql);
-      let insertId = result[0].insertId;
-      if (insertId == "0") {
-        let sql = "select id from podcasts where name = '" + escape(podcast.title) + "'";
-        let result = await promisePool.query(sql);
-        podcast.databaseId = result[0][0].id;
-      }
-      else {
-        podcast.databaseId = insertId;
-      }
-      list.addPodcast(podcast);
-      let linkSql = "insert into lists_podcasts_link (listsId, podcastsId) values (" + list.id + ", " + podcast.databaseId + ")";
-      await promisePool.query(linkSql);
-      res.send({ success: true });
-      return;
-    } catch (err) {
-      console.log(err);
-      res.send({ success: false });
-      return;
-    }
-
+  await addPodcast(podcast, list).then(result => {
+    res.send({ success: result.success });
   });
-  return;
-
 });
 
 app.post('/api/v1/lists/remove/podcast', async function (req, res) {
@@ -133,30 +164,8 @@ app.post('/api/v1/lists/add/episode', async function (req, res) {
   let episodejson = req.body.episode;
   let episode = new episodes(episodejson.title, req.body.image, episodejson.description, episodejson.podcast.title);
 
-  await new Promise(async (rem, rej) => {
-    try {
-      let sql = "insert ignore into episodes (name, description, image, podcastName) values ('" + escape(episode.title) + "','" + escape(episode.description) + "', '" + episode.image + "','" + escape(episode.podcast) + "')";
-      let result = await promisePool.query(sql);
-      let insertId = result[0].insertId;
-      if (insertId == "0") {
-        let sql = "select id from episodes where name = '" + escape(episode.title) + "'";
-        let result = await promisePool.query(sql);
-        episode.databaseId = result[0][0].id;
-      }
-      else {
-        episode.databaseId = insertId;
-      }
-      list.addEpisode(episode);
-      let linkSql = "insert into lists_episodes_link (listsId, episodesId) values (" + list.id + ", " + episode.databaseId + ")";
-      await promisePool.query(linkSql);
-      res.send({ success: true });
-      return;
-    } catch (err) {
-      console.log(err);
-      res.send({ success: false });
-      return;
-    }
-
+  await addEpisode(episode, list).then(result => {
+    res.send({ success: result.success });
   });
   return;
 
@@ -197,7 +206,6 @@ app.post("/api/v1/lists/get/all/names", async function (req, res) {
 
 });
 
-// This endpoint is VERY slow because it needs to pull everything out of the database, not sure if there's a better way to do this but it's good enough for now
 app.post("/api/v1/lists/get/all", async function (req, res) {
   let userId = req.body.id;
 
@@ -244,7 +252,7 @@ app.post("/api/v1/lists/get/one", async function (req, res) {
   if (userId != null) {
 
     let userList = await users.getUserLists(userId);
-    
+
     let element = userList.find(element => element?.name == name);
 
     let list = new lists(element.name, element.id);
@@ -297,7 +305,6 @@ app.post('/api/v1/get_episode_from_podcast', async function (req, res) {
   apiClient.search(podcastName).then(async (response) => {
     let podcast = response.feeds.find(pod => pod.title === podcastName);
     episodes = await apiClient.episodesByFeedId(podcast?.id);
-    console.log(episodes);
     let episode = episodes.items.find(ep => ep.title === episodeName);
     apiClient.episodeById(episode.id).then(async (response) => {
       res.send({ pod: podcast, episode: response.episode, eps: episodes });
@@ -309,7 +316,7 @@ app.get('/api/v1/trending', async function (req, res) {
   let apiClient = fetcher.getPodcastIndexApi();
   apiClient.raw("/podcasts/trending")
     .then((response) => {
-      res.send({data: response.feeds });
+      res.send({ data: response.feeds });
     });
 
 });
