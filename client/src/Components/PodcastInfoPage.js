@@ -198,7 +198,7 @@ function PodcastInfo(props) {
         <Item >
           <Typography variant="h3" textAlign="left">Reviews</Typography>
           <Box component="div" height="45vh" sx={{ overflow: 'auto', padding: '10px' }}>
-            <Reviews userId={props.userId} currentRating={props.rating} />
+            <Reviews userId={props.userId} currentRating={props.rating} podcast={podcast} />
           </Box>
         </Item>
       </Stack>

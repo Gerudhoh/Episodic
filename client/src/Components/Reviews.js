@@ -60,6 +60,7 @@ class ReviewsClass extends React.Component {
     this.userId = this.props.userId;
     this.location = this.props.location.split('/');
     this.currentRating = this.props.currentRating;
+    this.podcast = this.props.podcast;
 
     this.podcastName = decodeURIComponent(this.location[2]);
     this.episodeName = decodeURIComponent(this.location[3]);
@@ -75,12 +76,24 @@ class ReviewsClass extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     this.userId = nextProps.userId;
-    this.currentRating = nextProps.currentRating;
   }
 
   createReview = async e => {
     e.preventDefault();
-    console.log(this.state.newReviewRating)
+    if (this.isEpisode) {
+      console.log("not implemented");
+    }
+    else {
+      let response = await fetch('/api/v1/reviews/add/podcast', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: this.userId, name: this.podcastName, currentRating: this.currentRating, newRating: this.state.newReviewRating, newText: this.state.newReviewText, podcast: this.podcast }),
+      });
+      let body = await response.json();
+      if (body.success) window.location.reload(false);
+    }
   };
 
 
@@ -106,6 +119,7 @@ class ReviewsClass extends React.Component {
                 type="text"
                 value={this.state.newReviewText}
                 label="(Optional) Add more detail:"
+                inputProps={{ maxLength: 200 }}
                 onChange={e => this.setState({ newReviewText: e.target.value })}
               />
               <Button variant="contained" disabled={this.state.newReviewRating == 0} type="submit">Submit Review</Button>
@@ -126,6 +140,6 @@ class ReviewsClass extends React.Component {
 export default function Reviews(props){
   const location = useLocation();
   return(
-    <ReviewsClass location={location.pathname} userId = {props.userId} />
+    <ReviewsClass location={location.pathname} userId = {props.userId} currentRating = {props.currentRating} podcast = {props.podcast} />
   );
 }
