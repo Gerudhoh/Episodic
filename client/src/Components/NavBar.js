@@ -90,6 +90,11 @@ const ResponsiveAppBar = (props) => {
       navigate('/searchresults', { state: data })
     };
 
+    const fetchRandomEp = async () => {
+      let num = Math.random();
+      navigate('/randomep', { state: num })
+    };
+
     const logOutUser = async (data) => {
       let authData = getCookieData();
       console.log(authData);
@@ -165,6 +170,9 @@ const ResponsiveAppBar = (props) => {
                 <MenuItem component={Link} to="/trending" replace onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">Trending</Typography>
                 </MenuItem>
+                <MenuItem component={Link} to="/randomep" replace onClick={fetchRandomEp}>
+                  <Typography textAlign="center">Get Random Episode</Typography>
+                </MenuItem>
 
                 {props.auth === true &&
                   <MenuItem component={Link} to="/profile" replace onClick={handleCloseNavMenu}>
@@ -194,13 +202,12 @@ const ResponsiveAppBar = (props) => {
               >
                 Trending
               </Button>
-              {/*<Button component={Link} to="/searchresults" replace
-                onClick={handleCloseNavMenu}
+              <Button
+                onClick={fetchRandomEp}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
-                Search
-              </Button>*/}
-
+                Get Random Episode
+              </Button>
               {props.auth === true &&
                 <Button component={Link} to="/profile" replace
                   onClick={handleCloseNavMenu}

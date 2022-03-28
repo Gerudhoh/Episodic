@@ -10,28 +10,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 //Custom Components
 import EpisodeCardList from "./EpisodeCardList.js"
 
-function searchPageStack(){
-  return(
-    <React.Fragment>
-    <Stack alignItems="flex-start" justifyContent="space-evenly" direction="row" spacing={2}>
-      <Stack spacing={2}>
-      </Stack>
-    </Stack>
-    </React.Fragment>
-  );
-}
-
-function searchPageNormal(){
-  return(
-
-    <Stack flexWrap="wrap" direction="row" spacing={2} columnSpacing={2} alignItems="flex-start" justifyContent="center" padding="10px">
-      <Stack sx={{maxWidth:"25%"}} spacing={2}>
-      </Stack>
-    </Stack>
-  );
-}
-
-export default function SearchPage(){
+export default function TrendingPage(){
   const [value, setValue] = useState(null);
   const [isLoading, setLoading] = useState(true);
   const location = useLocation()

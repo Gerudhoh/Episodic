@@ -426,6 +426,15 @@ app.get('/api/v1/trending', async function (req, res) {
 
 });
 
+app.get('/api/v1/randomep', async function (req, res) {
+  let apiClient = fetcher.getPodcastIndexApi();
+  let raw_episode = await apiClient.episodesRandom({lang: "en"});
+  let episode = raw_episode.episodes[0];
+  let podcast = await apiClient.podcastById(episode.feedId);
+  let episodes = await apiClient.episodesByFeedId(episode.feedId);
+  res.send({ pod: podcast.feed, episode: episode, eps: episodes });
+});
+
 app.post('/api/v1/searchPodcast', async function (req, res) {
   let podcastName = req.body.name;
   let apiClient = fetcher.getPodcastIndexApi();
