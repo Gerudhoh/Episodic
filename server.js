@@ -308,7 +308,6 @@ app.post("/api/v1/reviews/add/podcast", async function (req, res) {
       let newRating = oldRating * oldCount;
       newRating = (+newRating + +req.body.newRating); //just wanna say i hate javascript
       newRating = newRating / parseFloat(newCount);
-      console.log(newRating);
 
       let updateSql = "update podcasts set rating = " + newRating + ", ratingCount = " + newCount + " where id = " + podcastId + "";
       await promisePool.query(updateSql);
@@ -316,6 +315,72 @@ app.post("/api/v1/reviews/add/podcast", async function (req, res) {
       return;
     } catch {
       res.send({ success: false });
+      return;
+    }
+  });
+})
+
+app.post("/api/v1/reviews/add/episode", async function (req, res) {
+  let episodejson = req.body.episode;
+  let episode = new episodes(episodejson.title, episodejson.podcast.image, episodejson.description, episodejson.podcast.title);
+
+  await addEpisode(episode, req.body.currentRating).then(async result => {
+    try {
+      let episodeId = result.id;
+      let oldRating = result.rating;
+      let oldCount = result.ratingCount;
+      let sql = "insert into reviews (userId, episodeId, creationDate, rating, description) values (" + req.body.id + ", " + episodeId + ", NOW(), " + req.body.newRating + ", '" + escape(req.body.newText) + "')";
+      await promisePool.query(sql);
+
+      let newCount = oldCount + 1;
+      let newRating = oldRating * oldCount;
+      newRating = (+newRating + +req.body.newRating); //just wanna say i hate javascript
+      newRating = newRating / parseFloat(newCount);
+
+      let updateSql = "update episodes set rating = " + newRating + ", ratingCount = " + newCount + " where id = " + episodeId + "";
+      await promisePool.query(updateSql);
+      res.send({ success: true });
+      return;
+    } catch {
+      res.send({ success: false });
+      return;
+    }
+  });
+})
+
+app.post("/api/v1/reviews/get/podcast", async function (req, res) {
+  await new Promise(async (rem, rej) => {
+    try {
+      let idSql = "select id from podcasts where name = '" + escape(req.body.name) + "'";
+      let idResult = await promisePool.query(idSql);
+      let id = idResult[0][0].id;
+
+      let sql = "select * from reviews inner join users on users.id=reviews.userId where reviews.podcastId = " + id + "";
+      let results = await promisePool.query(sql);
+
+      res.send({ results: results[0] });
+    } catch (err) {
+      console.log(err);
+      res.send({ results: [] });
+      return;
+    }
+  });
+})
+
+app.post("/api/v1/reviews/get/episode", async function (req, res) {
+  await new Promise(async (rem, rej) => {
+    try {
+      let idSql = "select id from episodes where name = '" + escape(req.body.name) + "' and podcastName = '" + escape(req.body.podcastName) + "'";
+      let idResult = await promisePool.query(idSql);
+      let id = idResult[0][0].id;
+
+      let sql = "select * from reviews inner join users on users.id=reviews.userId where reviews.episodeId = " + id + "";
+      let results = await promisePool.query(sql);
+
+      res.send({ results: results[0] });
+    } catch (err) {
+      console.log(err);
+      res.send({ results: [] });
       return;
     }
   });

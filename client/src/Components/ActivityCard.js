@@ -14,50 +14,50 @@ import ReviewPreview from "./ReviewPreview.js";
 import EpisodeCardList from "./EpisodeCardList.js";
 
 //Styling
-const activityCardStyles ={
+const activityCardStyles = {
   small:
   {
     avSize: "small",
-    buttonSize:"small",
+    buttonSize: "small",
     fontSize: '1em'
   },
-  medium:{
+  medium: {
     avSize: "medium",
-    buttonSize:"inherit",
+    buttonSize: "inherit",
     fontSize: '1em'
   },
-  large:{
+  large: {
     avSize: "large",
-    buttonSize:"large",
+    buttonSize: "large",
     fontSize: '1em',
   }
 };
 
 
-function NewListPreview(props){
-  return(
+function NewListPreview(props) {
+  return (
     <Stack alignItems="flex-start" spacing={2}>
       <Typography fontSize={props.fontSize}> made new list listName </Typography>
-      <EpisodeCardList listName={props.listName} images={props.images} userId={props.userId} listSize="small"/>
+      <EpisodeCardList listName={props.listName} images={props.images} userId={props.userId} listSize="small" />
     </Stack>
   );
 }
 
-function MoveListPreview(props){
-  return(
+function MoveListPreview(props) {
+  return (
     <Stack alignItems="flex-start" spacing={2}>
       <Typography fontSize={props.fontSize}>moved podcastName from listName to listName</Typography>
-      <EpisodeCardList listName={props.listName} images={props.images} userId={props.userId} listSize="small"/>
+      <EpisodeCardList listName={props.listName} images={props.images} userId={props.userId} listSize="small" />
     </Stack>
   );
 }
 
 
-export default function ActivityCard(props){
+export default function ActivityCard(props) {
   const size = activityCardStyles[props.activitySize];
 
   const ActivityPreview = (activityType) => {
-    if (props.activityType === 'newList'){
+    if (props.activityType === 'newList') {
       return (<NewListPreview fontSize={size.fontSize} listName={props.activityInfo.listName} images={props.activityInfo.images} />);
     }
     else if (props.activityType === 'listMove') {
@@ -68,19 +68,21 @@ export default function ActivityCard(props){
         reviewText={props.activityInfo.reviewText}
         date={props.activityInfo.date}
         rating={props.activityInfo.rating}
-        />);
+        image={props.activityInfo.image}
+        title={props.activityInfo.title}
+      />);
     }
   };
 
   return (
     <Stack spacing={2} alignItems="center" justifyContent="space-between" direction="row">
       <Stack spacing={2} alignItems="space-evenly" justifyContent="space-around">
-        <UserInfo userName={props.userName} fontSize={size.fontSize} avatarSize={size.avSize}/>
+        <UserInfo userName={props.userName} fontSize={size.fontSize} avatarSize={size.avSize} />
         {ActivityPreview(props.activityType)}
       </Stack>
       <IconButton aria-label="seeMore" size={size.buttonSize}>
-          <ArrowForward />
-        </IconButton>
+        <ArrowForward />
+      </IconButton>
     </Stack>
   );
 }

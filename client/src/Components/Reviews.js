@@ -9,13 +9,14 @@ import Button from '@mui/material/Button';
 import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';
 
-import {useLocation} from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 //Custom Components
 import ActivityCard from "./ActivityCard.js";
 
 const reviews = [
   {
+    src: "/pepekingprawn.jpg",
     name: "name1",
     activityType: "newReview",
     activityInfo: {
@@ -26,6 +27,7 @@ const reviews = [
   },
 
   {
+    src: "/pepekingprawn.jpg",
     name: "name2",
     activityType: "newReview",
     activityInfo: {
@@ -35,6 +37,7 @@ const reviews = [
     }
   },
   {
+    src: "/pepekingprawn.jpg",
     name: "name3",
     activityType: "newReview",
     activityInfo: {
@@ -44,6 +47,7 @@ const reviews = [
     }
   },
   {
+    src: "/pepekingprawn.jpg",
     name: "name4",
     activityType: "newReview",
     activityInfo: {
@@ -54,34 +58,131 @@ const reviews = [
   },
 ]
 
+function getParsedDate(strDate){
+  var strSplitDate = String(strDate).split(' ');
+  var date = new Date(strSplitDate[0]);
+  // alert(date);
+  var dd = date.getDate();
+  var mm = date.getMonth() + 1; //January is 0!
+
+  var yyyy = date.getFullYear();
+  if (dd < 10) {
+      dd = '0' + dd;
+  }
+  if (mm < 10) {
+      mm = '0' + mm;
+  }
+  date =  dd + "-" + mm + "-" + yyyy;
+  return date.toString();
+}
+
 class ReviewsClass extends React.Component {
   constructor(props) {
     super(props);
     this.userId = this.props.userId;
+    this.fullLocation = this.props.location;
     this.location = this.props.location.split('/');
     this.currentRating = this.props.currentRating;
     this.podcast = this.props.podcast;
+    this.episode = this.props.episode;
 
     this.podcastName = decodeURIComponent(this.location[2]);
     this.episodeName = decodeURIComponent(this.location[3]);
     this.isEpisode = false;
     if (this.location.length > 3) this.isEpisode = true;
 
+    this.image = "";
+    if (this.isEpisode){
+      this.image = this.episode.podcast.image;
+    }
+    else {
+      this.image = this.podcast.image;
+    }
+
     this.state = {
-      reviews: reviews,
+      reviews: [],
       newReviewText: "",
       newReviewRating: 0
     }
+  }
+
+  componentDidMount() {
+    this.getReviews();
   }
 
   componentWillReceiveProps(nextProps) {
     this.userId = nextProps.userId;
   }
 
+  getReviews = async e => {
+    if (this.isEpisode) {
+      let response = await fetch('/api/v1/reviews/get/episode', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name: this.episodeName, podcastName: this.podcastName }),
+      });
+      let body = await response.json();
+      let tmpArray = [];
+      body.results.reverse().map((item, index) =>
+        tmpArray.push(({
+          location: this.fullLocation,
+          name: item.username,
+          activityType: "newReview",
+          activityInfo: {
+            image: this.image,
+            rating: item.rating,
+            date: getParsedDate(item.creationDate),
+            reviewText: unescape(item.description),
+            title: this.episodeName + " (" + this.podcastName + ")"
+          }
+        }))
+      );
+
+      this.setState({ reviews: tmpArray });
+    }
+    else {
+      let response = await fetch('/api/v1/reviews/get/podcast', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name: this.podcastName }),
+      });
+      let body = await response.json();
+      let tmpArray = [];
+      body.results.reverse().map((item, index) =>
+        tmpArray.push(({
+          location: this.fullLocation,
+          name: item.username,
+          activityType: "newReview",
+          activityInfo: {
+            image: this.image,
+            rating: item.rating,
+            date: getParsedDate(item.creationDate),
+            reviewText: unescape(item.description),
+            title: this.podcastName
+          }
+        }))
+      );
+
+      this.setState({ reviews: tmpArray });
+    }
+  }
+
   createReview = async e => {
     e.preventDefault();
     if (this.isEpisode) {
-      console.log("not implemented");
+      let response = await fetch('/api/v1/reviews/add/episode', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: this.userId, name: this.episodeName, currentRating: this.currentRating, newRating: this.state.newReviewRating, newText: this.state.newReviewText, episode: this.episode }),
+      });
+      let body = await response.json();
+      if (body.success) window.location.reload(false);
     }
     else {
       let response = await fetch('/api/v1/reviews/add/podcast', {
@@ -137,9 +238,9 @@ class ReviewsClass extends React.Component {
   }
 }
 
-export default function Reviews(props){
+export default function Reviews(props) {
   const location = useLocation();
-  return(
-    <ReviewsClass location={location.pathname} userId = {props.userId} currentRating = {props.currentRating} podcast = {props.podcast} />
+  return (
+    <ReviewsClass location={location.pathname} userId={props.userId} currentRating={props.currentRating} podcast={props.podcast} episode={props.episode} />
   );
 }

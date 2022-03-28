@@ -73,20 +73,6 @@ class AddEpisodeToList extends React.Component {
 
   };
 
-  removeEpisode = async e => {
-    return;
-    /*const response = await fetch('/api/v1/lists/remove/podcast', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ list: this.state.currentList, podcastId: this.id }),
-    });
-    const body = await response.json();
-    this.setState({ showSuccess: body.success });
-    if (this.state.showSuccess) window.location.reload(false);*/
-
-  };
 
   getUserLists = async e => {
     //e.preventDefault();
@@ -173,7 +159,7 @@ function EpisodeInfo(props) {
         <Item sx={{ width: "45%" }} height="45vh">
           <Typography variant="h3">Reviews</Typography>
           <Box component="div" height="45vh" sx={{ overflow: 'auto', padding: '10px' }}>
-          <Reviews userId={props.userId} currentRating={props.rating} />
+          <Reviews userId={props.userId} currentRating={props.rating} episode={episode} />
           </Box>
         </Item>
       </Stack>
@@ -243,8 +229,8 @@ export default function EpisodeInfoPage(props) {
   };
 
   useEffect(() => {
-    getEpisodeFromPodcast(podTitle, episodeTitle);
-  }, [podTitle]);
+    getEpisodeFromPodcast(podTitle, episodeTitle, props.userId);
+  }, [podTitle, episodeTitle, props.userId]);
 
   return (
     <React.Fragment>
