@@ -10,7 +10,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 //Custom Components
 import EpisodeInfo from './EpisodeInfo.js';
 
-export default function EpisodeInfoPage(props){
+export default function EpisodeInfoPage(props) {
   const [value, setValue] = useState(null);
   const [isLoading, setLoading] = useState(true);
   const location = useLocation()
@@ -26,15 +26,15 @@ export default function EpisodeInfoPage(props){
       },
       body: JSON.stringify({ podName: podTitle, epName: epTitle }),
     });
-    response.json().then(response => {
+    response.json().then(async response => {
       console.log(response);
       let epPod = response.pod;
       let podEpisodes = response.eps;
       let episode = response.episode;
       let explicit = episode.explicit === 0 ? "clean" : "explicit";
       let info = {
-        title : episode.title,
-        description : episode.description,
+        title: episode.title,
+        description: episode.description,
         date: episode.datePublishedPretty,
         audio : episode.enclosureUrl,
         language : episode.feedLanguage,
@@ -52,21 +52,33 @@ export default function EpisodeInfoPage(props){
           episodes : podEpisodes,
         }
       }
-      return <EpisodeInfo episode={info} userId={props.userId}/>
-    }).then( resource => {
-      setValue(resource);
-      setLoading(false);
 
+      const ratingResponse = await fetch('/api/v1/rating/get/episode', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name: epTitle, podcastName: podTitle }),
+      });
+
+      ratingResponse.json().then(response => {
+        let rating = response.rating;
+        return <EpisodeInfo episode={info} userId={props.userId} rating={rating} />
+      }).then(resource => {
+        setValue(resource);
+        setLoading(false);
+
+      });
     });
   };
 
   useEffect(() => {
-    getEpisodeFromPodcast(podTitle, episodeTitle);
-  }, [podTitle, episodeTitle]);
+    getEpisodeFromPodcast(podTitle, episodeTitle, props.userId);
+  }, [podTitle, episodeTitle, props.userId]);
 
-  return(
+  return (
     <React.Fragment>
-    {isLoading ? (
+      {isLoading ? (
         <CircularProgress />
       ) : (
         value
