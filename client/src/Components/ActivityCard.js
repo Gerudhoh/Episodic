@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 
 //Material UI Components
 import Stack from '@mui/material/Stack';
@@ -55,6 +56,7 @@ function MoveListPreview(props) {
 
 export default function ActivityCard(props) {
   const size = activityCardStyles[props.activitySize];
+  console.log(props);
 
   const ActivityPreview = (activityType) => {
     if (props.activityType === 'newList') {
@@ -80,9 +82,12 @@ export default function ActivityCard(props) {
         <UserInfo userName={props.userName} fontSize={size.fontSize} avatarSize={size.avSize} />
         {ActivityPreview(props.activityType)}
       </Stack>
-      <IconButton aria-label="seeMore" size={size.buttonSize}>
-        <ArrowForward />
-      </IconButton>
+      {props.location ? (
+        <IconButton aria-label="seeMore" size={size.buttonSize} component={Link} to={props.location}>
+          <ArrowForward />
+        </IconButton>
+      ) : (null)}
+     
     </Stack>
   );
 }

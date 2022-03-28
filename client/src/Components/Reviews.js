@@ -14,50 +14,6 @@ import { useLocation } from 'react-router-dom';
 //Custom Components
 import ActivityCard from "./ActivityCard.js";
 
-const reviews = [
-  {
-    src: "/pepekingprawn.jpg",
-    name: "name1",
-    activityType: "newReview",
-    activityInfo: {
-      rating: 5,
-      date: "Feb 22 2022",
-      reviewText: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-    }
-  },
-
-  {
-    src: "/pepekingprawn.jpg",
-    name: "name2",
-    activityType: "newReview",
-    activityInfo: {
-      rating: 5,
-      date: "Feb 22 2022",
-      reviewText: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-    }
-  },
-  {
-    src: "/pepekingprawn.jpg",
-    name: "name3",
-    activityType: "newReview",
-    activityInfo: {
-      rating: 5,
-      date: "Feb 22 2022",
-      reviewText: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-    }
-  },
-  {
-    src: "/pepekingprawn.jpg",
-    name: "name4",
-    activityType: "newReview",
-    activityInfo: {
-      rating: 5,
-      date: "Feb 22 2022",
-      reviewText: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-    }
-  },
-]
-
 function getParsedDate(strDate){
   var strSplitDate = String(strDate).split(' ');
   var date = new Date(strSplitDate[0]);
@@ -80,7 +36,6 @@ class ReviewsClass extends React.Component {
   constructor(props) {
     super(props);
     this.userId = this.props.userId;
-    this.fullLocation = this.props.location;
     this.location = this.props.location.split('/');
     this.currentRating = this.props.currentRating;
     this.podcast = this.props.podcast;
@@ -154,7 +109,6 @@ class ReviewsClass extends React.Component {
       let tmpArray = [];
       body.results.reverse().map((item, index) =>
         tmpArray.push(({
-          location: this.fullLocation,
           name: item.username,
           activityType: "newReview",
           activityInfo: {
