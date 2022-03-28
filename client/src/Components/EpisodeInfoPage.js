@@ -73,8 +73,8 @@ export default function EpisodeInfoPage(props) {
   };
 
   useEffect(() => {
-    getEpisodeFromPodcast(podTitle, episodeTitle);
-  }, [podTitle, episodeTitle]);
+    getEpisodeFromPodcast(podTitle, episodeTitle, props.userId);
+  }, [podTitle, episodeTitle, props.userId]);
 
   return (
     <React.Fragment>
