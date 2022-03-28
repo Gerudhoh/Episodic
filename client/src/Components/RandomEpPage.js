@@ -2,29 +2,27 @@
 import * as React from 'react';
 
 import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom'
 
 //Material UI Components
 import CircularProgress from '@mui/material/CircularProgress';
 
+
 //Custom Components
 import EpisodeInfo from './EpisodeInfo.js';
 
-export default function EpisodeInfoPage(props){
+export default function RandomEpPage(props){
   const [value, setValue] = useState(null);
   const [isLoading, setLoading] = useState(true);
-  const location = useLocation()
-  const podTitle = decodeURIComponent(location.pathname.split('/')[2]);
-  const episodeTitle = decodeURIComponent(location.pathname.split('/')[3]);
+  const location = useLocation();
 
-  async function getEpisodeFromPodcast(podTitle, epTitle) {
-    console.log(`Fetch ${epTitle} from ${podTitle}`);
-    const response = await fetch('/api/v1/get_episode_from_podcast', {
-      method: 'POST',
+  async function getRandomEpisode(data) {
+    console.log(data);
+    const response = await fetch('/api/v1/randomep', {
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ podName: podTitle, epName: epTitle }),
     });
     response.json().then(response => {
       console.log(response);
@@ -61,8 +59,8 @@ export default function EpisodeInfoPage(props){
   };
 
   useEffect(() => {
-    getEpisodeFromPodcast(podTitle, episodeTitle);
-  }, [podTitle, episodeTitle]);
+    getRandomEpisode(location.state);
+  }, [location.state]);
 
   return(
     <React.Fragment>
