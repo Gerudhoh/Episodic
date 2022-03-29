@@ -51,7 +51,7 @@ class ReviewsClass extends React.Component {
       this.image = this.episode.podcast.image;
     }
     else {
-      this.image = this.podcast.image;
+      this.image = this.podcast?.image;
     }
 
     this.state = {

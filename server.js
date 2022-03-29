@@ -70,23 +70,17 @@ app.post('/api/v1/lists/create', async function (req, res) {
 
 });
 
-async function addPodcast(podcast, rating, list) {
+async function addPodcast(podcast, list) {
   let insertId = 0;
-  let ratingCount = 0;
-  if (rating != 0) {
-    ratingCount = 1;
-  }
   return await new Promise(async (res, rej) => {
     try {
-      let sql = "insert ignore into podcasts (name, rss, description, image, website, publisher, language, totalEpisodes, rating, ratingCount) values ('" + escape(podcast.title) + "', '" + podcast.rss + "', '" + escape(podcast.description) + "', '" + podcast.image + "', '" + podcast.website + "', '" + podcast.publisher + "', '" + podcast.language + "', " + podcast.totalEpisodes + ", " + rating + ", " + ratingCount + ")";
+      let sql = "insert ignore into podcasts (name, rss, description, image, website, publisher, language, totalEpisodes) values ('" + escape(podcast.title) + "', '" + podcast.rss + "', '" + escape(podcast.description) + "', '" + podcast.image + "', '" + podcast.website + "', '" + podcast.publisher + "', '" + podcast.language + "', " + podcast.totalEpisodes + ")";
       let result = await promisePool.query(sql);
       insertId = result[0].insertId;
       if (insertId == "0") {
-        let sql = "select id, rating, ratingCount from podcasts where name = '" + escape(podcast.title) + "'";
+        let sql = "select id from podcasts where name = '" + escape(podcast.title) + "'";
         let result = await promisePool.query(sql);
         insertId = result[0][0].id;
-        rating = result[0][0].rating;
-        ratingCount = result[0][0].ratingCount;
       }
       podcast.databaseId = insertId;
       if (list) {
@@ -94,33 +88,27 @@ async function addPodcast(podcast, rating, list) {
         let linkSql = "insert into lists_podcasts_link (listsId, podcastsId) values (" + list.id + ", " + podcast.databaseId + ")";
         await promisePool.query(linkSql);
       }
-      res({ success: true, id: insertId, rating: rating, ratingCount: ratingCount });
+      res({ success: true, id: insertId});
       return;
     } catch (err) {
       console.log(err);
-      res({ success: false, id: insertId, rating: rating, ratingCount: ratingCount });
+      res({ success: false, id: insertId});
       return;
     }
   });
 }
 
-async function addEpisode(episode, rating, list) {
+async function addEpisode(episode, list) {
   let insertId = 0;
-  let ratingCount = 0;
-  if (rating != 0) {
-    ratingCount = 1;
-  }
   return await new Promise(async (res, rej) => {
     try {
-      let sql = "insert ignore into episodes (name, description, image, podcastName, rating, ratingCount) values ('" + escape(episode.title) + "','" + escape(episode.description) + "', '" + episode.image + "','" + escape(episode.podcast) + "', " + rating + ", " + ratingCount + ")";
+      let sql = "insert ignore into episodes (name, description, image, podcastName) values ('" + escape(episode.title) + "','" + escape(episode.description) + "', '" + episode.image + "','" + escape(episode.podcast) + "')";
       let result = await promisePool.query(sql);
       insertId = result[0].insertId;
       if (insertId == "0") {
-        let sql = "select id, rating, ratingCount from episodes where name = '" + escape(episode.title) + "'";
+        let sql = "select id, from episodes where name = '" + escape(episode.title) + "'";
         let result = await promisePool.query(sql);
         insertId = result[0][0].id;
-        rating = result[0][0].rating;
-        ratingCount = result[0][0].ratingCount;
       }
       episode.databaseId = insertId;
       if (list) {
@@ -128,11 +116,11 @@ async function addEpisode(episode, rating, list) {
         let linkSql = "insert into lists_episodes_link (listsId, episodesId) values (" + list.id + ", " + episode.databaseId + ")";
         await promisePool.query(linkSql);
       }
-      res({ success: true, id: insertId, rating: rating, ratingCount: ratingCount });
+      res({ success: true, id: insertId });
       return;
     } catch (err) {
       console.log(err);
-      res({ success: false, id: insertId, rating: rating, ratingCount: ratingCount });
+      res({ success: false, id: insertId });
       return;
     }
   });
@@ -143,7 +131,7 @@ app.post('/api/v1/lists/add/podcast', async function (req, res) {
   let podcast = new podcasts(req.body.title, req.body.description, req.body.rss, req.body.image, req.body.website || "N/A", req.body.publisher || "N/A", req.body.language || "N/A", req.body.totalEpisodes || 0, null, req.body.podcastId);
   list = new lists(list.name, list.id, list);
 
-  await addPodcast(podcast, 0, list).then(result => {
+  await addPodcast(podcast, list).then(result => {
     res.send({ success: result.success });
   });
 });
@@ -176,7 +164,7 @@ app.post('/api/v1/lists/add/episode', async function (req, res) {
   let episodejson = req.body.episode;
   let episode = new episodes(episodejson.title, req.body.image, episodejson.description, episodejson.podcast.title);
 
-  await addEpisode(episode, 0, list).then(result => {
+  await addEpisode(episode, list).then(result => {
     res.send({ success: result.success });
   });
   return;
@@ -296,24 +284,26 @@ app.post("/api/v1/lists/get/one", async function (req, res) {
 app.post("/api/v1/reviews/add/podcast", async function (req, res) {
   let podcast = new podcasts(req.body.podcast.title, req.body.podcast.description, req.body.podcast.rss, req.body.podcast.image, req.body.podcast.website || "N/A", req.body.podcast.publisher || "N/A", req.body.podcast.language || "N/A", req.body.podcast.episodes.count || 0, null);
 
-  await addPodcast(podcast, req.body.currentRating).then(async result => {
+  await addPodcast(podcast).then(async result => {
     try {
       let podcastId = result.id;
-      let oldRating = result.rating;
-      let oldCount = result.ratingCount;
-      let sql = "insert into reviews (userId, podcastId, creationDate, rating, description) values (" + req.body.id + ", " + podcastId + ", NOW(), " + req.body.newRating + ", '" + escape(req.body.newText) + "')";
-      await promisePool.query(sql);
-
-      let newCount = oldCount + 1;
-      let newRating = oldRating * oldCount;
-      newRating = (+newRating + +req.body.newRating); //just wanna say i hate javascript
-      newRating = newRating / parseFloat(newCount);
-
-      let updateSql = "update podcasts set rating = " + newRating + ", ratingCount = " + newCount + " where id = " + podcastId + "";
-      await promisePool.query(updateSql);
+      let sql = "insert ignore into reviews (userId, podcastId, creationDate, rating, description) values (" + req.body.id + ", " + podcastId + ", NOW(), " + req.body.newRating + ", '" + escape(req.body.newText) + "')";
+      let resultId = await promisePool.query(sql);
+      
+      let insertId = resultId[0].insertId;
+      if (insertId == "0") {
+        let newSql = "select id from reviews where userId = " + req.body.id + " and podcastId = " + podcastId;
+        let newResult = await promisePool.query(newSql);
+        let newId = newResult[0][0].id;
+        let deleteSql = "delete from reviews where id = " + newId;
+        await promisePool.query(deleteSql);
+        sql = "insert ignore into reviews (userId, podcastId, creationDate, rating, description) values (" + req.body.id + ", " + podcastId + ", NOW(), " + req.body.newRating + ", '" + escape(req.body.newText) + "')";
+        await promisePool.query(sql);
+      }
       res.send({ success: true });
       return;
-    } catch {
+    } catch (err) {
+      console.log(err)
       res.send({ success: false });
       return;
     }
@@ -324,21 +314,23 @@ app.post("/api/v1/reviews/add/episode", async function (req, res) {
   let episodejson = req.body.episode;
   let episode = new episodes(episodejson.title, episodejson.podcast.image, episodejson.description, episodejson.podcast.title);
 
-  await addEpisode(episode, req.body.currentRating).then(async result => {
+  await addEpisode(episode).then(async result => {
     try {
       let episodeId = result.id;
-      let oldRating = result.rating;
-      let oldCount = result.ratingCount;
-      let sql = "insert into reviews (userId, episodeId, creationDate, rating, description) values (" + req.body.id + ", " + episodeId + ", NOW(), " + req.body.newRating + ", '" + escape(req.body.newText) + "')";
-      await promisePool.query(sql);
+      let sql = "insert ignore into reviews (userId, episodeId, creationDate, rating, description) values (" + req.body.id + ", " + episodeId + ", NOW(), " + req.body.newRating + ", '" + escape(req.body.newText) + "')";
+      let resultId = await promisePool.query(sql);
+      
+      let insertId = resultId[0].insertId;
+      if (insertId == "0") {
+        let newSql = "select id from reviews where userId = " + req.body.id + " and episodeId = " + episodeId;
+        let newResult = await promisePool.query(newSql);
+        let newId = newResult[0][0].id;
+        let deleteSql = "delete from reviews where id = " + newId;
+        await promisePool.query(deleteSql);
+        sql = "insert ignore into reviews (userId, episodeId, creationDate, rating, description) values (" + req.body.id + ", " + episodeId + ", NOW(), " + req.body.newRating + ", '" + escape(req.body.newText) + "')";
+        await promisePool.query(sql);
+      }
 
-      let newCount = oldCount + 1;
-      let newRating = oldRating * oldCount;
-      newRating = (+newRating + +req.body.newRating); //just wanna say i hate javascript
-      newRating = newRating / parseFloat(newCount);
-
-      let updateSql = "update episodes set rating = " + newRating + ", ratingCount = " + newCount + " where id = " + episodeId + "";
-      await promisePool.query(updateSql);
       res.send({ success: true });
       return;
     } catch {
@@ -349,6 +341,7 @@ app.post("/api/v1/reviews/add/episode", async function (req, res) {
 })
 
 app.post("/api/v1/reviews/get/podcast", async function (req, res) {
+  return;
   await new Promise(async (rem, rej) => {
     try {
       let idSql = "select id from podcasts where name = '" + escape(req.body.name) + "'";
@@ -368,6 +361,7 @@ app.post("/api/v1/reviews/get/podcast", async function (req, res) {
 })
 
 app.post("/api/v1/reviews/get/episode", async function (req, res) {
+  return;
   await new Promise(async (rem, rej) => {
     try {
       let idSql = "select id from episodes where name = '" + escape(req.body.name) + "' and podcastName = '" + escape(req.body.podcastName) + "'";
