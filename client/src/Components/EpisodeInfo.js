@@ -1,6 +1,7 @@
 //Packages
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
 
 //Material UI Components
 import Box from '@mui/material/Box';
@@ -67,21 +68,6 @@ class AddEpisodeToList extends React.Component {
     const body = await response.json();
     this.setState({ showSuccess: body.success });
     if (this.state.showSuccess) window.location.reload(false);
-
-  };
-
-  removeEpisode = async e => {
-    return;
-    /*const response = await fetch('/api/v1/lists/remove/podcast', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ list: this.state.currentList, podcastId: this.id }),
-    });
-    const body = await response.json();
-    this.setState({ showSuccess: body.success });
-    if (this.state.showSuccess) window.location.reload(false);*/
 
   };
 
@@ -159,6 +145,10 @@ function EpisodeDetails(props) {
 }
 
 export default function EpisodeInfo(props) {
+
+  useEffect(() => {
+  }, [props.userId]);
+
   const episode = props.episode;
   return (
     <Stack spacing={2} padding="10px" justifyContent="center" alignItems="center">
