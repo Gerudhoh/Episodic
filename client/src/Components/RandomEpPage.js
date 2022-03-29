@@ -12,7 +12,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 import EpisodeInfo from './EpisodeInfo.js';
 
 export default function RandomEpPage(props){
-  console.log(props);
   const [value, setValue] = useState(null);
   const [isLoading, setLoading] = useState(true);
   const location = useLocation();
@@ -26,6 +25,7 @@ export default function RandomEpPage(props){
       },
     });
     response.json().then(response => {
+      console.log(response);
       let epPod = response.pod;
       let podEpisodes = response.eps;
       let episode = response.episode;
