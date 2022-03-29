@@ -10,6 +10,7 @@ const promisePool = require('./repositories/mysql');
 
 // Import classes
 const users = require("./models/User")
+const user_activity = require("./models/UserActivity")
 const lists = require("./models/EpisodicList")
 const podcasts = require("./models/Podcast")
 const episodes = require("./models/Episode")
@@ -45,6 +46,7 @@ app.post('/api/v1/lists/create', async function (req, res) {
 
   if (userId != null) {
     let sql = "insert into lists (name, userId) values ('" + name + "', " + userId + ")";
+    await user_activity.addUserActivity("", "", "newList", "", userId, name);
 
     //throw it into the database
     await new Promise(async (rem, rej) => {
@@ -90,6 +92,7 @@ app.post('/api/v1/lists/add/podcast', async function (req, res) {
         podcast.databaseId = insertId;
       }
       list.addPodcast(podcast);
+      await user_activity.addUserActivity(escape(podcast.title), "", "Add", podcast.website, req.body.id, list.name);
       let linkSql = "insert into lists_podcasts_link (listsId, podcastsId) values (" + list.id + ", " + podcast.databaseId + ")";
       await promisePool.query(linkSql);
       res.send({ success: true });
@@ -131,6 +134,7 @@ app.post('/api/v1/lists/add/episode', async function (req, res) {
   let list = req.body.list;
   list = new lists(list.name, list.id, list);
   let episodejson = req.body.episode;
+  console.log(episodejson)
   let episode = new episodes(episodejson.title, req.body.image, episodejson.description, episodejson.podcast.title);
 
   await new Promise(async (rem, rej) => {
@@ -147,6 +151,7 @@ app.post('/api/v1/lists/add/episode', async function (req, res) {
         episode.databaseId = insertId;
       }
       list.addEpisode(episode);
+      await user_activity.addUserActivity(escape(episodejson.podcast.title), "", "Add", episodejson.podcast.link, req.body.id, list.name);
       let linkSql = "insert into lists_episodes_link (listsId, episodesId) values (" + list.id + ", " + episode.databaseId + ")";
       await promisePool.query(linkSql);
       res.send({ success: true });
@@ -351,7 +356,9 @@ app.get('*', (req, res) => {
 
 app.post('/api/v1/user/add', async function (req, res) {
   let token = randomString(32, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
-  let result = await users.addUser(req.body.username, req.body.email, req.body.password, token);
+  let friends = [];
+  friends.friends = {};
+  let result = await users.addUser(req.body.username, req.body.email, req.body.password, token, friends);
 
   let myResult = {};
   myResult.username = req.body.username;
@@ -406,6 +413,176 @@ app.post('/api/v1/user/logout', async function (req, res) {
   res.send(myResult);
 });
 
+// Check if a username and password is correct and generate a token
+app.post('/api/v1/user/get/friends', async function (req, res) {
+  console.log(req.body.id);
+  let result = await users.getUserFriends(req.body.id);
+
+  let myResult = [];
+  console.log(result);
+
+  if (result !== undefined) {
+    console.log("Hit")
+    console.log(result[0].friends);
+    let friends = JSON.parse(result[0].friends);
+    console.log(friends)
+
+    for(let i = 0; i < friends.length; i++) {
+      let user_friend = await users.getUserFriends(friends[i]);
+
+      let user_friend_activity = await user_activity.getUserActivity(friends[i]);
+
+      myResult[i] = {};
+
+      if (user_friend !== [] && user_friend !== undefined && user_friend.length > 0) {
+        myResult[i].username = user_friend[0].username;
+        myResult[i].email = user_friend[0].email;
+        myResult[i].id = user_friend[0].id;
+        myResult[i].activity = user_friend_activity;
+      }
+    }
+  }
+
+  console.log(myResult);
+
+  res.send(myResult);
+});
+
+app.post('/api/v1/user/add/friend', async function (req, res) {
+  console.log(req.body);
+
+  let search_term = req.body.search_term;
+  let result = await users.getUser(search_term);
+  console.log(result);
+
+  if (result !== undefined && result[0] !== undefined && result[0].friends !== undefined) {
+    let user_info = await users.getUserFriends(req.body.id);
+    let newFriends = JSON.parse(user_info[0].friends);
+
+    for(let i = 0; i < newFriends.length; i++) {
+      if(newFriends[i] === result[0].id) {
+        res.send({ success: false });
+        return;
+      }
+    }
+
+    newFriends = newFriends.concat(result[0].id);
+    console.log(newFriends);
+
+    let addFriendResult = await user_activity.addFriendToUser(JSON.stringify(newFriends), req.body.id);
+    console.log(addFriendResult)
+    res.send({ success: true });
+    return;
+  }
+
+  res.send({ success: false });
+});
+
+
+app.post('/api/v1/user_activity/add', async function (req, res) {
+  let result = await user_activity.addUserActivity(req.body.podcast_name, req.body.episode_name, req.body.action_description, req.body.link, req.body.id, req.body.list_name);
+
+  let myResult = {};
+  myResult.podcast_name = req.body.podcast_name;
+  myResult.episode_name = req.body.episode_name;
+  myResult.action_description = action_description;
+  myResult.link = link;
+  myResult.user_id = user_id;
+
+  res.send(myResult);
+});
+
+
+
+// Check if a username and password is correct and generate a token
+app.post('/api/v1/user_activity/get', async function (req, res) {
+  console.log(req.body.id);
+  let myResult = [];
+
+  let result = await users.getUserFriends(req.body.id);
+
+  console.log(result);
+
+  let user_friend_activity = await user_activity.getUserActivity(req.body.id);
+
+  for(let i = 0; i < user_friend_activity.length; i++) {
+    myResult[i] = {};
+
+    if (result !== [] && result !== undefined && result[0] !== undefined) {
+      myResult[i].username = result[0].username;
+      myResult[i].email = result[0].email;
+      myResult[i].id = result[0].id;
+      if(user_friend_activity[0].action_description === "newList") {
+        myResult[i].activityInfo.listName = user_friend_activity[0].list_name;
+        myResult[i].activityInfo.reviewText = "Created list " + user_friend_activity[0].list_name;
+        myResult[i].activityType = "newList";
+      }
+      else if(user_friend_activity[0].action_description === "listMove") {
+        myResult[i].activityInfo.listName = user_friend_activity[0].list_name;
+        myResult[i].activityInfo.reviewText =  "Moved list " + user_friend_activity[0].list_name;
+        myResult[i].activityType = "listMove";
+      }
+      else if(user_friend_activity[0].action_description === "newReview") {
+        myResult[i].activityInfo.listName = user_friend_activity[0].list_name;
+        myResult[i].activityInfo.reviewText =  "Moved list " + user_friend_activity[0].list_name;
+        myResult[i].activityType = "newReview";
+      }
+      else if(user_friend_activity[0].action_description === "Add") {
+        if(user_friend_activity[0].episode_name !== "" && user_friend_activity[0].episode_name !== null) {
+          myResult[i].activityInfo = "Added podcast \"" + user_friend_activity[0].podcast_name + "\" episode \"" + user_friend_activity[0].episode_name + "\"  to " + user_friend_activity[0].list_name ;
+          myResult[i].activityType = "add";
+        }
+        else {
+          myResult[i].activityInfo = "Added podcast \"" + user_friend_activity[0].podcast_name + "\"  to " + user_friend_activity[0].list_name ;
+          myResult[i].activityType = "add";
+        }
+      }
+    }
+  }
+
+  console.log(myResult);
+
+  res.send(myResult);
+});
+
+
+// Check if a username and password is correct and generate a token
+app.post('/api/v1/user_activity/get/friend', async function (req, res) {
+  console.log(req.body.id);
+  let result = await users.getUserFriends(req.body.id);
+
+  let myResult = [];
+  console.log(result);
+
+  if (result !== undefined && result[0] !== undefined && result[0].friends !== undefined) {
+    console.log("Hit")
+    console.log(result[0].friends);
+    let friends = JSON.parse(result[0].friends);
+    console.log(friends)
+
+    for(let i = 0; i < friends.length; i++) {
+      let user_friend = await users.getUserFriends(friends[i]);
+
+      let user_friend_activity = await user_activity.getUserActivity(friends[i]);
+
+      for(let j = 0; j < user_friend_activity.length; j++) {
+        myResult[i] = {};
+
+        if (user_friend !== [] && user_friend !== undefined && user_friend.length > 0) {
+          myResult[i].username = user_friend[0].username;
+          myResult[i].email = user_friend[0].email;
+          myResult[i].id = user_friend[0].id;
+          myResult[i].activityInfo = user_friend_activity[0].link;
+          myResult[i].activityType = user_friend_activity[0].activityType;
+        }
+      }
+    }
+  }
+
+  console.log(myResult);
+
+  res.send(myResult);
+});
 
 // Listen to the specified port for api requests
 app.listen(port);

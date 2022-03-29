@@ -11,6 +11,7 @@ import { styled } from '@mui/material/styles';
 //Custom Components
 import ListsHighlight from "./ListsHighlight.js";
 import FriendActivity from "./FriendActivity.js";
+import MyActivity from "./MyActivity.js";
 import AllLists from "./AllLists.js";
 
 //import AllComponents from "./AllComponents.js";
@@ -30,13 +31,14 @@ function homePageStack(props){
           <Typography variant="h4">Explore</Typography>
           <ListsHighlight listSize="small" userId={props.userId}/>
         </Item>
-        <Item sx={{maxWidth:"40%"}}><FriendActivity activitySize="small" /></Item>
+        <Item sx={{maxWidth:"40%"}}><FriendActivity activitySize="small" userId={props.userId}/></Item>
     </Stack>
     </React.Fragment>
   );
 }
 
 function homePageNormal(props){
+  console.log(props)
   return(
 
     <Stack direction="row" spacing={1} alignItems="flex-start" justifyContent="center" padding="10px">
@@ -44,7 +46,7 @@ function homePageNormal(props){
         <Item><AllLists userId={props.userId} /></Item>
         <Item >
           <Typography variant="h4">My Activity</Typography>
-          <FriendActivity activitySize="small" userId={props.userId}/>
+          <MyActivity activitySize="small" userId={props.userId}/>
         </Item>
       </Stack>
       <Item sx={{maxWidth:"40%"}}>

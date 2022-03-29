@@ -78,7 +78,7 @@ class AddPodcastToList extends React.Component{
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ list: this.state.lists[e.target.value], podcastId: this.id, description: this.description, title: this.podcastTitle, image: this.img,
+      body: JSON.stringify({ id: this.props.userId, list: this.state.lists[e.target.value], podcastId: this.id, description: this.description, title: this.podcastTitle, image: this.img,
         rss: this.rss,
         website: this.website,
         publisher: this.publisher,

@@ -9,28 +9,9 @@ import Stack from '@mui/material/Stack';
 //Custom Components
 import UserInfo from "./UserInfo.js";
 
-
-const friends = [
-    {
-      name: "name1",
-      activityType: "newList"
-    },
-
-    {
-      name: "name2",
-      activityType: "newList"
-    },
-    {
-      name: "name3",
-      activityType: "newList"
-    },
-    {
-      name: "name4",
-      activityType: "listMove"
-    },
-]
-
+/*
 export default function FriendList(props) {
+
   return (
     <Box container>
       <Typography>Friends</Typography>
@@ -42,3 +23,75 @@ export default function FriendList(props) {
     </Box>
   );
 }
+*/
+
+const delay = (ms) =>
+  new Promise((res) => {
+    setTimeout(() => {
+      res()
+    }, ms)
+  })
+
+class FriendList extends React.Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      allFriends: []
+    };
+  }
+
+  componentDidMount() {
+    this.getUserFriends();
+  }
+
+  getUserFriends = async e => {
+    //e.preventDefault();
+    console.log(this.props.userId)
+
+    let response = await fetch('/api/v1/user/get/friends', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: this.props.userId }),
+    });
+    let body = await response.json();
+    if (body.noUser === true) {
+      await delay(1000); //in case user is already logged in, wait for the auth
+      let response = await fetch('/api/v1/user/get/friends', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id: this.props.userId }),
+      });
+      body = await response.json();
+    }
+
+    console.log(body);
+
+    this.setState({ allFriends: body });
+  };
+
+  render() {
+    return (
+      <Box container>
+      <Typography>Friends</Typography>
+      <Stack>
+      {this.state.allFriends.map((item) => (
+        <UserInfo userName={item.username} email={item.email}  avatarSize={this.props.userSize} fontSize={this.props.fontSize}/>
+      ))}
+      </Stack>
+
+      {this.state.allFriends.length === 0 && 
+        <Typography >You have no friends</Typography>
+      }
+    </Box>
+    );
+  }
+
+}
+
+export default FriendList;
