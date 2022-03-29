@@ -106,7 +106,7 @@ async function addEpisode(episode, list) {
       let result = await promisePool.query(sql);
       insertId = result[0].insertId;
       if (insertId == "0") {
-        let sql = "select id, from episodes where name = '" + escape(episode.title) + "'";
+        let sql = "select id from episodes where name = '" + escape(episode.title) + "'";
         let result = await promisePool.query(sql);
         insertId = result[0][0].id;
       }
@@ -341,7 +341,6 @@ app.post("/api/v1/reviews/add/episode", async function (req, res) {
 })
 
 app.post("/api/v1/reviews/get/podcast", async function (req, res) {
-  return;
   await new Promise(async (rem, rej) => {
     try {
       let idSql = "select id from podcasts where name = '" + escape(req.body.name) + "'";
@@ -353,7 +352,6 @@ app.post("/api/v1/reviews/get/podcast", async function (req, res) {
 
       res.send({ results: results[0] });
     } catch (err) {
-      console.log(err);
       res.send({ results: [] });
       return;
     }
@@ -361,7 +359,6 @@ app.post("/api/v1/reviews/get/podcast", async function (req, res) {
 })
 
 app.post("/api/v1/reviews/get/episode", async function (req, res) {
-  return;
   await new Promise(async (rem, rej) => {
     try {
       let idSql = "select id from episodes where name = '" + escape(req.body.name) + "' and podcastName = '" + escape(req.body.podcastName) + "'";
@@ -373,7 +370,6 @@ app.post("/api/v1/reviews/get/episode", async function (req, res) {
 
       res.send({ results: results[0] });
     } catch (err) {
-      console.log(err);
       res.send({ results: [] });
       return;
     }
@@ -447,23 +443,55 @@ app.post('/api/v1/searchPodcast', async function (req, res) {
 });
 
 app.post('/api/v1/rating/get/podcast', async function (req, res) {
-  let sql = "select rating from podcasts where name = '" + escape(req.body.name) + "'";
+  let sql = "select id from podcasts where name = '" + escape(req.body.name) + "'";
   let result = await promisePool.query(sql);
   if (result.length <= 0 || result[0].length <= 0) {
     res.send({ rating: 0 });
     return;
   }
-  res.send({ rating: result[0][0].rating });
+  
+  let id = result[0][0].id;
+  try {
+    sql = "select rating from reviews where podcastId = " + id;
+    let results = await promisePool.query(sql);
+    let count = 0;
+    let rating = 0;
+    results[0].forEach(element => {
+      rating = rating + element.rating;
+      count = count+1;
+    });
+    res.send({ rating: rating/count });
+    return;
+  } catch {
+    res.send({ rating: 0 });
+    return;
+  }
 })
 
 app.post('/api/v1/rating/get/episode', async function (req, res) {
-  let sql = "select rating from episodes where name = '" + escape(req.body.name) + "' and podcastName = '" + escape(req.body.podcastName) + "'";
+  let sql = "select id from episodes where name = '" + escape(req.body.name) + "' and podcastName = '" + escape(req.body.podcastName) + "'";
   let result = await promisePool.query(sql);
   if (result.length <= 0 || result[0].length <= 0) {
     res.send({ rating: 0 });
     return;
   }
-  res.send({ rating: result[0][0].rating });
+  
+  let id = result[0][0].id;
+  try {
+    sql = "select rating from reviews where episodeId = " + id;
+    let results = await promisePool.query(sql);
+    let count = 0;
+    let rating = 0;
+    results[0].forEach(element => {
+      rating = rating + element.rating;
+      count = count+1;
+    });
+    res.send({ rating: rating/count });
+    return;
+  } catch {
+    res.send({ rating: 0 });
+    return;
+  }
 })
 
 function randomString(length, chars) {
