@@ -26,7 +26,6 @@ export default function RandomEpPage(props){
       },
     });
     response.json().then(response => {
-      console.log(response);
       let epPod = response.pod;
       let podEpisodes = response.eps;
       let episode = response.episode;
