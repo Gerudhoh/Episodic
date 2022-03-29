@@ -286,6 +286,7 @@ app.post("/api/v1/reviews/add/podcast", async function (req, res) {
 
   await addPodcast(podcast).then(async result => {
     try {
+      let msg = "Successfully added review.";
       let podcastId = result.id;
       let sql = "insert ignore into reviews (userId, podcastId, creationDate, rating, description) values (" + req.body.id + ", " + podcastId + ", NOW(), " + req.body.newRating + ", '" + escape(req.body.newText) + "')";
       let resultId = await promisePool.query(sql);
@@ -299,12 +300,13 @@ app.post("/api/v1/reviews/add/podcast", async function (req, res) {
         await promisePool.query(deleteSql);
         sql = "insert ignore into reviews (userId, podcastId, creationDate, rating, description) values (" + req.body.id + ", " + podcastId + ", NOW(), " + req.body.newRating + ", '" + escape(req.body.newText) + "')";
         await promisePool.query(sql);
+        msg = "Successfully updated review."
       }
-      res.send({ success: true });
+      res.send({ success: true, msg: msg });
       return;
     } catch (err) {
       console.log(err)
-      res.send({ success: false });
+      res.send({ success: false, msg: "Could not add review." });
       return;
     }
   });
@@ -316,6 +318,7 @@ app.post("/api/v1/reviews/add/episode", async function (req, res) {
 
   await addEpisode(episode).then(async result => {
     try {
+      let msg = "Successfully added review.";
       let episodeId = result.id;
       let sql = "insert ignore into reviews (userId, episodeId, creationDate, rating, description) values (" + req.body.id + ", " + episodeId + ", NOW(), " + req.body.newRating + ", '" + escape(req.body.newText) + "')";
       let resultId = await promisePool.query(sql);
@@ -329,12 +332,13 @@ app.post("/api/v1/reviews/add/episode", async function (req, res) {
         await promisePool.query(deleteSql);
         sql = "insert ignore into reviews (userId, episodeId, creationDate, rating, description) values (" + req.body.id + ", " + episodeId + ", NOW(), " + req.body.newRating + ", '" + escape(req.body.newText) + "')";
         await promisePool.query(sql);
+        msg = "Successfully updated review."
       }
 
-      res.send({ success: true });
+      res.send({ success: true, msg: msg });
       return;
     } catch {
-      res.send({ success: false });
+      res.send({ success: false, msg: "Could not add review." });
       return;
     }
   });

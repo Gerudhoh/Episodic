@@ -8,13 +8,14 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';
+import Alert from '@mui/material/Alert';
 
 import { useLocation } from 'react-router-dom';
 
 //Custom Components
 import ActivityCard from "./ActivityCard.js";
 
-function getParsedDate(strDate){
+function getParsedDate(strDate) {
   var strSplitDate = String(strDate).split(' ');
   var date = new Date(strSplitDate[0]);
   // alert(date);
@@ -23,12 +24,12 @@ function getParsedDate(strDate){
 
   var yyyy = date.getFullYear();
   if (dd < 10) {
-      dd = '0' + dd;
+    dd = '0' + dd;
   }
   if (mm < 10) {
-      mm = '0' + mm;
+    mm = '0' + mm;
   }
-  date =  dd + "-" + mm + "-" + yyyy;
+  date = dd + "-" + mm + "-" + yyyy;
   return date.toString();
 }
 
@@ -36,18 +37,23 @@ class ReviewsClass extends React.Component {
   constructor(props) {
     super(props);
     this.userId = this.props.userId;
-    this.location = this.props.location.split('/');
+
     this.currentRating = this.props.currentRating;
     this.podcast = this.props.podcast;
     this.episode = this.props.episode;
 
-    this.podcastName = decodeURIComponent(this.location[2]);
-    this.episodeName = decodeURIComponent(this.location[3]);
-    this.isEpisode = false;
-    if (this.location.length > 3) this.isEpisode = true;
+    if (this.podcast) {
+      this.podcastName = this.podcast?.title;
+      this.isEpisode = false;
+    }
+    if (this.episode) {
+      this.episodeName = this.episode?.title;
+      this.podcastName = this.episode?.podcast.title;
+      this.isEpisode = true;
+    }
 
     this.image = "";
-    if (this.isEpisode){
+    if (this.isEpisode) {
       this.image = this.episode.podcast.image;
     }
     else {
@@ -57,7 +63,10 @@ class ReviewsClass extends React.Component {
     this.state = {
       reviews: [],
       newReviewText: "",
-      newReviewRating: 0
+      newReviewRating: 0,
+      showSuccess: false,
+      successMessage: "Success",
+      showError: false
     }
   }
 
@@ -136,7 +145,16 @@ class ReviewsClass extends React.Component {
         body: JSON.stringify({ id: this.userId, name: this.episodeName, currentRating: this.currentRating, newRating: this.state.newReviewRating, newText: this.state.newReviewText, episode: this.episode }),
       });
       let body = await response.json();
-      if (body.success) window.location.reload(false);
+      if (body.success) {
+        this.setState({ showSuccess: true });
+        this.setState({ showError: false });
+        this.setState({ successMessage: body.msg });
+        this.getReviews();
+      }
+      else {
+        this.setState({ showSuccess: false });
+        this.setState({ showError: true });
+      }
     }
     else {
       let response = await fetch('/api/v1/reviews/add/podcast', {
@@ -147,7 +165,16 @@ class ReviewsClass extends React.Component {
         body: JSON.stringify({ id: this.userId, name: this.podcastName, currentRating: this.currentRating, newRating: this.state.newReviewRating, newText: this.state.newReviewText, podcast: this.podcast }),
       });
       let body = await response.json();
-      if (body.success) window.location.reload(false);
+      if (body.success) {
+        this.setState({ showSuccess: true });
+        this.setState({ showError: false });
+        this.setState({ successMessage: body.msg });
+        this.getReviews();
+      }
+      else {
+        this.setState({ showSuccess: false });
+        this.setState({ showError: true });
+      }
     }
   };
 
@@ -157,6 +184,17 @@ class ReviewsClass extends React.Component {
       <Box container>
         {this.userId ? (
           <Box component="form" onSubmit={this.createReview}>
+
+            {this.state.showSuccess ? (<Alert severity="success">
+              {this.state.successMessage}
+            </Alert>
+            ) : (null)}
+            {this.state.showError ? (<Alert severity="error">
+              Error: Could not leave review.
+            </Alert>
+            ) : (null)}
+
+            <br></br>
             <Stack direction="column" spacing={2} justifyContent="flex-start">
               <Typography variant="h4" textAlign="center">Leave a Review</Typography>
               <center>
