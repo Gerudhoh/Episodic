@@ -2,24 +2,10 @@
 import * as React from 'react';
 
 import { useState, useEffect } from 'react';
-import {useLocation, Link} from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 //Material UI Components
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
-import Rating from '@mui/material/Rating';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
 import CircularProgress from '@mui/material/CircularProgress';
-import CardMedia from "@mui/material/CardMedia";
-
-
-//Material UI Icons and Styling
-import { styled } from '@mui/material/styles';
 
 //Custom Components
 import PodcastEpisodesCard from './PodcastEpisodesCard.js';
@@ -158,28 +144,7 @@ function EpisodeDetails(props){
   );
 }
 
-function EpisodeInfo(props){
-  const episode = props.episode;
-  return(
-    <Stack spacing={2} padding="10px" justifyContent="center" alignItems="center">
-      <Item sx={{width:"80%"}}><EpisodeDetails episode={episode} userId={props.userId}/></Item>
-      <Stack direction="row" flexWrap="wrap" spacing={2} justifyContent="center">
-        <Item sx={{width:"45%"}}>
-          <Typography variant="h3">More From {episode.podcast.title}</Typography>
-          <PodcastEpisodesCard episodes={episode.podcast.episodes.items} userId={props.userId} image={episode.podcast.image} podcastTitle={episode.podcast.title}/>
-        </Item>
-        <Item sx={{width:"45%"}} height="45vh">
-          <Typography variant="h3">Reviews</Typography>
-          <Box component="div" height="45vh" sx={{overflow:'auto', padding:'10px'}}>
-            <Reviews userId={props.userId}/>
-          </Box>
-        </Item>
-      </Stack>
-    </Stack>
-  );
-}
-
-export default function EpisodeInfoPage(props){
+export default function EpisodeInfoPage(props) {
   const [value, setValue] = useState(null);
   const [isLoading, setLoading] = useState(true);
   const location = useLocation()
@@ -195,18 +160,19 @@ export default function EpisodeInfoPage(props){
       },
       body: JSON.stringify({ podName: podTitle, epName: epTitle }),
     });
-    response.json().then(response => {
+    response.json().then(async response => {
       console.log(response);
       let epPod = response.pod;
       let podEpisodes = response.eps;
       let episode = response.episode;
+      let explicit = episode.explicit === 0 ? "clean" : "explicit";
       let info = {
-        title : episode.title,
-        description : episode.description,
+        title: episode.title,
+        description: episode.description,
         date: episode.datePublishedPretty,
         audio : episode.enclosureUrl,
         language : episode.feedLanguage,
-        explicit : 'explicit',
+        explicit : explicit,
         podcast: {
           title : epPod.title,
           description : epPod.description,
@@ -215,26 +181,38 @@ export default function EpisodeInfoPage(props){
           website : epPod.url,
           publisher : epPod.author,
           language : epPod.language,
-          explicit : 'explicit',
+          explicit : explicit,
           genre : epPod.categories,
           episodes : podEpisodes,
         }
       }
-      return <EpisodeInfo episode={info} userId={props.userId}/>
-    }).then( resource => {
-      setValue(resource);
-      setLoading(false);
 
+      const ratingResponse = await fetch('/api/v1/rating/get/episode', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name: epTitle, podcastName: podTitle }),
+      });
+
+      ratingResponse.json().then(response => {
+        let rating = response.rating;
+        return <EpisodeInfo episode={info} userId={props.userId} rating={rating} />
+      }).then(resource => {
+        setValue(resource);
+        setLoading(false);
+
+      });
     });
   };
 
   useEffect(() => {
-    getEpisodeFromPodcast(podTitle, episodeTitle);
-  }, [podTitle]);
+    getEpisodeFromPodcast(podTitle, episodeTitle, props.userId);
+  }, [podTitle, episodeTitle, props.userId]);
 
-  return(
+  return (
     <React.Fragment>
-    {isLoading ? (
+      {isLoading ? (
         <CircularProgress />
       ) : (
         value

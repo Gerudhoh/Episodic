@@ -5,10 +5,6 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
 
-const image = {
-  img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-  title: 'Breakfast'
-}
 //Styling
 const userInfoStyles={
   small:
@@ -26,8 +22,8 @@ const userInfoStyles={
 export default function userInfo(props) {
   return (
       <Stack direction="row" spacing={1} alignItems="center">
-        <Avatar aria-label="user" sx={userInfoStyles[props.avatarSize].avSize}>
-          <img src={image.img} />
+        <Avatar alt={props.userName} aria-label="user" sx={userInfoStyles[props.avatarSize].avSize} src="/static/images/avatar/2.jpg">
+          
         </Avatar>
         <Typography fontSize={props.fontSize}>{props.userName}</Typography>
       </Stack>

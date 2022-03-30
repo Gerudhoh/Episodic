@@ -120,7 +120,7 @@ class EpisodeCard extends React.Component {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ list: this.state.currentList, name: this.episodeTitle, id: this.props.props.userId }),
+      body: JSON.stringify({ list: this.state.currentList, name: this.episodeTitle, id: this.props.props.userId, podcastName: this.podcastTitle }),
     });
     const body = await response.json();
     this.setState({ showSuccess: body.success });
