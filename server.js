@@ -319,6 +319,12 @@ app.get('/api/v1/trending', async function (req, res) {
 
 });
 
+app.get('/api/v1/user/get/all', async function (req, res) {
+  let result = await users.getAllUsers();
+  console.log(result);
+  res.send({users: result});
+});
+
 app.post('/api/v1/searchPodcast', async function (req, res) {
   let podcastName = req.body.name;
   let apiClient = fetcher.getPodcastIndexApi();
@@ -368,7 +374,6 @@ app.post('/api/v1/user/add', async function (req, res) {
 
   res.send(myResult);
 });
-
 
 // Check if a username and password is correct and generate a token
 app.post('/api/v1/user/login', async function (req, res) {

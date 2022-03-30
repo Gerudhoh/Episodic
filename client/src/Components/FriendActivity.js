@@ -9,6 +9,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Alert from '@mui/material/Alert';
 import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 
 //Custom Components
 import ActivityCard from "./ActivityCard.js";
@@ -102,6 +103,7 @@ class FriendActivity extends React.Component {
     let success = JSON.parse(localStorage.getItem('showSuccess')) || false;
     this.state = {
       allFriends: [],
+      allUsers: [],
       friendName: "",
       list: {},
       allLists: [],
@@ -112,6 +114,7 @@ class FriendActivity extends React.Component {
 
   componentDidMount() {
     this.getUserFriends();
+    this.getUsers();
     localStorage.setItem( 'showSuccess', false );
   }
 
@@ -141,6 +144,18 @@ class FriendActivity extends React.Component {
     console.log(body);
 
     this.setState({ allFriends: body });
+  };
+
+  getUsers = async e => {
+    let response = await fetch('/api/v1/user/get/all', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+    let body = await response.json();
+
+    this.setState({ allUsers: body.users });
   };
 
   addFriend = async e => {
@@ -179,13 +194,25 @@ class FriendActivity extends React.Component {
         </List>
         <Box component="form" onSubmit={this.addFriend}>
           <Stack direction="row" spacing={2} justifyContent="flex-start">
-            <TextField
-              required
-              id="new-list-input"
-              type="text"
-              value={this.state.friendName}
-              label="Friend Username/Email"
-              onChange={e => this.setState({ friendName: e.target.value })}
+          <Autocomplete
+              freeSolo
+              fullWidth
+              id="autofill-add-friend"
+              disableClearable
+              options={this.state.allUsers.map((option) => option.username)}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  type="text"
+                  value={this.state.friendName}
+                  label="Friend Username/Email"
+                  onChange={e => this.setState({ friendName: e.target.value })}
+                  InputProps={{
+                    ...params.InputProps,
+                    type: 'search',
+                  }}
+                />
+              )}
             />
             <Button variant="contained" type="submit">Add</Button>
           </Stack>
