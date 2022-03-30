@@ -625,7 +625,7 @@ app.post('/api/v1/user/get/friends', async function (req, res) {
     let friends = JSON.parse(result[0].friends);
     console.log(friends)
 
-    for(let i = 0; i < friends.length; i++) {
+    for(let i = 0; i < friends?.length; i++) {
       let user_friend = await users.getUserFriends(friends[i]);
 
       let user_friend_activity = await user_activity.getUserActivity(friends[i]);
