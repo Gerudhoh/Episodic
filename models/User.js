@@ -103,4 +103,17 @@ module.exports = {
             res(rows);
         });
     },
+
+    getAllUsers: function () {
+        return new Promise(async (res, rej) => {
+            console.log("test");
+            let sql = 'SELECT username, email FROM users;';
+            
+            const [rows] = await promisePool.query(sql);
+
+            console.log(`Rows in getAllUsers: ${JSON.stringify(rows)}`);
+
+            res(rows);
+        });
+    },
 };
