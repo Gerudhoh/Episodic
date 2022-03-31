@@ -29,8 +29,10 @@ class SingleListViewClass extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ userId: nextProps.userId });
-    //this.getUserList();
+    if (nextProps.userId) {
+      this.setState({ userId: nextProps.userId })
+      this.getUserList();
+    }
   }
 
   componentDidMount() {

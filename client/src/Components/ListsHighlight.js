@@ -7,6 +7,8 @@ import Stack from '@mui/material/Stack';
 
 import Typography from '@mui/material/Typography';
 
+import { useEffect } from 'react';
+
 //Material UI Icons and Styling
 import { styled } from '@mui/material/styles';
 
@@ -27,14 +29,15 @@ const delay = (ms) =>
     }, ms)
   })
 
-class ListsHighlight extends React.Component {
+class ListsHighlightClass extends React.Component {
 
   constructor(props) {
     super(props);
     this.size = this.props.listSize;
 
     this.state = {
-      allLists: []
+      allLists: [],
+      userId: this.props.userId
     };
   }
 
@@ -42,33 +45,30 @@ class ListsHighlight extends React.Component {
     this.getUserLists();
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.userId) {
+      this.setState({ userId: nextProps.userId })
+      this.getUserLists();
+    }
+  }
+
   getUserLists = async e => {
-    //e.preventDefault();
+    if (!this.state.userId) return;
     let response = await fetch('/api/v1/lists/get/all', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ id: this.props.userId }),
+      body: JSON.stringify({ id: this.state.userId }),
     });
     let body = await response.json();
-    if (body.noUser === true) {
-      await delay(1000); //in case user is already logged in, wait for the auth
-      let response = await fetch('/api/v1/lists/get/all', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id: this.props.userId }),
-      });
-      body = await response.json();
-    }
+    if (body.noUser === true) return;
     let listNames = [];
     body.lists.map((list) => {
       let tmp = { name: list.name, images: [] };
       let i = 0;
       list.podcasts?.map((podcast) => {
-        if (i < 4) {
+        if (i < 3) {
 
           tmp.images.push({
             img: podcast.image,
@@ -81,9 +81,10 @@ class ListsHighlight extends React.Component {
         i++;
       })
 
+      let remainder = 5 - i;
       i = 0;
       list.episodes?.map((episode) => {
-        if (i < 4) {
+        if (i < remainder) {
           tmp.images.push({
             img: episode.image,
             episodeTitle: episode.title,
@@ -96,8 +97,6 @@ class ListsHighlight extends React.Component {
         i++;
 
       })
-      // Add podcasts/episodes as images if there are any
-      // I'm not entirely sure how to do this. We need the podcasts to be clickable (?) but they are just images + titles here
       listNames.push(tmp)
     });
     this.setState({ allLists: listNames });
@@ -110,7 +109,7 @@ class ListsHighlight extends React.Component {
         <Stack spacing={2}>
           {this.state.allLists.map((item) => (
             <Item key={item.name}>
-              <ListPreview listName={item.name} images={item.images} listSize={this.size} userId={this.props.userId} />
+              <ListPreview listName={item.name} images={item.images} listSize={this.size} userId={this.state.userId} />
             </Item>
           ))}
         </Stack>
@@ -119,4 +118,12 @@ class ListsHighlight extends React.Component {
   }
 }
 
-export default ListsHighlight;
+export default function ListsHighlight(props) {
+
+  useEffect(() => {
+  }, [props]);
+
+  return (
+    <ListsHighlightClass listSize={props.listSize} userId={props.userId} />
+  );
+}

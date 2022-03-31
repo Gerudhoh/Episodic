@@ -29,13 +29,6 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-const delay = (ms) =>
-  new Promise((res) => {
-    setTimeout(() => {
-      res()
-    }, ms)
-  })
-
 
 class AddEpisodeToList extends React.Component {
   constructor(props) {
@@ -48,12 +41,20 @@ class AddEpisodeToList extends React.Component {
       currentList: this.props.currentList || null,
       lists: [],
       listMenuItems: null,
-      showSuccess: false
+      showSuccess: false,
+      userId: props.userId
     };
   }
 
   componentDidMount() {
     this.getUserLists();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.userId) {
+      this.setState({ userId: nextProps.userId })
+      this.getUserLists();
+    }
   }
 
   addEpisodeToList = async e => {
@@ -72,26 +73,16 @@ class AddEpisodeToList extends React.Component {
   };
 
   getUserLists = async e => {
-    //e.preventDefault();
+    if (!this.state.userId) return;
     let response = await fetch('/api/v1/lists/get/all/names', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ id: this.props.userId }),
+      body: JSON.stringify({ id: this.state.userId }),
     });
     let body = await response.json();
-    if (body.noUser === true) {
-      await delay(1000); //in case user is already logged in, wait for the auth
-      let response = await fetch('/api/v1/lists/get/all/names', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id: this.props.userId }),
-      });
-      body = await response.json();
-    }
+    if (body.noUser === true) return;
     let listNames = [];
     body.lists.map((list, index) =>
       listNames.push((<MenuItem key={index} value={index}>{list.name}</MenuItem>))

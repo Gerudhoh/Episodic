@@ -288,9 +288,8 @@ app.post("/api/v1/lists/delete", async function (req, res) {
   let sql = "delete from lists where name = '" + name + "' and userId = " + userId;
 
   try {
-    let result = await promisePool.query(sql);
+    await promisePool.query(sql);
     res.send({success: true});
-
   } catch (err) {
     console.log(err);
     res.send({success: false});
