@@ -274,12 +274,28 @@ app.post("/api/v1/lists/get/one", async function (req, res) {
       list.addEpisode(temp);
     }
 
-    res.send({ list: list });
+    res.send({ list: list, success: true });
     return;
   }
-  res.send({ list: {} });
+  res.send({ list: {}, success: false });
 
 });
+
+app.post("/api/v1/lists/delete", async function (req, res) {
+  let name = req.body.name;
+  let userId = req.body.id;
+
+  let sql = "delete from lists where name = '" + name + "' and userId = " + userId;
+
+  try {
+    let result = await promisePool.query(sql);
+    res.send({success: true});
+
+  } catch (err) {
+    console.log(err);
+    res.send({success: false});
+  }
+})
 
 app.post("/api/v1/reviews/add/podcast", async function (req, res) {
   let podcast = new podcasts(req.body.podcast.title, req.body.podcast.description, req.body.podcast.rss, req.body.podcast.image, req.body.podcast.website || "N/A", req.body.podcast.publisher || "N/A", req.body.podcast.language || "N/A", req.body.podcast.episodes.count || 0, null);
