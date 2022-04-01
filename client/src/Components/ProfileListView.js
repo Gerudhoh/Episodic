@@ -16,6 +16,7 @@ import UserInfo from './UserInfo.js';
 import AllLists from './AllLists.js';
 import EpisodeCardList from './EpisodeCardList.js';
 import SingleListView from './SingleListView.js';
+import SingleListViewFn from './SingleListViewFn.js';
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(3),
@@ -52,9 +53,7 @@ class ProfileListViewClass extends React.Component {
       body: JSON.stringify({ id: this.props.userId}),
     });
     const body = await response.json();
-    //const listMap = body.lists.map((list) => {list.name});
     let userLists = [];
-
 
     body.lists.forEach((list) => {
       let listImgs = [];
@@ -64,6 +63,8 @@ class ProfileListViewClass extends React.Component {
     });
 
     this.setState({ allLists: userLists });
+
+    console.log(this.state.allLists);
 
   };
 
@@ -119,8 +120,8 @@ class ProfileListViewClass extends React.Component {
           </Item>
           <Item><AllLists userId={this.props.userId} /></Item>
         </Stack>
-        {this.props.location != '/alluserlists/' ? (
-          <SingleListView location={this.props.location} username={this.props.userName} />
+        {this.props.location !== '/alluserlists/' ? (
+          <SingleListViewFn location={this.props.location} username={this.props.userName} userId={this.props.userId} seed={Math.random()}/>
           ) : (null)}
       </Stack>
     )
@@ -130,13 +131,6 @@ class ProfileListViewClass extends React.Component {
 export default function ProfileListView(props){
   const location = useLocation();
   return(
-    <Stack spacing={1} alignItems="flex-start" justifyContent="center" padding="10px">
-        <Item sx={{maxWidth:"40%"}}>
-          <AllLists userId={props.userId} />
-        </Item>
-        <Item sx={{maxWidth:"60%"}}>
-          <ProfileListViewClass location={location.pathname} userId={props.userId} userName={props.username}/>
-       </Item>
-    </Stack>
+      <ProfileListViewClass location={location.pathname} userId={props.userId} userName={props.username}/>
   );
 }
