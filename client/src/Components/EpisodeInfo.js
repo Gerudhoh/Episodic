@@ -30,6 +30,7 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
+const regex = /(<([^>]+)>)/ig;
 
 class AddEpisodeToList extends React.Component {
   constructor(props) {
@@ -144,7 +145,7 @@ function EpisodeDetails(props) {
           <Typography variant="h4" component={Link} to={podURI} replace>{podcast.title}</Typography>
           <AddEpisodeToList episode={episode} image={podcast.image} userId={props.userId} />
           <Rating readOnly size="large" value={props.rating} />
-          <Typography component="div" textAlign="left" variant="p">{episode.description}</Typography>
+          <Typography component="div" textAlign="left" variant="p">{episode.description.replace(regex, '')}</Typography>
         </Stack>
       </Item>
     </Stack>

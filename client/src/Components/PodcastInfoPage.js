@@ -26,18 +26,13 @@ import { styled } from '@mui/material/styles';
 import PodcastEpisodesCard from './PodcastEpisodesCard.js';
 import Reviews from './Reviews.js'
 
-const delay = (ms) =>
-  new Promise((res) => {
-    setTimeout(() => {
-      res()
-    }, ms)
-  })
-
 const Item = styled(Paper)(({ theme }) => ({
   padding: '10px',
   textAlign: 'center',
   color: theme.palette.text.secondary,
 }));
+
+const regex = /(<([^>]+)>)/ig;
 
 class AddPodcastToList extends React.Component {
   constructor(props) {
@@ -47,7 +42,7 @@ class AddPodcastToList extends React.Component {
     this.id = this.props.id;
     this.podcastTitle = this.props.podcast.title;
 
-    this.description = this.podcast.description;
+    this.description = this.podcast.description.replace(regex, '');
     this.rss = this.podcast.rss;
     this.website = this.podcast.website;
     this.publisher = this.podcast.publisher;
@@ -218,7 +213,7 @@ export default function PodcastInfoPage(props) {
       let episodes = response.eps;
       let info = {
         title: podcast.title,
-        description: podcast.description,
+        description: podcast.description.replace(regex, ''),
         rss: podcast.url,
         image: podcast.image,
         website: podcast.link,
