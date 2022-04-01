@@ -88,11 +88,15 @@ async function addPodcast(podcast, list) {
         let linkSql = "insert into lists_podcasts_link (listsId, podcastsId) values (" + list.id + ", " + podcast.databaseId + ")";
         await promisePool.query(linkSql);
       }
-      res({ success: true, id: insertId});
+      res({ success: true, id: insertId, listMsg: "Successfully added to list."});
       return;
     } catch (err) {
       console.log(err);
-      res({ success: false, id: insertId});
+      let msg = "Failed to add to list.";
+      if (err.code == 'ER_DUP_ENTRY') {
+        msg = "This podcast is already in this list!";
+      }
+      res({ success: false, id: insertId, listMsg: msg});
       return;
     }
   });
@@ -116,11 +120,15 @@ async function addEpisode(episode, list) {
         let linkSql = "insert into lists_episodes_link (listsId, episodesId) values (" + list.id + ", " + episode.databaseId + ")";
         await promisePool.query(linkSql);
       }
-      res({ success: true, id: insertId });
+      res({ success: true, id: insertId, listMsg: "Successfully added to list." });
       return;
     } catch (err) {
       console.log(err);
-      res({ success: false, id: insertId });
+      let msg = "Failed to add to list.";
+      if (err.code == 'ER_DUP_ENTRY') {
+        msg = "This episode is already in this list!";
+      }
+      res({ success: false, id: insertId, listMsg: msg });
       return;
     }
   });
@@ -132,7 +140,7 @@ app.post('/api/v1/lists/add/podcast', async function (req, res) {
   list = new lists(list.name, list.id, list);
 
   await addPodcast(podcast, list).then(result => {
-    res.send({ success: result.success });
+    res.send({ success: result.success, msg: result.listMsg });
   });
 });
 
@@ -165,7 +173,7 @@ app.post('/api/v1/lists/add/episode', async function (req, res) {
   let episode = new episodes(episodejson.title, req.body.image, episodejson.description, episodejson.podcast.title);
 
   await addEpisode(episode, list).then(result => {
-    res.send({ success: result.success });
+    res.send({ success: result.success, msg: result.listMsg });
   });
   return;
 

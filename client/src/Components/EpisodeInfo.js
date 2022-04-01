@@ -14,6 +14,7 @@ import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import CardMedia from "@mui/material/CardMedia";
+import Alert from '@mui/material/Alert';
 
 
 //Material UI Icons and Styling
@@ -42,6 +43,9 @@ class AddEpisodeToList extends React.Component {
       lists: [],
       listMenuItems: null,
       showSuccess: false,
+      showSuccess: false,
+      showError: false,
+      msg: "",
       userId: props.userId
     };
   }
@@ -68,12 +72,13 @@ class AddEpisodeToList extends React.Component {
     });
     const body = await response.json();
     this.setState({ showSuccess: body.success });
-    if (this.state.showSuccess) window.location.reload(false);
+    this.setState({ showSuccess: body.success });
+    this.setState({ showError: !body.success });
+    this.setState({ msg: body.msg });
 
   };
 
   getUserLists = async e => {
-    if (!this.state.userId) return;
     let response = await fetch('/api/v1/lists/get/all/names', {
       method: 'POST',
       headers: {
@@ -95,17 +100,31 @@ class AddEpisodeToList extends React.Component {
     return (
       <React.Fragment>
         <CardMedia className="podcastPlayer" component="audio" controls src={this.episode.audio} />
-        <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">Add to List</InputLabel>
-          <Select variant="outlined"
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            label="Age"
-            onChange={this.addEpisodeToList}
-          >
-            {this.state.listMenuItems}
-          </Select>
-        </FormControl>
+        {this.state.userId ? (
+          <React.Fragment>
+            <FormControl fullWidth>
+              {this.state.showSuccess ? (<Alert severity="success">
+                {this.state.msg}
+              </Alert>
+              ) : (null)}
+              {this.state.showError ? (<Alert severity="error">
+                {this.state.msg}
+              </Alert>
+              ) : (null)}
+            </FormControl>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Add to List</InputLabel>
+              <Select variant="outlined"
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Age"
+                onChange={this.addEpisodeToList}
+              >
+                {this.state.listMenuItems}
+              </Select>
+            </FormControl>
+          </React.Fragment>
+        ) : (null)}
       </React.Fragment>
     );
   }
@@ -123,10 +142,7 @@ function EpisodeDetails(props) {
         <Stack alignItems="flex-start" spacing={2} padding="10px">
           <Typography textAlign="left" variant="h3">{episode.title}</Typography>
           <Typography variant="h4" component={Link} to={podURI} replace>{podcast.title}</Typography>
-
-          {props.userId ? (
-            <AddEpisodeToList episode={episode} image={podcast.image} userId={props.userId} />
-          ) : (null)}
+          <AddEpisodeToList episode={episode} image={podcast.image} userId={props.userId} />
           <Rating readOnly size="large" value={props.rating} />
           <Typography component="div" textAlign="left" variant="p">{episode.description}</Typography>
         </Stack>
@@ -138,7 +154,7 @@ function EpisodeDetails(props) {
 export default function EpisodeInfo(props) {
 
   useEffect(() => {
-  }, [props.userId]);
+  }, [props]);
 
   const episode = props.episode;
   return (

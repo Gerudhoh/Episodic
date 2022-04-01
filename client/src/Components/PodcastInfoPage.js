@@ -16,6 +16,7 @@ import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import CircularProgress from '@mui/material/CircularProgress';
+import Alert from '@mui/material/Alert';
 
 
 //Material UI Icons and Styling
@@ -64,6 +65,8 @@ class AddPodcastToList extends React.Component {
       lists: [],
       listMenuItems: null,
       showSuccess: false,
+      showError: false,
+      msg: "",
       userId: this.props.userId
     };
   }
@@ -99,21 +102,8 @@ class AddPodcastToList extends React.Component {
     });
     const body = await response.json();
     this.setState({ showSuccess: body.success });
-    if (this.state.showSuccess) window.location.reload(false);
-
-  };
-
-  removePodcast = async e => {
-    const response = await fetch('/api/v1/lists/remove/podcast', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ list: this.state.currentList, podcastId: this.id }),
-    });
-    const body = await response.json();
-    this.setState({ showSuccess: body.success });
-    if (this.state.showSuccess) window.location.reload(false);
+    this.setState({ showError: !body.success });
+    this.setState({ msg: body.msg });
 
   };
 
@@ -139,24 +129,28 @@ class AddPodcastToList extends React.Component {
   render() {
     return (
       <React.Fragment>
-        {!this.state.listView && this.isPodcast ? (
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Add to List</InputLabel>
-            <Select variant="outlined"
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              label="Age"
-              onChange={this.addPodcastToList}
-            >
-              {this.state.listMenuItems}
-            </Select>
-          </FormControl>
-        ) : (null)}
-        {this.state.listView && this.isPodcast ? (
-          <FormControl>
-            <Button variant="contained" onClick={this.removePodcast}>Remove</Button>
-          </FormControl>
-        ) : (null)}
+        <FormControl fullWidth>
+          {this.state.showSuccess ? (<Alert severity="success">
+            {this.state.msg}
+          </Alert>
+          ) : (null)}
+          {this.state.showError ? (<Alert severity="error">
+            {this.state.msg}
+          </Alert>
+          ) : (null)}
+        </FormControl>
+
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Add to List</InputLabel>
+          <Select variant="outlined"
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            label="Age"
+            onChange={this.addPodcastToList}
+          >
+            {this.state.listMenuItems}
+          </Select>
+        </FormControl>
       </React.Fragment>
     );
   }
@@ -187,7 +181,7 @@ function PodcastInfo(props) {
   const podcast = props.podcast;
   return (
     <Stack spacing={2} padding="10px" justifyContent="center">
-      <Item><PodcastDetails podcast={podcast} userId={props.userId} rating = {props.rating}/></Item>
+      <Item><PodcastDetails podcast={podcast} userId={props.userId} rating={props.rating} /></Item>
       <Stack direction="row" padding="10px" spacing={2} justifyContent="center">
         <Item sx={{ maxWidth: "45%" }}>
           <Typography variant="h3" textAlign="left">Episodes</Typography>
