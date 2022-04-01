@@ -134,6 +134,13 @@ class ProfileListViewClass extends React.Component {
 export default function ProfileListView(props){
   const location = useLocation();
   return(
-    <ProfileListViewClass location={location.pathname} userId={props.userId} userName={props.username}/>
+    <Stack spacing={1} alignItems="flex-start" justifyContent="center" padding="10px">
+        <Item sx={{maxWidth:"40%"}}>
+          <AllLists userId={props.userId} />
+        </Item>
+        <Item sx={{maxWidth:"60%"}}>
+          <ProfileListViewClass location={location.pathname} userId={props.userId} userName={props.username}/>
+       </Item>
+    </Stack>
   );
 }
