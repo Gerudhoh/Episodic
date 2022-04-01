@@ -8,47 +8,6 @@ import EpisodeCardList from './EpisodeCardList.js';
 import {useLocation} from 'react-router-dom';
 
 
-const list = {
-  name: 'list1',
-  images: [
-    {
-      img: '/pepekingprawn.jpg',
-      title: 'PKP1',
-    },
-    {
-      img: '/pepekingprawn.jpg',
-      title: 'PKP2',
-    },
-    {
-      img: '/pepekingprawn.jpg',
-      title: 'PKP63',
-    },
-    {
-      img: '/pepekingprawn.jpg',
-      title: 'PKP4',
-    },
-    {
-      img: '/pepekingprawn.jpg',
-      title: 'PKP5',
-    },
-    {
-      img: '/pepekingprawn.jpg',
-      title: 'PKP6',
-    },
-    {
-      img: '/pepekingprawn.jpg',
-      title: 'PKP7',
-    },
-    {
-      img: '/pepekingprawn.jpg',
-      title: 'PKP8',
-    },
-    {
-      img: '/pepekingprawn.jpg',
-      title: 'PKP9',
-    },
-  ],
-};
 
 
 const delay = (ms) =>
@@ -63,9 +22,9 @@ class SingleListViewClass extends React.Component {
   constructor(props) {
     super(props);
     this.size = this.props.listSize;
-    
-    this.location = decodeURIComponent(this.props.location.split('/')[2]);
 
+    this.location = decodeURIComponent(this.props.location.split('/')[2]);
+    console.log(this.location);
     this.state = {
       list: { name: 'Loading...', images: [] },
       listObj: {}

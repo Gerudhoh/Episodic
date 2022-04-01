@@ -15,6 +15,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import UserInfo from './UserInfo.js';
 import AllLists from './AllLists.js';
 import EpisodeCardList from './EpisodeCardList.js';
+import SingleListView from './SingleListView.js';
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(3),
@@ -22,15 +23,6 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-
-// function NewListButton(props){
-//   if(flag === "ownProfile"){
-//     return(<Button variant="contained" style={{height: "35px", width:"auto"}}>New List</Button>);
-//   }
-//   else {
-//     return(<React.Fragment></React.Fragment>);
-//   }
-// }
 
 
 class ProfileListViewClass extends React.Component {
@@ -52,7 +44,7 @@ class ProfileListViewClass extends React.Component {
 
   getUserLists = async e => {
     //e.preventDefault();
-    let response = await fetch('/api/v1/lists/get/all/temp', {
+    let response = await fetch('/api/v1/lists/get/all/names', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -90,28 +82,6 @@ class ProfileListViewClass extends React.Component {
 
   };
 
-  ShowList(listName){
-    if(listName === 'all'){
-      return (<React.Fragment></React.Fragment>);
-    }
-    const list = this.state.allLists.find((list) => list.name === listName);
-    if(list){
-      return(
-        <Item>
-        <Stack spacing={2}>
-          <Stack direction="row" spacing={2}>
-            <Typography variant="h4">{list.name}</Typography>
-          </Stack>
-          <Stack>
-            <EpisodeCardList images={list.images} listSize={"large"} userId={this.props.userId}/>
-          </Stack>
-        </Stack>
-      </Item>
-      );
-    }
-    return (<React.Fragment></React.Fragment>);
-
-  };
 
   render(){
     return(
@@ -124,7 +94,9 @@ class ProfileListViewClass extends React.Component {
           </Item>
           <Item><AllLists userId={this.props.userId} /></Item>
         </Stack>
-        {  this.ShowList(this.props.location.split('/')[2])}
+        {this.props.location != '/alluserlists/' ? (
+          <SingleListView location={this.props.location} username={this.props.userName} />
+          ) : (null)}
       </Stack>
     )
     };
