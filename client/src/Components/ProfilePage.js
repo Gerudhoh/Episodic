@@ -17,6 +17,8 @@ import ListsHighlight from "./ListsHighlight.js";
 import UserInfo from "./UserInfo.js";
 import Reviews from "./Reviews.js"
 import Achievement from "./Achievement.js"
+import FriendList from "./FriendList";
+import FollowingList from "./FollowingList";
 
 //Styling
 const Item = styled(Paper)(({ theme }) => ({
@@ -89,32 +91,6 @@ function UserProfileButton(props){
   }
 }
 
-function FriendList(props) {
-  return (
-    <Box container>
-      <Typography variant="h5">Friends</Typography>
-      <Stack spacing={2}>
-      {friends.map((item) => (
-        <UserInfo userName={item.name} avatarSize={props.userSize} fontSize={props.fontSize}/>
-      ))}
-      </Stack>
-    </Box>
-  );
-}
-
-function FollowingList(props) {
-  return (
-    <Box container>
-      <Typography variant="h5">Following</Typography>
-      <Stack spacing={2}>
-      {following.map((item) => (
-        <UserInfo userName={item.name} avatarSize={props.userSize} fontSize={props.fontSize}/>
-      ))}
-      </Stack>
-    </Box>
-  );
-};
-
 function UserDescription(props){
 
   return(
@@ -167,8 +143,8 @@ function profileNormal(props){
         /></Item>
         <Item>{Achievements()}</Item>
         <Stack direction="row" spacing={2} justifyContent="center">
-          <Item sx={{width:"50%"}}><FollowingList userSize="small" fontSize={20}/></Item>
-          <Item sx={{width:"50%"}}><FriendList userSize="small" fontSize={20}/></Item>
+          <Item sx={{width:"50%"}}><FollowingList userSize="small" fontSize={20} userId={props.userId}/></Item>
+          <Item sx={{width:"50%"}}><FriendList userSize="small" fontSize={20} userId={props.userId}/></Item>
         </Stack>
       </Stack>
       <Item sx={{maxWidth:"30%"}}>
