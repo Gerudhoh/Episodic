@@ -26,7 +26,7 @@ class MyActivity extends React.Component {
     super(props);
     let success = JSON.parse(localStorage.getItem('showSuccess')) || false;
     this.state = {
-      allFriends: [],
+      myActivity: [],
       friendName: "",
       list: {},
       allLists: [],
@@ -65,7 +65,7 @@ class MyActivity extends React.Component {
 
     console.log(body);
 
-    this.setState({ allFriends: body });
+    this.setState({ myActivity: body });
   };
 
   render() {
@@ -73,7 +73,7 @@ class MyActivity extends React.Component {
       <Box container>
       {this.state.showSuccess ? (<React.Fragment></React.Fragment>) : (null)}
         <List>
-          {this.state.allFriends.map((item) => (
+          {this.state.myActivity.map((item) => (
             <ActivityCard key={item.username} activityInfo={item.activityInfo} activityType={item.activityType} userName={item.username} userId={this.props.userId} activitySize={this.props.activitySize}/>
           ))}
         </List>

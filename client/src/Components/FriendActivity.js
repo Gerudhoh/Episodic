@@ -14,82 +14,6 @@ import Autocomplete from '@mui/material/Autocomplete';
 //Custom Components
 import ActivityCard from "./ActivityCard.js";
 
-const friends = [
-    {
-      name: "name1",
-      activityType: "newReview",
-      activityInfo: {
-        rating: 5,
-        date: "Feb 22 2022",
-        reviewText: "",
-      }
-    },
-
-    {
-      name: "name2",
-      activityType: "newList",
-      activityInfo: {
-          friendName: "list1",
-          images: [
-            {
-              img: '/pepekingprawn.jpg',
-              title: 'Breakfast',
-            },
-            {
-              img: '/pepekingprawn.jpg',
-              title: 'Burger',
-            },
-            {
-              img: '/pepekingprawn.jpg',
-              title: 'Camera',
-            },
-          ]
-        }
-    },
-    {
-      name: "name3",
-      activityType: "newList",
-      activityInfo: {
-        friendName: "list1",
-        images: [
-          {
-            img: '/pepekingprawn.jpg',
-            title: 'Breakfast',
-          },
-          {
-            img: '/pepekingprawn.jpg',
-            title: 'Burger',
-          },
-          {
-            img: '/pepekingprawn.jpg',
-            title: 'Camera',
-          },
-        ]
-      }
-    },
-    {
-      name: "name4",
-      activityType: "listMove",
-      activityInfo: {
-        friendName: "list1",
-        images: [
-          {
-            img: '/pepekingprawn.jpg',
-            title: 'Breakfast',
-          },
-          {
-            img: '/pepekingprawn.jpg',
-            title: 'Burger',
-          },
-          {
-            img: '/pepekingprawn.jpg',
-            title: 'Camera',
-          },
-        ]
-      }
-    },
-]
-
   const delay = (ms) =>
   new Promise((res) => {
     setTimeout(() => {
@@ -141,7 +65,7 @@ class FriendActivity extends React.Component {
       body = await response.json();
     }
 
-    console.log(body);
+    //console.log(body);
 
     this.setState({ allFriends: body });
   };
@@ -162,6 +86,8 @@ class FriendActivity extends React.Component {
     e.preventDefault();
     this.setState({ showError: false });
     this.setState({ showSuccess: false });
+    console.log(this.state.friendName);
+    console.log(this.state);
     const response = await fetch('/api/v1/user/add/friend', {
       method: 'POST',
       headers: {
@@ -180,6 +106,16 @@ class FriendActivity extends React.Component {
     window.location.reload(false); // refreshing here because i can't figure out how to reload the listhighlights from here
   };
 
+  onNameChange = (event, value) => {
+    this.setState({
+      friendName: value
+    }, () => {
+      // This will output an array of objects
+      // given by Autocompelte options property.
+      console.log(this.state.friendName);
+    });
+  }
+
   render() {
     return (
       <Box container>
@@ -189,7 +125,7 @@ class FriendActivity extends React.Component {
       {this.state.showSuccess ? (<React.Fragment></React.Fragment>) : (null)}
         <List>
           {this.state.allFriends.map((item) => (
-            <ActivityCard key={item.username} activityInfo={item.activityInfo} activityType={item.activityType} userName={item.username} userId={this.props.userId} activitySize={this.props.activitySize}/>
+            <ActivityCard key={item.id} activityInfo={item.activityInfo} activityType={item.activityType} userName={item.username} userId={this.props.userId} activitySize={this.props.activitySize}/>
           ))}
         </List>
         <Box component="form" onSubmit={this.addFriend}>
@@ -200,13 +136,13 @@ class FriendActivity extends React.Component {
               id="autofill-add-friend"
               disableClearable
               options={this.state.allUsers.map((option) => option.username)}
+              onChange={this.onNameChange}
               renderInput={(params) => (
                 <TextField
                   {...params}
                   type="text"
                   value={this.state.friendName}
                   label="Friend Username/Email"
-                  onChange={e => this.setState({ friendName: e.target.value })}
                   InputProps={{
                     ...params.InputProps,
                     type: 'search',

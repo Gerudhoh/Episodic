@@ -94,7 +94,7 @@ module.exports = {
 
     getUser: function (search_term) {
         return new Promise(async (res, rej) => {
-            let sql = 'SELECT id, username, email FROM users WHERE username = (?) OR email = (?);'
+            let sql = 'SELECT id, username, email, friends FROM users WHERE username = (?) OR email = (?);'
             
             const [rows, fields] = await promisePool.query(sql, [search_term, search_term]);
 

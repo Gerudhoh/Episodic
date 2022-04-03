@@ -14,11 +14,9 @@ import { styled } from '@mui/material/styles';
 
 //Custom Components
 import ListsHighlight from "./ListsHighlight.js";
-import UserInfo from "./UserInfo.js";
 import Reviews from "./Reviews.js"
 import Achievement from "./Achievement.js"
 import FriendList from "./FriendList";
-import FollowingList from "./FollowingList";
 
 //Styling
 const Item = styled(Paper)(({ theme }) => ({
@@ -143,7 +141,6 @@ function profileNormal(props){
         /></Item>
         <Item>{Achievements()}</Item>
         <Stack direction="row" spacing={2} justifyContent="center">
-          <Item sx={{width:"50%"}}><FollowingList userSize="small" fontSize={20} userId={props.userId}/></Item>
           <Item sx={{width:"50%"}}><FriendList userSize="small" fontSize={20} userId={props.userId}/></Item>
         </Stack>
       </Stack>
@@ -174,7 +171,6 @@ function profileStack(){
         /></Item>
         <Item>{Achievements()}</Item>
         <Stack direction="row" spacing={2} justifyContent="center">
-          <Item sx={{width:"50%"}}><FollowingList userSize="small" fontSize={20}/></Item>
           <Item sx={{width:"50%"}}><FriendList userSize="small" fontSize={20}/></Item>
         </Stack>
         <Item sx={{maxWidth:"100%"}}><ListsHighlight listSize="small"/></Item>

@@ -38,7 +38,7 @@ const activityCardStyles = {
 function NewListPreview(props) {
   return (
     <Stack alignItems="flex-start" spacing={2}>
-      <Typography fontSize={props.fontSize}>{props.reviewText}</Typography>
+      <Typography component={Link} to={"userlist/" + props.listName} fontSize={props.fontSize}>{props.reviewText}</Typography>
       <EpisodeCardList listName={props.listName} images={props.images} userId={props.userId} listSize="small"/>
     </Stack>
   );

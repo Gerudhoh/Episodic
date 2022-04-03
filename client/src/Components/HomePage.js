@@ -31,7 +31,11 @@ function homePageStack(props){
           <Typography variant="h4">Explore</Typography>
           <ListsHighlight listSize="small" userId={props.userId}/>
         </Item>
-        <Item sx={{maxWidth:"40%"}}><FriendActivity activitySize="small" userId={props.userId}/></Item>
+        {props.userId &&
+          <Item sx={{maxWidth:"40%"}}>
+            <FriendActivity activitySize="small" userId={props.userId}/>
+          </Item>
+        }
     </Stack>
     </React.Fragment>
   );
@@ -53,10 +57,12 @@ function homePageNormal(props){
         <Typography variant="h4">Explore</Typography>
         <ListsHighlight listSize="medium" userId={props.userId}/>
       </Item>
-      <Item sx={{maxWidth:"30%"}}>
-        <Typography variant="h4">Friend Activity</Typography>
-        <FriendActivity activitySize="small" userId={props.userId}/>
-      </Item>
+      {props.userId &&
+        <Item sx={{maxWidth:"30%"}}>
+          <Typography variant="h4">Friend Activity</Typography>
+          <FriendActivity activitySize="small" userId={props.userId}/>
+        </Item>
+      }
     </Stack>
   );
 }
