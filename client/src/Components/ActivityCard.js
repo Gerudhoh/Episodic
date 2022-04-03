@@ -38,8 +38,8 @@ const activityCardStyles = {
 function NewListPreview(props) {
   return (
     <Stack alignItems="flex-start" spacing={2}>
-      <Typography fontSize={props.fontSize}> made new list listName </Typography>
-      <EpisodeCardList listName={props.listName} images={props.images} userId={props.userId} listSize="small" />
+      <Typography fontSize={props.fontSize}>{props.reviewText}</Typography>
+      <EpisodeCardList listName={props.listName} images={props.images} userId={props.userId} listSize="small"/>
     </Stack>
   );
 }
@@ -47,8 +47,17 @@ function NewListPreview(props) {
 function MoveListPreview(props) {
   return (
     <Stack alignItems="flex-start" spacing={2}>
-      <Typography fontSize={props.fontSize}>moved podcastName from listName to listName</Typography>
-      <EpisodeCardList listName={props.listName} images={props.images} userId={props.userId} listSize="small" />
+      <Typography fontSize={props.fontSize}>{props.reviewText}</Typography>
+      <EpisodeCardList listName={props.listName} images={props.images} userId={props.userId} listSize="small"/>
+    </Stack>
+  );
+}
+
+function AddEpisodePreview(props){
+  return(
+    <Stack alignItems="flex-start" spacing={2}>
+      <Typography fontSize={props.fontSize}>{props.reviewText}</Typography>
+      <EpisodeCardList listName={props.listName} images={props.images} userId={props.userId} listSize="small"/>
     </Stack>
   );
 }
@@ -59,11 +68,11 @@ export default function ActivityCard(props) {
   console.log(props);
 
   const ActivityPreview = (activityType) => {
-    if (props.activityType === 'newList') {
-      return (<NewListPreview fontSize={size.fontSize} listName={props.activityInfo.listName} images={props.activityInfo.images} />);
+    if (props.activityType === 'newList'){
+      return (<NewListPreview fontSize={size.fontSize} listName={props.activityInfo.listName} images={props.activityInfo.images} reviewText={props.activityInfo.reviewText} />);
     }
     else if (props.activityType === 'listMove') {
-      return (<MoveListPreview fontSize={size.fontSize} listName={props.activityInfo.listName} images={props.activityInfo.images} />);
+      return (<MoveListPreview fontSize={size.fontSize} listName={props.activityInfo.listName} images={props.activityInfo.images} reviewText={props.activityInfo.reviewText} />);
     }
     else if (props.activityType === 'newReview') {
       return (<ReviewPreview

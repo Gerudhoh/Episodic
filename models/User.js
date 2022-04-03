@@ -1,27 +1,16 @@
 const promisePool = require('../repositories/mysql');
 
 module.exports = {
-    initUsersTable: async function () {
-        return new Promise(async (res, rej) => {
-            let sql = `CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT, username VARCHAR(100) NOT NULL, password VARCHAR(100) NOT NULL, token VARCHAR(100), PRIMARY KEY (id));`
-            
-            const [rows, fields] = await promisePool.query(sql);
-
-            //console.log(`Rows in initUsersTable: ${JSON.stringify(rows)}`);
-
-            res("Created Users Table");
-        });
-    },
-
-    addUser: function (username, email, password, token) {
+    addUser: function (username, email, password, token, friends) {
         console.log(username);
         console.log(email);
         console.log(password);
         console.log(token);
+        console.log(friends);
         return new Promise(async (res, rej) => {
-            let sql = 'INSERT INTO users(username, email, password, token) VALUES(?,?,?,?);'
+            let sql = 'INSERT INTO users(username, email, password, token, friends) VALUES(?,?,?,?,?);'
             
-            const [rows, fields] = await promisePool.query(sql, [username, email, password, token]);
+            const [rows, fields] = await promisePool.query(sql, [username, email, password, token, JSON.stringify(friends)]);
 
             //console.log(`Rows in addUser: ${JSON.stringify(rows)}`);
 
@@ -84,6 +73,45 @@ module.exports = {
             const [rows, fields] = await promisePool.query(sql, ["", username, token]);
 
             //console.log(`Rows in removeToken: ${JSON.stringify(rows)}`);
+
+            res(rows);
+        });
+    },
+
+    getUserFriends: function (user_id) {
+        console.log(user_id);
+
+        return new Promise(async (res, rej) => {
+            let sql = 'SELECT * FROM users WHERE id = (?);'
+            
+            const [rows, fields] = await promisePool.query(sql, [user_id]);
+
+            //console.log(`Rows in getUserFriends: ${JSON.stringify(rows)}`);
+
+            res(rows);
+        });
+    },
+
+    getUser: function (search_term) {
+        return new Promise(async (res, rej) => {
+            let sql = 'SELECT id, username, email, friends FROM users WHERE username = (?) OR email = (?);'
+            
+            const [rows, fields] = await promisePool.query(sql, [search_term, search_term]);
+
+            //console.log(`Rows in getUserFriends: ${JSON.stringify(rows)}`);
+
+            res(rows);
+        });
+    },
+
+    getAllUsers: function () {
+        return new Promise(async (res, rej) => {
+            console.log("test");
+            let sql = 'SELECT username, email FROM users;';
+            
+            const [rows] = await promisePool.query(sql);
+
+            console.log(`Rows in getAllUsers: ${JSON.stringify(rows)}`);
 
             res(rows);
         });
