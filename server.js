@@ -412,6 +412,21 @@ app.post("/api/v1/reviews/get/episode", async function (req, res) {
   });
 })
 
+app.post("/api/v1/reviews/get/user", async function (req, res) {
+  await new Promise(async (rem, rej) => {
+    try {
+
+      let sql = "select reviews.*, users.*, podcasts.name as podcastName, podcasts.image as podcastImage, episodes.image as episodeImage, episodes.name as episodeName, episodes.podcastName as episodesPodcastName from reviews inner join users on users.id=reviews.userId left outer join podcasts on podcasts.id=reviews.podcastId left outer join episodes on episodes.id=reviews.episodeId where reviews.userId = " + req.body.id + "";
+      let results = await promisePool.query(sql);
+
+      res.send({ results: results[0] });
+    } catch (err) {
+      res.send({ results: [] });
+      return;
+    }
+  });
+})
+
 app.post('/api/v1/search', async function (req, res) {
   let name = req.body.name;
   let apiClient = fetcher.getListenNotesApi();

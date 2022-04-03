@@ -15,7 +15,7 @@ import { styled } from '@mui/material/styles';
 //Custom Components
 import ListsHighlight from "./ListsHighlight.js";
 import UserInfo from "./UserInfo.js";
-import Reviews from "./Reviews.js"
+import Reviews from "./ReviewsUser.js"
 import Achievement from "./Achievement.js"
 import FriendList from "./FriendList";
 import FollowingList from "./FollowingList";
@@ -93,7 +93,8 @@ function UserProfileButton(props){
 
 function UserDescription(props){
 
-  return(
+  // I don't want to delete this old code, but I am actually too lazy to do the stats stuff atm, maybe we can do this later but it's not in our TDD sooooo
+  /*return(
     <Stack direction="row" spacing={2} justifyContent="flex-start">
       <Avatar sx={{width: 80, height: 80}} alt={props.userName} src={props.profilePic}/>
       <Stack justifyContent="flex-start" alignItems="flex-start">
@@ -104,6 +105,16 @@ function UserDescription(props){
           <Typography variant="p" textAlign="left">{props.numLists} Lists </Typography>
         </Stack>
         <Typography variant="p" textAlign="left">{props.numReviews} Reviews ({props.ratingAvg} average)</Typography>
+      </Stack>
+      <UserProfileButton />
+    </Stack>
+  );*/
+
+  return(
+    <Stack direction="row" spacing={2} justifyContent="flex-start">
+      <Avatar sx={{width: 80, height: 80}} alt={props.userName} src={props.profilePic}/>
+      <Stack justifyContent="flex-start" alignItems="flex-start">
+        <Typography variant="h6" > {props.userName} </Typography>
       </Stack>
       <UserProfileButton />
     </Stack>
@@ -141,19 +152,17 @@ function profileNormal(props){
         numReviews={userInfo.numReviews}
         ratingAvg={userInfo.ratingAvg}
         /></Item>
-        <Item>{Achievements()}</Item>
         <Stack direction="row" spacing={2} justifyContent="center">
-          <Item sx={{width:"50%"}}><FollowingList userSize="small" fontSize={20} userId={props.userId}/></Item>
-          <Item sx={{width:"50%"}}><FriendList userSize="small" fontSize={20} userId={props.userId}/></Item>
+          <Item sx={{width:"100%"}}><FriendList userSize="small" fontSize={20} userId={props.userId}/></Item>
         </Stack>
       </Stack>
       <Item sx={{maxWidth:"30%"}}>
         <Typography variant="h4">Reviews</Typography>
-        <Reviews />
+        <Reviews userId={props.userId}/>
       </Item>
       <Item sx={{maxWidth:"40%"}}>
         <Typography variant="h4" component={Link} to="/listview/all">Lists</Typography>
-        <ListsHighlight listSize="medium"/>
+        <ListsHighlight listSize="medium" userId={props.userId}/>
       </Item>
     </Stack>
   );
@@ -172,10 +181,8 @@ function profileStack(){
         numReviews={userInfo.numReviews}
         ratingAvg={userInfo.ratingAvg}
         /></Item>
-        <Item>{Achievements()}</Item>
         <Stack direction="row" spacing={2} justifyContent="center">
-          <Item sx={{width:"50%"}}><FollowingList userSize="small" fontSize={20}/></Item>
-          <Item sx={{width:"50%"}}><FriendList userSize="small" fontSize={20}/></Item>
+          <Item sx={{width:"100%"}}><FriendList userSize="small" fontSize={20}/></Item>
         </Stack>
         <Item sx={{maxWidth:"100%"}}><ListsHighlight listSize="small"/></Item>
       </Stack>
