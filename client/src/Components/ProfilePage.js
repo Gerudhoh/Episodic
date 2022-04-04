@@ -18,7 +18,7 @@ import UserInfo from "./UserInfo.js";
 import Reviews from "./ReviewsUser.js"
 import Achievement from "./Achievement.js"
 import FriendList from "./FriendList";
-import FollowingList from "./FollowingList";
+import EditProfile from "./EditProfilePage.js";
 
 //Styling
 const Item = styled(Paper)(({ theme }) => ({
@@ -83,8 +83,9 @@ const flag = "ownProfile";
 
 //Inner Components
 function UserProfileButton(props){
+  console.log(props);
   if(flag === "ownProfile"){
-    return(<Button variant="contained" style={{height: "35px"}}>Edit</Button>);
+    return(<Button variant="contained" component={Link} to="/editprofile" props={props} style={{height: "35px"}}>Edit</Button>);
   }
   else {
     return(<Button variant="contained" style={{height: "35px"}}>Follow</Button>);
@@ -116,7 +117,7 @@ function UserDescription(props){
       <Stack justifyContent="flex-start" alignItems="flex-start">
         <Typography variant="h6" > {props.userName} </Typography>
       </Stack>
-      <UserProfileButton />
+      <UserProfileButton props={props} />
     </Stack>
   );
 }
@@ -145,6 +146,8 @@ function profileNormal(props){
       <Stack spacing={2} sx={{maxWidth:"30%"}}>
         <Item ><UserDescription
         userName={props.username}
+        userId={props.userId}
+        userEmail={props.email}
         profilePic={userInfo.profilePic}
         numPodsListened={userInfo.numPodsListened}
         numEpisListened={userInfo.numEpisListened}
@@ -168,12 +171,14 @@ function profileNormal(props){
   );
 };
 
-function profileStack(){
+function profileStack(props){
   return(
     <Stack direction="row" spacing={2} padding="10px" alignItems="flex-start" justifyContent="center">
       <Stack spacing={2} sx={{maxWidth:"50%"}}>
         <Item ><UserDescription
         userName={userInfo.name}
+        userId={props.userId}
+        userEmail={props.email}
         profilePic={userInfo.profilePic}
         numPodsListened={userInfo.numPodsListened}
         numEpisListened={userInfo.numEpisListened}
@@ -204,7 +209,7 @@ export default function ProfilePage(props){
             {profileNormal(props)}
           </MediaQuery>
           <MediaQuery query='(max-width: 1224px)'>
-            {profileStack()}
+            {profileStack(props)}
           </MediaQuery>
         </div>
       }
