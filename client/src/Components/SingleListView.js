@@ -17,8 +17,6 @@ class SingleListViewClass extends React.Component {
     this.size = this.props.listSize;
 
     this.location = decodeURIComponent(this.props.location.split('/')[2]);
-
-    this.location = decodeURIComponent(this.props.location.split('/')[2]);
     console.log(this.location);
     this.state = {
       list: {},
