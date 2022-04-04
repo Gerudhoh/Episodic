@@ -24,15 +24,6 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 
-// function NewListButton(props){
-//   if(flag === "ownProfile"){
-//     return(<Button variant="contained" style={{height: "35px", width:"auto"}}>New List</Button>);
-//   }
-//   else {
-//     return(<React.Fragment></React.Fragment>);
-//   }
-// }
-
 
 class ProfileListViewClass extends React.Component {
   constructor(props) {
@@ -61,9 +52,7 @@ class ProfileListViewClass extends React.Component {
       body: JSON.stringify({ id: this.props.userId}),
     });
     const body = await response.json();
-    //const listMap = body.lists.map((list) => {list.name});
     let userLists = [];
-
 
     body.lists.forEach((list) => {
       let listImgs = [];
@@ -73,6 +62,8 @@ class ProfileListViewClass extends React.Component {
     });
 
     this.setState({ allLists: userLists });
+
+    console.log(this.state.allLists);
 
   };
 
@@ -113,7 +104,6 @@ class ProfileListViewClass extends React.Component {
     return (<React.Fragment></React.Fragment>);
 
   };
-
   render(){
     return(
       <Stack direction="row" spacing={2} padding="20px">
@@ -134,6 +124,6 @@ class ProfileListViewClass extends React.Component {
 export default function ProfileListView(props){
   const location = useLocation();
   return(
-    <ProfileListViewClass location={location.pathname} userId={props.userId} userName={props.username}/>
+      <ProfileListViewClass location={location.pathname} userId={props.userId} userName={props.username}/>
   );
 }

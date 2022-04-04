@@ -9,7 +9,8 @@ import Button from '@mui/material/Button';
 import Rating from '@mui/material/Rating';
 import Typography from '@mui/material/Typography';
 import Alert from '@mui/material/Alert';
-
+import CheckIcon from '@mui/icons-material/Check';
+import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import { useLocation } from 'react-router-dom';
 
 //Custom Components
@@ -185,11 +186,19 @@ class ReviewsClass extends React.Component {
         {this.userId ? (
           <Box component="form" onSubmit={this.createReview}>
 
-            {this.state.showSuccess ? (<Alert severity="success">
+            {this.state.showSuccess ? (
+              <Alert icon={<CheckIcon fontSize="inherit" sx={{bgcolor:"secondary.main", color:"primary.main"}} />}
+                sx={{bgcolor:"secondary.main", color:"primary.main"}}
+                severity="success"
+              >
               {this.state.successMessage}
             </Alert>
             ) : (null)}
-            {this.state.showError ? (<Alert severity="error">
+            {this.state.showError ? (
+              <Alert icon={<ErrorOutline fontSize="inherit" sx={{bgcolor:"primary.main", color:"secondary.main"}} />}
+                sx={{bgcolor:"secondary.main", color:"primary.main"}}
+                severity="error"
+              >
               Error: Could not leave review.
             </Alert>
             ) : (null)}
