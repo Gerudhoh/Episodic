@@ -7,7 +7,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import EpisodeCardList from './EpisodeCardList.js';
 
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 import { useLocation, Navigate } from 'react-router-dom';
 
@@ -24,7 +24,7 @@ class SingleListViewClass extends React.Component {
       isLoading: true,
       listObj: {},
       userId: this.props.userId,
-      redirect: false
+      redirect: false,
     };
   }
 
@@ -39,8 +39,22 @@ class SingleListViewClass extends React.Component {
     this.getUserList();
   }
 
+  componentDidUpdate(prevProps) {
+    if(this.props.location !== prevProps.location) {
+      this.location = decodeURIComponent(this.props.location.split('/')[2]);
+      this.setState({ isLoading: true });
+      this.getUserList();
+    }
+  }
+
+  updateState = async e => {
+    this.setState({ listObj: {} });
+    this.setState({ list: {} });
+  }
+
   getUserList = async e => {
     if (!this.state.userId) return;
+    await this.updateState();
     const response = await fetch('/api/v1/lists/get/one', {
       method: 'POST',
       headers: {
@@ -49,7 +63,7 @@ class SingleListViewClass extends React.Component {
       body: JSON.stringify({ name: this.location, id: this.state.userId }),
     });
     let body = await response.json();
-    if (body.success = false) return;
+    if (body.success === false) return;
     this.setState({ listObj: body.list });
     let tmp = { name: body.list.name, images: [] };
     body.list.podcasts?.map((podcast) => {
@@ -102,9 +116,8 @@ class SingleListViewClass extends React.Component {
         ) : (
           <Stack spacing={2}>
             <Stack direction="row" spacing={2}>
-              <Typography variant="h4">{this.state.list.name}</Typography>
               {this.state.userId ? (
-                <Button variant="contained" onClick={this.deleteList}>Delete</Button>
+                <Button variant="contained" onClick={this.deleteList}>Delete List</Button>
               ) : (null)}
 
             </Stack>
@@ -121,11 +134,13 @@ class SingleListViewClass extends React.Component {
 
 export default function SingleListView(props) {
   const location = useLocation();
+  const [value, setValue] = useState(null);
 
   useEffect(() => {
+    setValue(<SingleListViewClass location={location.pathname} listSize={props.listSize} userId={props.userId} />)
   }, [location, props]);
 
   return (
-    <SingleListViewClass location={location.pathname} listSize={props.listSize} userId={props.userId} />
+    value
   );
 }

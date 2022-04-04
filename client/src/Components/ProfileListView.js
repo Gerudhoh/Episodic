@@ -15,6 +15,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import UserInfo from './UserInfo.js';
 import AllLists from './AllLists.js';
 import EpisodeCardList from './EpisodeCardList.js';
+import SingleListView from './SingleListView.js';
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(3),
@@ -52,7 +53,7 @@ class ProfileListViewClass extends React.Component {
 
   getUserLists = async e => {
     //e.preventDefault();
-    let response = await fetch('/api/v1/lists/get/all/temp', {
+    let response = await fetch('/api/v1/lists/get/all', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -103,7 +104,7 @@ class ProfileListViewClass extends React.Component {
             <Typography variant="h4">{list.name}</Typography>
           </Stack>
           <Stack>
-            <EpisodeCardList images={list.images} listSize={"large"} userId={this.props.userId}/>
+            <SingleListView location={this.props.location} listSize={"large"} userId={this.props.userId} />
           </Stack>
         </Stack>
       </Item>

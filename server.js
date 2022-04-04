@@ -272,7 +272,7 @@ app.post("/api/v1/lists/get/one", async function (req, res) {
 
     let element = userList.find(element => element?.name == name);
 
-    let list = new lists(element.name, element.id);
+    let list = new lists(element?.name, element.id);
     let sql = "select * from lists_podcasts_link where listsId = " + list.id + "";
     let newResult = await promisePool.query(sql);
     for (const pod of newResult[0]) {
@@ -714,8 +714,8 @@ app.post('/api/v1/user_activity/get', async function (req, res) {
       myResult[i].username = result[0].username;
       myResult[i].email = result[0].email;
       myResult[i].id = result[0].id;
-      if (user_friend_activity[0].action_description === "newList") {
-        myResult[i].activityInfo.listName = user_friend_activity[0].list_name;
+      if (user_friend_activity[0].action_description === "newList" && myResult[i].activityInfo !== undefined) {
+        myResult[i].activityInfo.listName = user_friend_activity[0]?.list_name;
         myResult[i].activityInfo.reviewText = "Created list " + user_friend_activity[0].list_name;
         myResult[i].activityType = "newList";
       }
