@@ -10,7 +10,6 @@ import EpisodeCardList from './EpisodeCardList.js';
 import { useState, useEffect } from 'react';
 
 import { useLocation, Navigate } from 'react-router-dom';
-
 class SingleListViewClass extends React.Component {
 
   constructor(props) {
