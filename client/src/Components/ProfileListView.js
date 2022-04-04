@@ -16,7 +16,6 @@ import UserInfo from './UserInfo.js';
 import AllLists from './AllLists.js';
 import EpisodeCardList from './EpisodeCardList.js';
 import SingleListView from './SingleListView.js';
-import SingleListViewFn from './SingleListViewFn.js';
 
 const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(3),
