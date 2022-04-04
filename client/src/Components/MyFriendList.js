@@ -33,7 +33,6 @@ class MyFriendList extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.userId) {
       this.setState({ userId: nextProps.userId })
-      this.getUserFriends();
     }
   }
 
