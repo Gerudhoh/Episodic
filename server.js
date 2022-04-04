@@ -73,7 +73,7 @@ app.post('/api/v1/lists/create', async function (req, res) {
 
 });
 
-async function addPodcast(podcast, list) {
+async function addPodcast(podcast, userId, list) {
   let insertId = 0;
   return await new Promise(async (res, rej) => {
     try {
@@ -90,22 +90,26 @@ async function addPodcast(podcast, list) {
         list.addPodcast(podcast);
         let linkSql = "insert into lists_podcasts_link (listsId, podcastsId) values (" + list.id + ", " + podcast.databaseId + ")";
         await promisePool.query(linkSql);
+        await user_activity.addUserActivity(escape(podcast.title), "", "Add", podcast.website, userId, list.name);
       }
-      list.addPodcast(podcast);
-      await user_activity.addUserActivity(escape(podcast.title), "", "Add", podcast.website, req.body.id, list.name);
-      let linkSql = "insert into lists_podcasts_link (listsId, podcastsId) values (" + list.id + ", " + podcast.databaseId + ")";
-      await promisePool.query(linkSql);
-      res({ success: true, id: insertId});
+      else {
+        //Created a review!
+      }
+      res({ success: true, id: insertId, listMsg: "Successfully added to list." });
       return;
     } catch (err) {
       console.log(err);
-      res({ success: false, id: insertId});
+      let msg = "Failed to add to list.";
+      if (err.code == 'ER_DUP_ENTRY') {
+        msg = "This podcast is already in this list!";
+      }
+      res({ success: false, id: insertId, listMsg: msg });
       return;
     }
   });
 }
 
-async function addEpisode(episode, list) {
+async function addEpisode(episode, userId, list) {
   let insertId = 0;
   return await new Promise(async (res, rej) => {
     try {
@@ -122,12 +126,20 @@ async function addEpisode(episode, list) {
         list.addEpisode(episode);
         let linkSql = "insert into lists_episodes_link (listsId, episodesId) values (" + list.id + ", " + episode.databaseId + ")";
         await promisePool.query(linkSql);
+        await user_activity.addUserActivity(escape(episode.podcast.title), "", "Add", episode.podcast.link, userId, list.name);
       }
-      res({ success: true, id: insertId });
+      else {
+        //Created a review!
+      }
+      res({ success: true, id: insertId, listMsg: "Successfully added to list." });
       return;
     } catch (err) {
       console.log(err);
-      res({ success: false, id: insertId });
+      let msg = "Failed to add to list.";
+      if (err.code == 'ER_DUP_ENTRY') {
+        msg = "This episode is already in this list!";
+      }
+      res({ success: false, id: insertId, listMsg: msg });
       return;
     }
   });
@@ -138,8 +150,8 @@ app.post('/api/v1/lists/add/podcast', async function (req, res) {
   let podcast = new podcasts(req.body.title, req.body.description, req.body.rss, req.body.image, req.body.website || "N/A", req.body.publisher || "N/A", req.body.language || "N/A", req.body.totalEpisodes || 0, null, req.body.podcastId);
   list = new lists(list.name, list.id, list);
 
-  await addPodcast(podcast, list).then(result => {
-    res.send({ success: result.success });
+  await addPodcast(podcast, req.body.id, list).then(result => {
+    res.send({ success: result.success, msg: result.listMsg });
   });
 });
 
@@ -171,36 +183,10 @@ app.post('/api/v1/lists/add/episode', async function (req, res) {
   let episodejson = req.body.episode;
   let episode = new episodes(episodejson.title, req.body.image, episodejson.description, episodejson.podcast.title);
 
-  await new Promise(async (rem, rej) => {
-    try {
-      let sql = "insert ignore into episodes (name, description, image, podcastName) values ('" + escape(episode.title) + "','" + escape(episode.description) + "', '" + episode.image + "','" + escape(episode.podcast) + "')";
-      let result = await promisePool.query(sql);
-      let insertId = result[0].insertId;
-      if (insertId == "0") {
-        let sql = "select id from episodes where name = '" + escape(episode.title) + "'";
-        let result = await promisePool.query(sql);
-        episode.databaseId = result[0][0].id;
-      }
-      else {
-        episode.databaseId = insertId;
-      }
-      list.addEpisode(episode);
-      await user_activity.addUserActivity(escape(episodejson.podcast.title), "", "Add", episodejson.podcast.link, req.body.id, list.name);
-      let linkSql = "insert into lists_episodes_link (listsId, episodesId) values (" + list.id + ", " + episode.databaseId + ")";
-      await promisePool.query(linkSql);
-      res.send({ success: true });
-      return;
-    } catch (err) {
-      console.log(err);
-      res.send({ success: false });
-      return;
-    }
-
-  await addEpisode(episode, list).then(result => {
-    res.send({ success: result.success });
+  await addEpisode(episode, req.body.id, list).then(result => {
+    res.send({ success: result.success, msg: result.listMsg });
   });
   return;
-  });
 });
 
 app.post('/api/v1/lists/remove/episode', async function (req, res) {
@@ -287,7 +273,7 @@ app.post("/api/v1/lists/get/one", async function (req, res) {
 
     let element = userList.find(element => element?.name == name);
 
-    let list = new lists(element.name, element.id);
+    let list = new lists(element?.name, element.id);
     let sql = "select * from lists_podcasts_link where listsId = " + list.id + "";
     let newResult = await promisePool.query(sql);
     for (const pod of newResult[0]) {
@@ -306,23 +292,38 @@ app.post("/api/v1/lists/get/one", async function (req, res) {
       list.addEpisode(temp);
     }
 
-    res.send({ list: list });
+    res.send({ list: list, success: true });
     return;
   }
-  res.send({ list: {} });
+  res.send({ list: {}, success: false });
 
 });
+
+app.post("/api/v1/lists/delete", async function (req, res) {
+  let name = req.body.name;
+  let userId = req.body.id;
+
+  let sql = "delete from lists where name = '" + name + "' and userId = " + userId;
+
+  try {
+    await promisePool.query(sql);
+    res.send({ success: true });
+  } catch (err) {
+    console.log(err);
+    res.send({ success: false });
+  }
+})
 
 app.post("/api/v1/reviews/add/podcast", async function (req, res) {
   let podcast = new podcasts(req.body.podcast.title, req.body.podcast.description, req.body.podcast.rss, req.body.podcast.image, req.body.podcast.website || "N/A", req.body.podcast.publisher || "N/A", req.body.podcast.language || "N/A", req.body.podcast.episodes.count || 0, null);
 
-  await addPodcast(podcast).then(async result => {
+  await addPodcast(podcast, req.body.id).then(async result => {
     try {
       let msg = "Successfully added review.";
       let podcastId = result.id;
       let sql = "insert ignore into reviews (userId, podcastId, creationDate, rating, description) values (" + req.body.id + ", " + podcastId + ", NOW(), " + req.body.newRating + ", '" + escape(req.body.newText) + "')";
       let resultId = await promisePool.query(sql);
-      
+
       let insertId = resultId[0].insertId;
       if (insertId == "0") {
         let newSql = "select id from reviews where userId = " + req.body.id + " and podcastId = " + podcastId;
@@ -348,13 +349,13 @@ app.post("/api/v1/reviews/add/episode", async function (req, res) {
   let episodejson = req.body.episode;
   let episode = new episodes(episodejson.title, episodejson.podcast.image, episodejson.description, episodejson.podcast.title);
 
-  await addEpisode(episode).then(async result => {
+  await addEpisode(episode, req.body.id).then(async result => {
     try {
       let msg = "Successfully added review.";
       let episodeId = result.id;
       let sql = "insert ignore into reviews (userId, episodeId, creationDate, rating, description) values (" + req.body.id + ", " + episodeId + ", NOW(), " + req.body.newRating + ", '" + escape(req.body.newText) + "')";
       let resultId = await promisePool.query(sql);
-      
+
       let insertId = resultId[0].insertId;
       if (insertId == "0") {
         let newSql = "select id from reviews where userId = " + req.body.id + " and episodeId = " + episodeId;
@@ -412,6 +413,21 @@ app.post("/api/v1/reviews/get/episode", async function (req, res) {
   });
 })
 
+app.post("/api/v1/reviews/get/user", async function (req, res) {
+  await new Promise(async (rem, rej) => {
+    try {
+
+      let sql = "select reviews.*, users.*, podcasts.name as podcastName, podcasts.image as podcastImage, episodes.image as episodeImage, episodes.name as episodeName, episodes.podcastName as episodesPodcastName from reviews inner join users on users.id=reviews.userId left outer join podcasts on podcasts.id=reviews.podcastId left outer join episodes on episodes.id=reviews.episodeId where reviews.userId = " + req.body.id + "";
+      let results = await promisePool.query(sql);
+
+      res.send({ results: results[0] });
+    } catch (err) {
+      res.send({ results: [] });
+      return;
+    }
+  });
+})
+
 app.post('/api/v1/search', async function (req, res) {
   let name = req.body.name;
   let apiClient = fetcher.getListenNotesApi();
@@ -454,7 +470,7 @@ app.get('/api/v1/trending', async function (req, res) {
 
 app.get('/api/v1/randomep', async function (req, res) {
   let apiClient = fetcher.getPodcastIndexApi();
-  let raw_episode = await apiClient.episodesRandom({lang: "en"});
+  let raw_episode = await apiClient.episodesRandom({ lang: "en" });
   let episode = raw_episode.episodes[0];
   let podcast = await apiClient.podcastById(episode.feedId);
   let episodes = await apiClient.episodesByFeedId(episode.feedId);
@@ -463,7 +479,7 @@ app.get('/api/v1/randomep', async function (req, res) {
 
 app.get('/api/v1/user/get/all', async function (req, res) {
   let result = await users.getAllUsers();
-  res.send({users: result});
+  res.send({ users: result });
 });
 
 app.post('/api/v1/searchPodcast', async function (req, res) {
@@ -490,7 +506,7 @@ app.post('/api/v1/rating/get/podcast', async function (req, res) {
     res.send({ rating: 0 });
     return;
   }
-  
+
   let id = result[0][0].id;
   try {
     sql = "select rating from reviews where podcastId = " + id;
@@ -499,9 +515,9 @@ app.post('/api/v1/rating/get/podcast', async function (req, res) {
     let rating = 0;
     results[0].forEach(element => {
       rating = rating + element.rating;
-      count = count+1;
+      count = count + 1;
     });
-    res.send({ rating: rating/count });
+    res.send({ rating: rating / count });
     return;
   } catch {
     res.send({ rating: 0 });
@@ -516,7 +532,7 @@ app.post('/api/v1/rating/get/episode', async function (req, res) {
     res.send({ rating: 0 });
     return;
   }
-  
+
   let id = result[0][0].id;
   try {
     sql = "select rating from reviews where episodeId = " + id;
@@ -525,9 +541,9 @@ app.post('/api/v1/rating/get/episode', async function (req, res) {
     let rating = 0;
     results[0].forEach(element => {
       rating = rating + element.rating;
-      count = count+1;
+      count = count + 1;
     });
-    res.send({ rating: rating/count });
+    res.send({ rating: rating / count });
     return;
   } catch {
     res.send({ rating: 0 });
@@ -619,7 +635,7 @@ app.post('/api/v1/user/get/friends', async function (req, res) {
   if (result !== undefined) {
     let friends = JSON.parse(result[0].friends);
 
-    for(let i = 0; i < friends?.length; i++) {
+    for (let i = 0; i < friends?.length; i++) {
       let user_friend = await users.getUserFriends(friends[i]);
 
       let user_friend_activity = await user_activity.getUserActivity(friends[i]);
@@ -678,7 +694,7 @@ app.post('/api/v1/user/add/friend', async function (req, res) {
         return;
       }
     }
-
+    
     newFriends = newFriends.concat(result[0].id);
     friendsFriends = friendsFriends.concat(parseInt(req.body.id));
 
@@ -689,6 +705,7 @@ app.post('/api/v1/user/add/friend', async function (req, res) {
   }
 
   res.send({ success: false });
+  return;
 });
 
 
@@ -715,7 +732,7 @@ app.post('/api/v1/user_activity/get', async function (req, res) {
 
   let user_friend_activity = await user_activity.getUserActivity(req.body.id);
 
-  for(let i = 0; i < user_friend_activity.length; i++) {
+  for (let i = 0; i < user_friend_activity.length; i++) {
     myResult[i] = {};
 
     if (result !== [] && result !== undefined && result[0] !== undefined) {
@@ -769,12 +786,12 @@ app.post('/api/v1/user_activity/get/friend', async function (req, res) {
   if (result !== undefined && result[0] !== undefined && result[0].friends !== undefined) {
     let friends = JSON.parse(result[0].friends);
 
-    for(let i = 0; i < friends?.length; i++) {
+    for (let i = 0; i < friends?.length; i++) {
       let user_friend = await users.getUserFriends(friends[i]);
 
       let user_friend_activity = await user_activity.getUserActivity(friends[i]);
 
-      for(let j = 0; j < user_friend_activity.length; j++) {
+      for (let j = 0; j < user_friend_activity.length; j++) {
         myResult[i] = {};
 
         if (user_friend !== [] && user_friend !== undefined && user_friend.length > 0) {

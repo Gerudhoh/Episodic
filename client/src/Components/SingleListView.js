@@ -2,91 +2,68 @@ import * as React from 'react';
 //Material UI Components
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import EpisodeCardList from './EpisodeCardList.js';
 
-import {useLocation} from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
-
-const list = {
-  name: 'list1',
-  images: [
-    {
-      img: '/pepekingprawn.jpg',
-      title: 'PKP1',
-    },
-    {
-      img: '/pepekingprawn.jpg',
-      title: 'PKP2',
-    },
-    {
-      img: '/pepekingprawn.jpg',
-      title: 'PKP63',
-    },
-    {
-      img: '/pepekingprawn.jpg',
-      title: 'PKP4',
-    },
-    {
-      img: '/pepekingprawn.jpg',
-      title: 'PKP5',
-    },
-    {
-      img: '/pepekingprawn.jpg',
-      title: 'PKP6',
-    },
-    {
-      img: '/pepekingprawn.jpg',
-      title: 'PKP7',
-    },
-    {
-      img: '/pepekingprawn.jpg',
-      title: 'PKP8',
-    },
-    {
-      img: '/pepekingprawn.jpg',
-      title: 'PKP9',
-    },
-  ],
-};
-
-
-const delay = (ms) =>
-  new Promise((res) => {
-    setTimeout(() => {
-      res()
-    }, ms)
-  })
+import { useLocation, Navigate } from 'react-router-dom';
 
 class SingleListViewClass extends React.Component {
 
   constructor(props) {
     super(props);
     this.size = this.props.listSize;
-    
+
     this.location = decodeURIComponent(this.props.location.split('/')[2]);
 
     this.state = {
-      list: { name: 'Loading...', images: [] },
-      listObj: {}
+      list: {},
+      isLoading: true,
+      listObj: {},
+      userId: this.props.userId,
+      redirect: false,
     };
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.userId) {
+      this.setState({ userId: nextProps.userId })
+      this.getUserList();
+    }
+  }
 
   componentDidMount() {
     this.getUserList();
   }
 
+  componentDidUpdate(prevProps) {
+    if(this.props.location !== prevProps.location) {
+      this.location = decodeURIComponent(this.props.location.split('/')[2]);
+      this.setState({ isLoading: true });
+      this.getUserList();
+    }
+  }
+
+  updateState = async e => {
+    this.setState({ listObj: {} });
+    this.setState({ list: {} });
+  }
+
   getUserList = async e => {
-    await delay(500);
+    if (!this.state.userId) return;
+    await this.updateState();
     const response = await fetch('/api/v1/lists/get/one', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name: this.location, id: this.props.userId }),
+      body: JSON.stringify({ name: this.location, id: this.state.userId }),
     });
     let body = await response.json();
+    if (body.success === false) return;
     this.setState({ listObj: body.list });
     let tmp = { name: body.list.name, images: [] };
     body.list.podcasts?.map((podcast) => {
@@ -112,25 +89,58 @@ class SingleListViewClass extends React.Component {
 
     })
     this.setState({ list: tmp });
+    this.setState({ isLoading: false });
+  };
+
+  deleteList = async e => {
+    if (!this.state.userId) return;
+    const response = await fetch('/api/v1/lists/delete', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name: this.location, id: this.state.userId }),
+    });
+
+    let body = await response.json();
+    if (body.success = false) return;
+    this.setState({ redirect: true })
   };
 
   render() {
     return (
-      <Stack spacing={2}>
-        <Stack direction="row" spacing={2}>
-          <Typography variant="h4">{this.state.list.name}</Typography>
-        </Stack>
-        <Stack>
-          <EpisodeCardList images={this.state.list.images} listSize={"large"} userId={this.props.userId} listView={true} />
-        </Stack>
+      <Stack>
+        {this.state.redirect ? (<Navigate to="/" />) : null}
+        {this.state.isLoading ? (
+          <CircularProgress />
+        ) : (
+          <Stack spacing={2}>
+            <Stack direction="row" spacing={2}>
+              {this.state.userId ? (
+                <Button variant="contained" onClick={this.deleteList}>Delete List</Button>
+              ) : (null)}
+
+            </Stack>
+            <Stack>
+              <EpisodeCardList images={this.state.list.images} listSize={"large"} userId={this.props.userId} listView={true} />
+            </Stack>
+          </Stack>
+        )}
       </Stack>
+
     );
   }
 }
 
-export default function SingleListView(props){
+export default function SingleListView(props) {
   const location = useLocation();
-  return(
-    <SingleListViewClass location={location.pathname} listSize={props.listSize} userId={props.userId}/>
+  const [value, setValue] = useState(null);
+
+  useEffect(() => {
+    setValue(<SingleListViewClass location={location.pathname} listSize={props.listSize} userId={props.userId} />)
+  }, [location, props]);
+
+  return (
+    value
   );
 }

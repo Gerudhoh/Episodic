@@ -23,8 +23,8 @@ export default function ListPreview(props) {
         <Typography variant="h6" component={Link} to={`/userlist/${props.listName}`}>{props.listName}</Typography>
         <Stack direction="row" spacing={1} justifyContent="space-evenly" alignItems="center">
             <EpisodeCardList images={props.images} listSize={props.listSize} listView={true} userId={props.userId} />
-            <IconButton aria-label="see more" >
-              <ArrowForwardIcon sx={{ height: '25px', width: '25px' }}/>
+            <IconButton aria-label="see more" component={Link} to={`/userlist/${props.listName}`}>
+              <ArrowForwardIcon sx={{ height: '25px', width: '25px' }} />
             </IconButton>
         </Stack>
       </Stack>

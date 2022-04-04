@@ -71,7 +71,8 @@ function UserProfileButton(props){
 
 function UserDescription(props){
 
-  return(
+  // I don't want to delete this old code, but I am actually too lazy to do the stats stuff atm, maybe we can do this later but it's not in our TDD sooooo
+  /*return(
     <Stack direction="row" spacing={2} justifyContent="flex-start">
       <Avatar sx={{width: 80, height: 80}} alt={props.userName} src={props.profilePic}/>
       <Stack justifyContent="flex-start" alignItems="flex-start">
@@ -82,6 +83,16 @@ function UserDescription(props){
           <Typography variant="p" textAlign="left">{props.numLists} Lists </Typography>
         </Stack>
         <Typography variant="p" textAlign="left">{props.numReviews} Reviews ({props.ratingAvg} average)</Typography>
+      </Stack>
+      <UserProfileButton />
+    </Stack>
+  );*/
+
+  return(
+    <Stack direction="row" spacing={2} justifyContent="flex-start">
+      <Avatar sx={{width: 80, height: 80}} alt={props.userName} src={props.profilePic}/>
+      <Stack justifyContent="flex-start" alignItems="flex-start">
+        <Typography variant="h6" > {props.userName} </Typography>
       </Stack>
       <UserProfileButton />
     </Stack>
@@ -119,7 +130,6 @@ function profileNormal(props){
         numReviews={userInfo.numReviews}
         ratingAvg={userInfo.ratingAvg}
         /></Item>
-        <Item>{Achievements()}</Item>
         <Stack direction="row" spacing={2} justifyContent="center">
           <Item sx={{width:"50%"}}>
           <MyFriendList activitySize="small" userId={props.userId} updateUserFriends={props.updateUserFriends} allFriends={props.allFriends}/>
@@ -128,11 +138,11 @@ function profileNormal(props){
       </Stack>
       <Item sx={{maxWidth:"30%"}}>
         <Typography variant="h4">Reviews</Typography>
-        <Reviews />
+        <Reviews userId={props.userId}/>
       </Item>
       <Item sx={{maxWidth:"40%"}}>
         <Typography variant="h4" component={Link} to="/listview/all">Lists</Typography>
-        <ListsHighlight listSize="medium"/>
+        <ListsHighlight listSize="medium" userId={props.userId}/>
       </Item>
     </Stack>
   );
@@ -151,7 +161,6 @@ function profileStack(props){
         numReviews={userInfo.numReviews}
         ratingAvg={userInfo.ratingAvg}
         /></Item>
-        <Item>{Achievements()}</Item>
         <Stack direction="row" spacing={2} justifyContent="center">
           <MyFriendList activitySize="small" userId={props.userId} updateUserFriends={props.updateUserFriends} allFriends={props.allFriends}/>
         </Stack>

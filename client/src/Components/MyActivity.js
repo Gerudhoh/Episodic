@@ -12,7 +12,8 @@ class MyActivity extends React.Component {
     let success = JSON.parse(localStorage.getItem('showSuccess')) || false;
     this.state = {
       showSuccess: success,
-      showError: false
+      showError: false,
+      userId: this.props.userId
     };
   }
 

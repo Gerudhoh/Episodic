@@ -14,12 +14,6 @@ import Autocomplete from '@mui/material/Autocomplete';
 //Custom Components
 import ActivityCard from "./ActivityCard.js";
 
-  const delay = (ms) =>
-  new Promise((res) => {
-    setTimeout(() => {
-      res()
-    }, ms)
-  })
 
 class MyFriendList extends React.Component {
   constructor(props) {
@@ -31,8 +25,16 @@ class MyFriendList extends React.Component {
       list: {},
       allLists: [],
       showSuccess: success,
-      showError: false
+      showError: false,
+      userId: this.props.userId
     };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.userId) {
+      this.setState({ userId: nextProps.userId })
+      this.getUserFriends();
+    }
   }
 
   componentDidMount() {
@@ -63,7 +65,7 @@ class MyFriendList extends React.Component {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ search_term: this.state.friendName, id: this.props.userId}),
+      body: JSON.stringify({ search_term: this.state.friendName, id: this.state.userId}),
     });
     const body = await response.json();
     console.log(body);
