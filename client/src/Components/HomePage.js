@@ -10,7 +10,8 @@ import { styled } from '@mui/material/styles';
 
 //Custom Components
 import ListsHighlight from "./ListsHighlight.js";
-import FriendActivity from "./FriendActivity.js";
+import MyFriendList from "./MyFriendList.js";
+import FriendActivityList from "./FriendActivityList.js";
 import MyActivity from "./MyActivity.js";
 import AllLists from "./AllLists.js";
 
@@ -32,9 +33,16 @@ function homePageStack(props){
           <ListsHighlight listSize="small" userId={props.userId}/>
         </Item>
         {props.userId &&
-          <Item sx={{maxWidth:"40%"}}>
-            <FriendActivity activitySize="small" userId={props.userId}/>
+          <Stack sx={{maxWidth:"30%"}} spacing={2}>
+          <Item>
+            <Typography variant="h4">My Friends</Typography>
+            <MyFriendList activitySize="small" userId={props.userId} updateUserFriends={props.updateUserFriends} allFriends={props.allFriends}/>
           </Item>
+          <Item>
+            <Typography variant="h4">Friend Activity</Typography>
+            <FriendActivityList activitySize="small" userSize="small" fontSize={20} friendActivity={props.friendActivity}/>
+          </Item>
+          </Stack>
         }
     </Stack>
     </React.Fragment>
@@ -50,7 +58,7 @@ function homePageNormal(props){
         <Item><AllLists userId={props.userId} /></Item>
         <Item >
           <Typography variant="h4">My Activity</Typography>
-          <MyActivity activitySize="small" userId={props.userId}/>
+          <MyActivity activitySize="small" userId={props.userId} myActivity={props.myActivity} updateUserActivity={props.updateUserActivity} />
         </Item>
       </Stack>
       <Item sx={{maxWidth:"40%"}}>
@@ -58,11 +66,18 @@ function homePageNormal(props){
         <ListsHighlight listSize="medium" userId={props.userId}/>
       </Item>
       {props.userId &&
-        <Item sx={{maxWidth:"30%"}}>
+        <Stack sx={{maxWidth:"30%"}} spacing={2}>
+          <Item>
+            <Typography variant="h4">My Friends</Typography>
+            <MyFriendList activitySize="small" userId={props.userId} updateUserFriends={props.updateUserFriends} allFriends={props.allFriends}/>
+          </Item>
+          <Item>
           <Typography variant="h4">Friend Activity</Typography>
-          <FriendActivity activitySize="small" userId={props.userId}/>
-        </Item>
-      }
+            <FriendActivityList activitySize="small" userSize="small" fontSize={20} friendActivity={props.friendActivity}/>
+          </Item>
+          </Stack>
+        }
+
     </Stack>
   );
 }

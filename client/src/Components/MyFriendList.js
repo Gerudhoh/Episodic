@@ -21,12 +21,11 @@ import ActivityCard from "./ActivityCard.js";
     }, ms)
   })
 
-class FriendActivity extends React.Component {
+class MyFriendList extends React.Component {
   constructor(props) {
     super(props);
     let success = JSON.parse(localStorage.getItem('showSuccess')) || false;
     this.state = {
-      allFriends: [],
       allUsers: [],
       friendName: "",
       list: {},
@@ -37,38 +36,9 @@ class FriendActivity extends React.Component {
   }
 
   componentDidMount() {
-    this.getUserFriends();
     this.getUsers();
     localStorage.setItem( 'showSuccess', false );
   }
-
-  getUserFriends = async e => {
-    //e.preventDefault();
-    console.log(this.props.userId);
-    let response = await fetch('/api/v1/user_activity/get/friend', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ id: this.props.userId }),
-    });
-    let body = await response.json();
-    if (body.noUser === true) {
-      await delay(1000); //in case user is already logged in, wait for the auth
-      let response = await fetch('/api/v1/user_activity/get/friend', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id: this.props.userId }),
-      });
-      body = await response.json();
-    }
-
-    //console.log(body);
-
-    this.setState({ allFriends: body });
-  };
 
   getUsers = async e => {
     let response = await fetch('/api/v1/user/get/all', {
@@ -124,7 +94,7 @@ class FriendActivity extends React.Component {
       </Alert>) : (null)}
       {this.state.showSuccess ? (<React.Fragment></React.Fragment>) : (null)}
         <List>
-          {this.state.allFriends.map((item) => (
+          {this.props.allFriends.map((item) => (
             <ActivityCard key={item.id} activityInfo={item.activityInfo} activityType={item.activityType} userName={item.username} userId={this.props.userId} activitySize={this.props.activitySize}/>
           ))}
         </List>
@@ -158,4 +128,4 @@ class FriendActivity extends React.Component {
   }
 }
 
-export default FriendActivity
+export default MyFriendList

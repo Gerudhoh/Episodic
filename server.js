@@ -638,13 +638,34 @@ app.post('/api/v1/user/get/friends', async function (req, res) {
   res.send(myResult);
 });
 
+// Check if a username and password is correct and generate a token
+app.post('/api/v1/user_activity/get/friends', async function (req, res) {
+  let all_activity = await user_activity.getUserFriendActivity(req.body.id);
+  let user_friend = await users.getUserFriends(req.body.id);
+  let result = [];
+  let index = 0;
+
+  if(user_friend.length > 0 && user_friend[0].friends !== undefined) {
+    let friends = JSON.parse(user_friend[0].friends);
+
+    for(let i = 0; i < all_activity.length; i++) {
+      for(let j = 0; j < friends.length; j++) {
+        if(parseInt(friends[j]) === parseInt(all_activity[i].user_id)) {
+          result[index] = all_activity[i];
+          index++;
+        }
+      }
+    }
+  }
+
+  res.send(result);
+});
+
+
+
 app.post('/api/v1/user/add/friend', async function (req, res) {
   let search_term = req.body.search_term;
   let result = await users.getUser(search_term);
-
-  console.log(search_term);
-  console.log("here");
-  console.log(result[0].friends);
 
   if (result !== undefined && result[0] !== undefined) {
     let user_info = await users.getUserFriends(req.body.id);
@@ -688,15 +709,11 @@ app.post('/api/v1/user_activity/add', async function (req, res) {
 
 // Check if a username and password is correct and generate a token
 app.post('/api/v1/user_activity/get', async function (req, res) {
-  console.log(req.body.id);
   let myResult = [];
 
   let result = await users.getUserFriends(req.body.id);
 
-  console.log(result);
-
   let user_friend_activity = await user_activity.getUserActivity(req.body.id);
-  console.log(user_friend_activity);
 
   for(let i = 0; i < user_friend_activity.length; i++) {
     myResult[i] = {};
@@ -705,7 +722,6 @@ app.post('/api/v1/user_activity/get', async function (req, res) {
       myResult[i].username = result[0].username;
       myResult[i].email = result[0].email;
       myResult[i].id = result[0].id;
-      console.log(user_friend_activity[i]);
       if(user_friend_activity[i].action_description === "newList") {
         myResult[i].activityInfo = {};
         myResult[i].activityInfo.listName = user_friend_activity[i].list_name;
@@ -771,8 +787,6 @@ app.post('/api/v1/user_activity/get/friend', async function (req, res) {
       }
     }
   }
-
-  console.log(myResult);
 
   res.send(myResult);
 });

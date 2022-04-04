@@ -16,7 +16,7 @@ import { styled } from '@mui/material/styles';
 import ListsHighlight from "./ListsHighlight.js";
 import Reviews from "./Reviews.js"
 import Achievement from "./Achievement.js"
-import FriendList from "./FriendList";
+import MyFriendList from "./MyFriendList";
 
 //Styling
 const Item = styled(Paper)(({ theme }) => ({
@@ -36,26 +36,6 @@ const userInfo={
 }
 
 const following = [
-    {
-      name: "name1",
-      activityType: "newList"
-    },
-
-    {
-      name: "name2",
-      activityType: "newList"
-    },
-    {
-      name: "name3",
-      activityType: "newList"
-    },
-    {
-      name: "name4",
-      activityType: "listMove"
-    },
-];
-
-const friends = [
     {
       name: "name1",
       activityType: "newList"
@@ -141,7 +121,9 @@ function profileNormal(props){
         /></Item>
         <Item>{Achievements()}</Item>
         <Stack direction="row" spacing={2} justifyContent="center">
-          <Item sx={{width:"50%"}}><FriendList userSize="small" fontSize={20} userId={props.userId}/></Item>
+          <Item sx={{width:"50%"}}>
+          <MyFriendList activitySize="small" userId={props.userId} updateUserFriends={props.updateUserFriends} allFriends={props.allFriends}/>
+        </Item>
         </Stack>
       </Stack>
       <Item sx={{maxWidth:"30%"}}>
@@ -156,7 +138,7 @@ function profileNormal(props){
   );
 };
 
-function profileStack(){
+function profileStack(props){
   return(
     <Stack direction="row" spacing={2} padding="10px" alignItems="flex-start" justifyContent="center">
       <Stack spacing={2} sx={{maxWidth:"50%"}}>
@@ -171,7 +153,7 @@ function profileStack(){
         /></Item>
         <Item>{Achievements()}</Item>
         <Stack direction="row" spacing={2} justifyContent="center">
-          <Item sx={{width:"50%"}}><FriendList userSize="small" fontSize={20}/></Item>
+          <MyFriendList activitySize="small" userId={props.userId} updateUserFriends={props.updateUserFriends} allFriends={props.allFriends}/>
         </Stack>
         <Item sx={{maxWidth:"100%"}}><ListsHighlight listSize="small"/></Item>
       </Stack>
@@ -193,7 +175,7 @@ export default function ProfilePage(props){
             {profileNormal(props)}
           </MediaQuery>
           <MediaQuery query='(max-width: 1224px)'>
-            {profileStack()}
+            {profileStack(props)}
           </MediaQuery>
         </div>
       }
