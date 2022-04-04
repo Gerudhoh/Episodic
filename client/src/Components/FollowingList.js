@@ -9,20 +9,14 @@ import Typography from '@mui/material/Typography';
 //Custom Components
 import UserInfo from "./UserInfo.js";
 
-const delay = (ms) =>
-  new Promise((res) => {
-    setTimeout(() => {
-      res()
-    }, ms)
-  })
-
 class FollowingList extends React.Component {
 
   constructor(props) {
     super(props);
 
     this.state = {
-      allFriends: []
+      allFriends: [],
+      userId: this.props.userId
     };
   }
 
@@ -30,27 +24,25 @@ class FollowingList extends React.Component {
     this.getUserFriends();
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.userId) {
+      this.setState({ userId: nextProps.userId })
+      this.getUserFriends();
+    }
+  }
+
   getUserFriends = async e => {
     //e.preventDefault();
+
+    if (!this.state.userId) return;
     let response = await fetch('/api/v1/user/get/friends', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ id: this.props.userId }),
+      body: JSON.stringify({ id: this.state.userId }),
     });
     let body = await response.json();
-    if (body.noUser === true) {
-      await delay(1000); //in case user is already logged in, wait for the auth
-      let response = await fetch('/api/v1/user/get/friends', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id: this.props.userId }),
-      });
-      body = await response.json();
-    }
 
     console.log(body);
 

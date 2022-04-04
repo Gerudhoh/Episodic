@@ -15,6 +15,8 @@ import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 
 
+const regex = /(<([^>]+)>)/ig;
+
 const Item = styled(Paper)(({ theme }) => ({
   padding: '10px',
   textAlign: 'center',
@@ -28,7 +30,7 @@ function PodcastEpisode(props){
       <Typography variant="h4" textAlign="left" component={Link} to={uri} replace>{props.title}</Typography>
       <Stack direction="row" padding="10px" spacing={2}>
           <img src={props.image} width="20%" height="auto" alt={`Cover for ${props.title}`}/>
-        <Typography variant="p" textAlign="left">{props.description}</Typography>
+        <Typography variant="p" textAlign="left">{props.description.replace(regex, '')}</Typography>
       </Stack>
     </Stack>
   );

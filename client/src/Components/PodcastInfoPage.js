@@ -16,6 +16,7 @@ import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import CircularProgress from '@mui/material/CircularProgress';
+import Alert from '@mui/material/Alert';
 
 
 //Material UI Icons and Styling
@@ -25,18 +26,13 @@ import { styled } from '@mui/material/styles';
 import PodcastEpisodesCard from './PodcastEpisodesCard.js';
 import Reviews from './Reviews.js'
 
-const delay = (ms) =>
-  new Promise((res) => {
-    setTimeout(() => {
-      res()
-    }, ms)
-  })
-
 const Item = styled(Paper)(({ theme }) => ({
   padding: '10px',
   textAlign: 'center',
   color: theme.palette.text.secondary,
 }));
+
+const regex = /(<([^>]+)>)/ig;
 
 class AddPodcastToList extends React.Component {
   constructor(props) {
@@ -46,7 +42,7 @@ class AddPodcastToList extends React.Component {
     this.id = this.props.id;
     this.podcastTitle = this.props.podcast.title;
 
-    this.description = this.podcast.description;
+    this.description = this.podcast.description.replace(regex, '');
     this.rss = this.podcast.rss;
     this.website = this.podcast.website;
     this.publisher = this.podcast.publisher;
@@ -63,12 +59,22 @@ class AddPodcastToList extends React.Component {
       currentList: this.props.currentList || null,
       lists: [],
       listMenuItems: null,
-      showSuccess: false
+      showSuccess: false,
+      showError: false,
+      msg: "",
+      userId: this.props.userId
     };
   }
 
   componentDidMount() {
     this.getUserLists();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.userId) {
+      this.setState({ userId: nextProps.userId })
+      this.getUserLists();
+    }
   }
 
   addPodcastToList = async e => {
@@ -91,45 +97,22 @@ class AddPodcastToList extends React.Component {
     });
     const body = await response.json();
     this.setState({ showSuccess: body.success });
-    if (this.state.showSuccess) window.location.reload(false);
-
-  };
-
-  removePodcast = async e => {
-    const response = await fetch('/api/v1/lists/remove/podcast', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ list: this.state.currentList, podcastId: this.id }),
-    });
-    const body = await response.json();
-    this.setState({ showSuccess: body.success });
-    if (this.state.showSuccess) window.location.reload(false);
+    this.setState({ showError: !body.success });
+    this.setState({ msg: body.msg });
 
   };
 
   getUserLists = async e => {
-    //e.preventDefault();
+    if (!this.state.userId) return;
     let response = await fetch('/api/v1/lists/get/all/names', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ id: this.props.userId }),
+      body: JSON.stringify({ id: this.state.userId }),
     });
     let body = await response.json();
-    if (body.noUser === true) {
-      await delay(1000); //in case user is already logged in, wait for the auth
-      let response = await fetch('/api/v1/lists/get/all/names', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id: this.props.userId }),
-      });
-      body = await response.json();
-    }
+    if (body.noUser === true) return;
     let listNames = [];
     body.lists.map((list, index) =>
       listNames.push((<MenuItem key={index} value={index}>{list.name}</MenuItem>))
@@ -141,24 +124,28 @@ class AddPodcastToList extends React.Component {
   render() {
     return (
       <React.Fragment>
-        {!this.state.listView && this.isPodcast ? (
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Add to List</InputLabel>
-            <Select variant="outlined"
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              label="Age"
-              onChange={this.addPodcastToList}
-            >
-              {this.state.listMenuItems}
-            </Select>
-          </FormControl>
-        ) : (null)}
-        {this.state.listView && this.isPodcast ? (
-          <FormControl>
-            <Button variant="contained" onClick={this.removePodcast}>Remove</Button>
-          </FormControl>
-        ) : (null)}
+        <FormControl fullWidth>
+          {this.state.showSuccess ? (<Alert severity="success">
+            {this.state.msg}
+          </Alert>
+          ) : (null)}
+          {this.state.showError ? (<Alert severity="error">
+            {this.state.msg}
+          </Alert>
+          ) : (null)}
+        </FormControl>
+
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Add to List</InputLabel>
+          <Select variant="outlined"
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            label="Age"
+            onChange={this.addPodcastToList}
+          >
+            {this.state.listMenuItems}
+          </Select>
+        </FormControl>
       </React.Fragment>
     );
   }
@@ -189,7 +176,7 @@ function PodcastInfo(props) {
   const podcast = props.podcast;
   return (
     <Stack spacing={2} padding="10px" justifyContent="center">
-      <Item><PodcastDetails podcast={podcast} userId={props.userId} rating = {props.rating}/></Item>
+      <Item><PodcastDetails podcast={podcast} userId={props.userId} rating={props.rating} /></Item>
       <Stack direction="row" padding="10px" spacing={2} justifyContent="center">
         <Item sx={{ maxWidth: "45%" }}>
           <Typography variant="h3" textAlign="left">Episodes</Typography>
@@ -226,7 +213,7 @@ export default function PodcastInfoPage(props) {
       let episodes = response.eps;
       let info = {
         title: podcast.title,
-        description: podcast.description,
+        description: podcast.description.replace(regex, ''),
         rss: podcast.url,
         image: podcast.image,
         website: podcast.link,

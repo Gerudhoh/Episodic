@@ -90,13 +90,6 @@ const friends = [
     },
 ]
 
-  const delay = (ms) =>
-  new Promise((res) => {
-    setTimeout(() => {
-      res()
-    }, ms)
-  })
-
 class FriendActivity extends React.Component {
   constructor(props) {
     super(props);
@@ -108,8 +101,16 @@ class FriendActivity extends React.Component {
       list: {},
       allLists: [],
       showSuccess: success,
-      showError: false
+      showError: false,
+      userId: this.props.userId
     };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.userId) {
+      this.setState({ userId: nextProps.userId })
+      this.getUserFriends();
+    }
   }
 
   componentDidMount() {
@@ -119,29 +120,15 @@ class FriendActivity extends React.Component {
   }
 
   getUserFriends = async e => {
-    //e.preventDefault();
-    console.log(this.props.userId);
+    if (!this.state.userId) return;
     let response = await fetch('/api/v1/user_activity/get/friend', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ id: this.props.userId }),
+      body: JSON.stringify({ id: this.state.userId }),
     });
     let body = await response.json();
-    if (body.noUser === true) {
-      await delay(1000); //in case user is already logged in, wait for the auth
-      let response = await fetch('/api/v1/user_activity/get/friend', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id: this.props.userId }),
-      });
-      body = await response.json();
-    }
-
-    console.log(body);
 
     this.setState({ allFriends: body });
   };
@@ -167,7 +154,7 @@ class FriendActivity extends React.Component {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ search_term: this.state.friendName, id: this.props.userId}),
+      body: JSON.stringify({ search_term: this.state.friendName, id: this.state.userId}),
     });
     const body = await response.json();
     console.log(body);
@@ -189,7 +176,7 @@ class FriendActivity extends React.Component {
       {this.state.showSuccess ? (<React.Fragment></React.Fragment>) : (null)}
         <List>
           {this.state.allFriends.map((item) => (
-            <ActivityCard key={item.username} activityInfo={item.activityInfo} activityType={item.activityType} userName={item.username} userId={this.props.userId} activitySize={this.props.activitySize}/>
+            <ActivityCard key={item.username} activityInfo={item.activityInfo} activityType={item.activityType} userName={item.username} userId={this.state.userId} activitySize={this.props.activitySize}/>
           ))}
         </List>
         <Box component="form" onSubmit={this.addFriend}>
