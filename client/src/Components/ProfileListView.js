@@ -115,9 +115,7 @@ class ProfileListViewClass extends React.Component {
           </Item>
           <Item><AllLists userId={this.props.userId} /></Item>
         </Stack>
-        {this.props.location !== '/alluserlists/' ? (
-          <SingleListViewFn location={this.props.location} username={this.props.userName} userId={this.props.userId} seed={Math.random()}/>
-          ) : (null)}
+        {  this.ShowList(this.props.location.split('/')[2])}
       </Stack>
     )
     };
