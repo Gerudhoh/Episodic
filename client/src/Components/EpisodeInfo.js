@@ -102,6 +102,7 @@ class AddEpisodeToList extends React.Component {
     return (
       <React.Fragment>
         <CardMedia className="podcastPlayer" component="audio" controls src={this.episode.audio} />
+<<<<<<< HEAD
         {this.state.userId ? (
           <React.Fragment>
             <FormControl fullWidth>
@@ -127,6 +128,21 @@ class AddEpisodeToList extends React.Component {
             </FormControl>
           </React.Fragment>
         ) : (null)}
+=======
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Add to List</InputLabel>
+          <Select variant="standard"
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            label="Age"
+            onChange={this.addEpisodeToList}
+          >
+            <MenuList sx={{bgcolor:'primary.main'}}>
+              {this.state.listMenuItems}
+            </MenuList>
+          </Select>
+        </FormControl>
+>>>>>>> 6189387... fixed opacity on dropdowns
       </React.Fragment>
     );
   }

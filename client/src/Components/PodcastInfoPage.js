@@ -125,6 +125,7 @@ class AddPodcastToList extends React.Component {
   render() {
     return (
       <React.Fragment>
+<<<<<<< HEAD
         <FormControl fullWidth>
           {this.state.showSuccess ? (<Alert severity="success">
             {this.state.msg}
@@ -147,6 +148,28 @@ class AddPodcastToList extends React.Component {
             {this.state.listMenuItems}
           </Select>
         </FormControl>
+=======
+        {!this.state.listView && this.isPodcast ? (
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Add to List</InputLabel>
+            <Select variant="outlined"
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              label="Age"
+              onChange={this.addPodcastToList}
+            >
+              <MenuList sx={{bgcolor:'primary.main'}}>
+                {this.state.listMenuItems}
+              </MenuList>
+            </Select>
+          </FormControl>
+        ) : (null)}
+        {this.state.listView && this.isPodcast ? (
+          <FormControl>
+            <Button variant="contained" onClick={this.removePodcast}>Remove</Button>
+          </FormControl>
+        ) : (null)}
+>>>>>>> 6189387... fixed opacity on dropdowns
       </React.Fragment>
     );
   }
