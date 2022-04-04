@@ -5,8 +5,40 @@ import { useLocation } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import FormControl from '@mui/material/FormControl';
 
 export function EditProfileForm(props) {
+  const [userName, setUserName] = React.useState(props.props.username);
+  const [email, setEmail] = React.useState(props.props.email);
+  const [password, setPassword] = React.useState("");
+  const [id, setId] = React.useState(props.props.userId);
+
+  console.log(props);
+
+  function updateUsername(e) {
+    setUserName(e.target.value);
+  }
+  
+  function updateEmail(e) {
+    setEmail(e.target.value);
+  }
+  
+  function updatePassword(e) {
+    setPassword(e.target.value);
+  }
+
+  async function updateUser() {
+    const response = await fetch('/api/v1/user/update', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ username: userName, email: email, password: password, id: id }),
+    });
+    let user = await response.json();
+    console.log(user);
+  }
+
   return (
     <Box
       component="form"
@@ -16,29 +48,34 @@ export function EditProfileForm(props) {
       noValidate
       autoComplete="off"
     >
-      <div>
+    <div>
+      <FormControl>
         <TextField
           id="Username"
           label="Username"
-          value={props.props.username}
+          value={userName}
+          onChange={updateUsername}
           variant="filled"
         />
         <TextField
           id="Email"
           label="Email"
-          value={props.props.email}
+          value={email}
+          onChange={updateEmail}
           variant="filled"
         />
         <TextField
           id="Password"
           label="Password"
           type="password"
-          autoComplete={props.props.password}
+          autoComplete={password}
+          onChange={updatePassword}
           variant="filled"
         />
+      </FormControl>
       </div>
       &nbsp;&nbsp;
-      <Button variant="contained" style={{height: "35px"}}>Submit</Button>
+      <Button variant="contained" style={{height: "35px"}} onClick={updateUser}>Submit</Button>
     </Box>
   );
 }

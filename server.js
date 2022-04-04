@@ -481,6 +481,30 @@ app.get('/api/v1/user/get/all', async function (req, res) {
   res.send({ users: result });
 });
 
+app.post('/api/v1/user/update', async function (req, res) {
+  users.getUserById(req.body.id).then(fetchedUser => {
+    let user = fetchedUser[0];
+    let username = user.username;
+    if(req.body.username !== user.username) {
+      username = req.body.username;
+    }
+
+    let email = user.email;
+    if(req.body.email !== user.email){
+      email = req.body.email;
+    }
+
+    password = user.password;
+    console.log(user.password === "");
+    if(req.body.password !== user.password && user.password !== "") {
+      password = req.body.password;
+    }
+    // let result = await users.updateUser(username, email, password, req.body.id);
+    
+    res.send({data: fetchedUser});
+  });
+});
+
 app.post('/api/v1/searchPodcast', async function (req, res) {
   let podcastName = req.body.name;
   let apiClient = fetcher.getPodcastIndexApi();
