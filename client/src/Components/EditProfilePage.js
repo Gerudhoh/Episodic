@@ -37,6 +37,7 @@ export function EditProfileForm(props) {
     });
     let user = await response.json();
     console.log(user);
+    alert("Yay!");
   }
 
   return (

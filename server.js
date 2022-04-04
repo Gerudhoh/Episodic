@@ -494,13 +494,12 @@ app.post('/api/v1/user/update', async function (req, res) {
       email = req.body.email;
     }
 
-    password = user.password;
-    console.log(user.password === "");
-    if(req.body.password !== user.password && user.password !== "") {
+    let password = user.password;
+    if(req.body.password !== user.password && req.body.password !== "") {
       password = req.body.password;
     }
-    // let result = await users.updateUser(username, email, password, req.body.id);
-    
+    let result = await users.updateUser(username, email, password, req.body.id);
+    console.log(result);
     res.send({data: fetchedUser});
   });
 });
