@@ -83,7 +83,6 @@ class ProfileListViewClass extends React.Component {
 
   };
 
-<<<<<<< HEAD
   ShowList(listName){
     if(listName === 'all'){
       return (<React.Fragment></React.Fragment>);
@@ -106,9 +105,6 @@ class ProfileListViewClass extends React.Component {
     return (<React.Fragment></React.Fragment>);
 
   };
-=======
->>>>>>> kinda fixed all list views, kinda not
-
   render(){
     return(
       <Stack direction="row" spacing={2} padding="20px">

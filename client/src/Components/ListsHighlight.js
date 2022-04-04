@@ -120,4 +120,3 @@ export default function ListsHighlight(props) {
     <ListsHighlightClass listSize={props.listSize} userId={props.userId} />
   );
 }
-export default ListsHighlight;
