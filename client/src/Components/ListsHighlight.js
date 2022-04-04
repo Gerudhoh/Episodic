@@ -111,7 +111,6 @@ class ListsHighlightClass extends React.Component {
   }
 }
 
-<<<<<<< HEAD
 export default function ListsHighlight(props) {
 
   useEffect(() => {
@@ -121,6 +120,4 @@ export default function ListsHighlight(props) {
     <ListsHighlightClass listSize={props.listSize} userId={props.userId} />
   );
 }
-=======
 export default ListsHighlight;
->>>>>>> kinda fixed all list views, kinda not
