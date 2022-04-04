@@ -13,6 +13,7 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import MenuList from '@mui/material/MenuList';
 import CardMedia from "@mui/material/CardMedia";
 
 
@@ -94,7 +95,7 @@ class AddEpisodeToList extends React.Component {
     }
     let listNames = [];
     body.lists.map((list, index) =>
-      listNames.push((<MenuItem key={index} value={index}>{list.name}</MenuItem>))
+      listNames.push((<MenuItem sx={{bgcolor:'primary.main', opacity:1}}key={index} value={index}>{list.name}</MenuItem>))
     );
     this.setState({ listMenuItems: listNames });
     this.setState({ lists: body.lists });
@@ -106,13 +107,15 @@ class AddEpisodeToList extends React.Component {
         <CardMedia className="podcastPlayer" component="audio" controls src={this.episode.audio} />
         <FormControl fullWidth>
           <InputLabel id="demo-simple-select-label">Add to List</InputLabel>
-          <Select variant="outlined"
+          <Select variant="standard"
             labelId="demo-simple-select-label"
             id="demo-simple-select"
             label="Age"
             onChange={this.addEpisodeToList}
           >
-            {this.state.listMenuItems}
+            <MenuList sx={{bgcolor:'primary.main'}}>
+              {this.state.listMenuItems}
+            </MenuList>
           </Select>
         </FormControl>
       </React.Fragment>
