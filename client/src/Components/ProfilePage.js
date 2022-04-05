@@ -14,11 +14,11 @@ import { styled } from '@mui/material/styles';
 
 //Custom Components
 import ListsHighlight from "./ListsHighlight.js";
-import UserInfo from "./UserInfo.js";
-import Reviews from "./ReviewsUser.js"
 import Achievement from "./Achievement.js"
 import FriendList from "./FriendList";
 import EditProfile from "./EditProfilePage.js";
+import MyFriendList from "./MyFriendList";
+import Reviews from "./ReviewsUser.js"
 
 //Styling
 const Item = styled(Paper)(({ theme }) => ({
@@ -38,26 +38,6 @@ const userInfo={
 }
 
 const following = [
-    {
-      name: "name1",
-      activityType: "newList"
-    },
-
-    {
-      name: "name2",
-      activityType: "newList"
-    },
-    {
-      name: "name3",
-      activityType: "newList"
-    },
-    {
-      name: "name4",
-      activityType: "listMove"
-    },
-];
-
-const friends = [
     {
       name: "name1",
       activityType: "newList"
@@ -155,7 +135,9 @@ function profileNormal(props){
         ratingAvg={userInfo.ratingAvg}
         /></Item>
         <Stack direction="row" spacing={2} justifyContent="center">
-          <Item sx={{width:"100%"}}><FriendList userSize="small" fontSize={20} userId={props.userId}/></Item>
+          <Item sx={{width:"50%"}}>
+          <MyFriendList activitySize="small" userId={props.userId} updateUserFriends={props.updateUserFriends} allFriends={props.allFriends}/>
+        </Item>
         </Stack>
       </Stack>
       <Item sx={{maxWidth:"30%"}}>
@@ -186,7 +168,7 @@ function profileStack(props){
         ratingAvg={userInfo.ratingAvg}
         /></Item>
         <Stack direction="row" spacing={2} justifyContent="center">
-          <Item sx={{width:"100%"}}><FriendList userSize="small" fontSize={20}/></Item>
+          <MyFriendList activitySize="small" userId={props.userId} updateUserFriends={props.updateUserFriends} allFriends={props.allFriends}/>
         </Stack>
         <Item sx={{maxWidth:"100%"}}><ListsHighlight listSize="small"/></Item>
       </Stack>
