@@ -37,7 +37,7 @@ module.exports = {
     getUserActivity: function (user_id) {
         console.log(user_id);
         return new Promise(async (res, rej) => {
-            let sql = 'SELECT * FROM user_activity WHERE user_id = (?) ORDER BY id DESC LIMIT 5;'
+            let sql = 'SELECT * FROM user_activity WHERE user_id = (?) ORDER BY id DESC LIMIT 10;'
             
             const [rows, fields] = await promisePool.query(sql, [user_id]);
 
@@ -49,7 +49,7 @@ module.exports = {
 
     getUserFriendActivity: function () {
         return new Promise(async (res, rej) => {
-            let sql = 'SELECT A.id, podcast_name, episode_name, action_description, list_name, image, user_id, username, email FROM user_activity A JOIN users B ON A.user_id = B.id ORDER BY A.id DESC LIMIT 5;'
+            let sql = 'SELECT A.id, podcast_name, episode_name, action_description, list_name, link, user_id, username, email FROM user_activity A JOIN users B ON A.user_id = B.id ORDER BY A.id DESC LIMIT 10;'
             
             const [rows, fields] = await promisePool.query(sql);
 

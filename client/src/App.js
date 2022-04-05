@@ -259,7 +259,7 @@ class App extends React.Component {
       <div>
         <ThemeProvider theme={theme}>
           <BrowserRouter history={history}>
-          <NavBar auth={this.state.auth} checkAuthData={this.checkAuthData} updateAuth={this.updateAuth} removeAuth={this.removeAuth} username={this.state.username} email={this.state.email} userId={this.state.userId}/>
+          <NavBar auth={this.state.auth} checkAuthData={this.checkAuthData} getUserFriends={this.getUserFriends} getUserActivity={this.getUserActivity} updateAuth={this.updateAuth} removeAuth={this.removeAuth} username={this.state.username} email={this.state.email} userId={this.state.userId}/>
           <RouteSwitch auth={this.state.auth} getUserFriends={this.getUserFriends} getUserActivity={this.getUserActivity} checkAuthData={this.checkAuthData}  updateAuth={this.updateAuth} removeAuth={this.removeAuth} friendActivity={this.state.friendActivity} allFriends={this.state.allFriends} myActivity={this.state.myActivity} username={this.state.username} email={this.state.email} userId={this.state.userId}/>
           </BrowserRouter>
         </ThemeProvider>

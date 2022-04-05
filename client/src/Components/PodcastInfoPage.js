@@ -99,7 +99,8 @@ class AddPodcastToList extends React.Component {
     this.setState({ showSuccess: body.success });
     this.setState({ showError: !body.success });
     this.setState({ msg: body.msg });
-
+    this.props.updateUserFriends();
+    this.props.updateUserActivity();
   };
 
   getUserLists = async e => {

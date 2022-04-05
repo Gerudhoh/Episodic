@@ -52,13 +52,13 @@ class RouteSwitch extends React.Component {
       <div>
             <Routes >
                 {/* Logged Out routes */}
-                <Route exact path="/login" element={<Login changeAuth={this.changeAuth}  checkAuthData={this.checkAuthData}  changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
-                <Route exact path="/signup" element={<SignUp changeAuth={this.changeAuth} checkAuthData={this.checkAuthData}  changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
+                <Route exact path="/login" element={<Login changeAuth={this.changeAuth}  checkAuthData={this.checkAuthData}  changeRemoveAuth={this.changeRemoveAuth} userId={this.props.userId} className="tabContent"/>}/>
+                <Route exact path="/signup" element={<SignUp changeAuth={this.changeAuth} checkAuthData={this.checkAuthData}  changeRemoveAuth={this.changeRemoveAuth} userId={this.props.userId} className="tabContent"/>}/>
                 
-                <Route path="/episodeinfo/*" element={<EpisodeInfoPage changeAuth={this.changeAuth} checkAuthData={this.checkAuthData}  changeRemoveAuth={this.changeRemoveAuth} className="tabContent" userId={this.props.userId}/>}/>
-                <Route path="/info/*" element={<PodcastInfoPage changeAuth={this.changeAuth} checkAuthData={this.checkAuthData}  changeRemoveAuth={this.changeRemoveAuth} className="tabContent" userId={this.props.userId}/>}/>
-                <Route path="/trending" element={<TrendingPage changeAuth={this.changeAuth} checkAuthData={this.checkAuthData}  changeRemoveAuth={this.changeRemoveAuth} className="tabContent"/>}/>
-                <Route path="/randomep" element={<RandomEpPage changeAuth={this.changeAuth} checkAuthData={this.checkAuthData}  changeRemoveAuth={this.changeRemoveAuth} className="tabContent" userId={this.props.userId}/>}/>
+                <Route path="/episodeinfo/*" element={<EpisodeInfoPage updateUserFriends={this.updateUserFriends} updateUserActivity={this.updateUserActivity} changeAuth={this.changeAuth} checkAuthData={this.checkAuthData}  changeRemoveAuth={this.changeRemoveAuth} className="tabContent" userId={this.props.userId}/>}/>
+                <Route path="/info/*" element={<PodcastInfoPage  updateUserFriends={this.updateUserFriends} updateUserActivity={this.updateUserActivity} changeAuth={this.changeAuth} checkAuthData={this.checkAuthData}  changeRemoveAuth={this.changeRemoveAuth} className="tabContent" userId={this.props.userId}/>}/>
+                <Route path="/trending" element={<TrendingPage updateUserFriends={this.updateUserFriends} updateUserActivity={this.updateUserActivity} changeAuth={this.changeAuth} checkAuthData={this.checkAuthData}  changeRemoveAuth={this.changeRemoveAuth} userId={this.props.userId} className="tabContent" /> }/>
+                <Route path="/randomep" element={<RandomEpPage updateUserFriends={this.updateUserFriends} updateUserActivity={this.updateUserActivity} changeAuth={this.changeAuth} checkAuthData={this.checkAuthData}  changeRemoveAuth={this.changeRemoveAuth} className="tabContent" userId={this.props.userId}/>}/>
 
                 {/* Logged In routes */}
                 <Route exact path="/" element={<HomePage changeAuth={this.changeAuth} updateUserFriends={this.updateUserFriends} updateUserActivity={this.updateUserActivity} changeRemoveAuth={this.changeRemoveAuth} className="tabContent" auth={this.props.auth} friendActivity={this.props.friendActivity} allFriends={this.props.allFriends} myActivity={this.props.myActivity} email={this.props.email} username={this.props.username} userId={this.props.userId}/>}/>

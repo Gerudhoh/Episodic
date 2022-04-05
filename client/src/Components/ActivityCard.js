@@ -5,7 +5,9 @@ import { Link } from 'react-router-dom';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import { styled } from '@mui/material/styles';
 //Material UI Icons and Styling
 import ArrowForward from '@mui/icons-material/ArrowForward';
 
@@ -34,12 +36,10 @@ const activityCardStyles = {
   }
 };
 
-
 function NewListPreview(props) {
   return (
     <Stack alignItems="flex-start" spacing={2}>
-      <Typography component={Link} to={"userlist/" + props.listName} fontSize={props.fontSize}>{props.reviewText}</Typography>
-      <EpisodeCardList listName={props.listName} images={props.images} userId={props.userId} listSize="small"/>
+      <Typography fontSize={props.fontSize}>{props.reviewText}</Typography><br/>
     </Stack>
   );
 }
@@ -48,16 +48,22 @@ function MoveListPreview(props) {
   return (
     <Stack alignItems="flex-start" spacing={2}>
       <Typography fontSize={props.fontSize}>{props.reviewText}</Typography>
-      <EpisodeCardList listName={props.listName} images={props.images} userId={props.userId} listSize="small"/>
     </Stack>
   );
 }
 
-function AddEpisodePreview(props){
-  return(
+function AddEpisodePreview(props) {
+  return (
     <Stack alignItems="flex-start" spacing={2}>
-      <Typography fontSize={props.fontSize}>{props.reviewText}</Typography>
-      <EpisodeCardList listName={props.listName} images={props.images} userId={props.userId} listSize="small"/>
+      
+      <Box sx={{ position: 'relative' }} replace>
+            < img width="100" height="auto"
+              src={props.image}
+              alt={`${props.reviewText}`}
+              loading="lazy"
+            />
+        <Typography fontSize={props.fontSize}>{props.reviewText}</Typography><br/>
+      </Box>
     </Stack>
   );
 }
@@ -68,20 +74,23 @@ export default function ActivityCard(props) {
   console.log(props);
 
   const ActivityPreview = (activityType) => {
-    if (props.activityType === 'newList'){
+    if (activityType === 'newList'){
       return (<NewListPreview fontSize={size.fontSize} listName={props.activityInfo.listName} images={props.activityInfo.images} reviewText={props.activityInfo.reviewText} />);
     }
-    else if (props.activityType === 'listMove') {
+    else if (activityType === 'listMove') {
       return (<MoveListPreview fontSize={size.fontSize} listName={props.activityInfo.listName} images={props.activityInfo.images} reviewText={props.activityInfo.reviewText} />);
     }
-    else if (props.activityType === 'newReview') {
+    else if (activityType === 'newReview') {
       return (<ReviewPreview
         reviewText={props.activityInfo.reviewText}
         date={props.activityInfo.date}
-        rating={props.activityInfo.rating}
+        rating={props.activityInfo.listName}
         image={props.activityInfo.image}
-        title={props.activityInfo.title}
+        title={props.activityInfo.podcastName}
       />);
+    }
+    else if (activityType === 'add') {
+      return (<AddEpisodePreview fontSize={size.fontSize} listName={props.activityInfo.listName} image={props.image} reviewText={props.activityInfo.reviewText} size={size}/>);
     }
   };
 

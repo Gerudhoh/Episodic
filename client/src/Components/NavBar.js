@@ -34,10 +34,14 @@ const ResponsiveAppBar = (props) => {
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
+    this.props.getUserFriends();
+    this.props.getUserActivity();
   };
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+    this.props.getUserFriends();
+    this.props.getUserActivity();
   };
 
   const Search = styled('div')(({ theme }) => ({
