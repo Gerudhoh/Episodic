@@ -16,7 +16,7 @@ class FriendActivityList extends React.Component {
       <Stack>
       <List>
       {this.props.friendActivity.map((item) => (
-        <ActivityCard key={item.id} activityInfo={item.activityInfo} activityType={item.activityType} userName={item.username} image={item.image} userId={this.props.userId} activitySize={this.props.activitySize}/>
+        <ActivityCard key={item.id} activityInfo={item.activityInfo} activityType={item.activityType} userName={item.username} image={item.image} userId={this.props.userId} activitySize="medium"/>
       ))}
       </List>
       </Stack>
