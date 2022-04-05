@@ -48,6 +48,12 @@ export default function EditProfilePage(props) {
         </Alert>
       );
     } else if (res.success) {
+      var date = new Date();
+      date.setTime(date.getTime()+(2*60*60*1000));
+      var expires = date.toGMTString();
+      
+      document.cookie = `username=${userName}; expires=${expires};`;
+      document.cookie = `email=${email}; expires=${expires};`;
       setSuccess(true);
       setAlert(
         <Alert severity="success"> 

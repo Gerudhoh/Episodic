@@ -96,8 +96,8 @@ export default function ActivityCard(props) {
 
   return (
     <Stack spacing={2} alignItems="center" justifyContent="space-between" direction="row">
-      <Stack spacing={2} alignItems="space-evenly" justifyContent="space-around">
-        <UserInfo userName={props.userName} fontSize={size.fontSize} avatarSize={size.avSize} />
+      <Stack spacing={2} alignItems="space-evenly" justifyContent="space-around"  style={{marginBottom: "5px"}}>
+        <UserInfo userName={props.userName} fontSize={size.fontSize} avatarSize={size.avSize}/>
         {ActivityPreview(props.activityType)}
       </Stack>
       {props.location ? (
