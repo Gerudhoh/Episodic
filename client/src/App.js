@@ -81,13 +81,6 @@ const theme = createTheme({
   }
 })
 
-const delay = (ms) =>
-  new Promise((res) => {
-    setTimeout(() => {
-      res()
-    }, ms)
-  })
-
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -120,8 +113,6 @@ class App extends React.Component {
   }
 
   async getUserActivity() {
-    //e.preventDefault();
-    console.log(this.state.userId);
     let response = await fetch('/api/v1/user_activity/get', {
       method: 'POST',
       headers: {
@@ -130,27 +121,11 @@ class App extends React.Component {
       body: JSON.stringify({ id: this.state.userId }),
     });
     let body = await response.json();
-    if (body.noUser === true) {
-      await delay(1000); //in case user is already logged in, wait for the auth
-      let response = await fetch('/api/v1/user_activity/get', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id: this.state.userId }),
-      });
-      body = await response.json();
-    }
-
-    console.log(body);
 
     this.setState({ myActivity: body });
   };
 
   async getUserFriends() {
-    //e.preventDefault();
-    console.log(this.state.userId)
-
     let response = await fetch('/api/v1/user/get/friends', {
       method: 'POST',
       headers: {
@@ -159,26 +134,11 @@ class App extends React.Component {
       body: JSON.stringify({ id: this.state.userId }),
     });
     let body = await response.json();
-    if (body.noUser === true) {
-      await delay(1000); //in case user is already logged in, wait for the auth
-      let response = await fetch('/api/v1/user/get/friends', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id: this.state.userId }),
-      });
-      body = await response.json();
-    }
-
-    console.log(body);
 
     this.setState({ allFriends: body });
   };
 
   async getUserFriendActivity() {
-    //e.preventDefault();
-    console.log(this.state.userId);
     let response = await fetch('/api/v1/user_activity/get/friends', {
       method: 'POST',
       headers: {
@@ -187,31 +147,14 @@ class App extends React.Component {
       body: JSON.stringify({ id: this.state.userId }),
     });
     let body = await response.json();
-    if (body.noUser === true) {
-      await delay(1000); //in case user is already logged in, wait for the auth
-      let response = await fetch('/api/v1/user_activity/get/friends', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id: this.state.userId }),
-      });
-      body = await response.json();
-    }
-
-    console.log(body);
-
     this.setState({ friendActivity: body });
   };
 
   async checkAuthData() {
     let authData = getCookieData();
-    console.log(authData);
 
     if(authData.username && authData.token) {
       let authCheck = await checkAuth(authData.username, authData.token);
-      console.log(authCheck);
-      console.log(authCheck.length > 0)
 
       this.setState({username: authData.username, email: authData.email, userId: parseInt(authData.userId)});
 
@@ -229,7 +172,6 @@ class App extends React.Component {
 
   async updateAuth() {
     let authData = getCookieData();
-    console.log(authData);
 
     if(authData.username && authData.token) {
       this.setState({
