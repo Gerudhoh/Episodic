@@ -75,17 +75,17 @@ export default function ActivityCard(props) {
 
   const ActivityPreview = (activityType) => {
     if (activityType === 'newList'){
-      return (<NewListPreview fontSize={size.fontSize} listName={props.activityInfo.listName} images={props.activityInfo.images} reviewText={props.activityInfo.reviewText} />);
+      return (<NewListPreview fontSize={size.fontSize} listName={props.activityInfo.listName} image={props.activityInfo.image} reviewText={props.activityInfo.reviewText} />);
     }
     else if (activityType === 'listMove') {
-      return (<MoveListPreview fontSize={size.fontSize} listName={props.activityInfo.listName} images={props.activityInfo.images} reviewText={props.activityInfo.reviewText} />);
+      return (<MoveListPreview fontSize={size.fontSize} listName={props.activityInfo.listName} image={props.activityInfo.image} reviewText={props.activityInfo.reviewText} />);
     }
     else if (activityType === 'newReview') {
       return (<ReviewPreview
         reviewText={props.activityInfo.reviewText}
         date={props.activityInfo.date}
         rating={props.activityInfo.listName}
-        image={props.activityInfo.image}
+        image={props.image}
         title={props.activityInfo.podcastName}
       />);
     }

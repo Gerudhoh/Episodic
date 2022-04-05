@@ -2,11 +2,6 @@ const promisePool = require('../repositories/mysql');
 
 module.exports = {
     addUser: function (username, email, password, token, friends) {
-        console.log(username);
-        console.log(email);
-        console.log(password);
-        console.log(token);
-        console.log(friends);
         return new Promise(async (res, rej) => {
             let sql = 'INSERT INTO users(username, email, password, token, friends) VALUES(?,?,?,?,?);'
             
@@ -79,8 +74,6 @@ module.exports = {
     },
 
     getUserFriends: function (user_id) {
-        console.log(user_id);
-
         return new Promise(async (res, rej) => {
             let sql = 'SELECT * FROM users WHERE id = (?);'
             
@@ -106,12 +99,11 @@ module.exports = {
 
     getAllUsers: function () {
         return new Promise(async (res, rej) => {
-            console.log("test");
             let sql = 'SELECT username, email FROM users;';
             
             const [rows] = await promisePool.query(sql);
 
-            console.log(`Rows in getAllUsers: ${JSON.stringify(rows)}`);
+            //console.log(`Rows in getAllUsers: ${JSON.stringify(rows)}`);
 
             res(rows);
         });

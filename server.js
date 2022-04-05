@@ -817,6 +817,7 @@ app.post('/api/v1/user_activity/get', async function (req, res) {
       }
     }
   }
+  
   res.send(myResult);
 });
 
