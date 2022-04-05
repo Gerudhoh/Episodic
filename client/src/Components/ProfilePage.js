@@ -37,26 +37,6 @@ const userInfo={
   ratingAvg: 3.96
 }
 
-const following = [
-    {
-      name: "name1",
-      activityType: "newList"
-    },
-
-    {
-      name: "name2",
-      activityType: "newList"
-    },
-    {
-      name: "name3",
-      activityType: "newList"
-    },
-    {
-      name: "name4",
-      activityType: "listMove"
-    },
-];
-
 const achievements = ['critic', 'socialbutterfly', 'organizer', 'closer'];
 
 const flag = "ownProfile";
@@ -134,11 +114,9 @@ function profileNormal(props){
         numReviews={userInfo.numReviews}
         ratingAvg={userInfo.ratingAvg}
         /></Item>
-        <Stack direction="row" spacing={2} justifyContent="center">
-          <Item sx={{width:"50%"}}>
-          <MyFriendList activitySize="small" userId={props.userId} updateUserFriends={props.updateUserFriends} allFriends={props.allFriends}/>
+        <Item>
+          <MyFriendList activitySize="medium" userId={props.userId} updateUserFriends={props.updateUserFriends} allFriends={props.allFriends}/>
         </Item>
-        </Stack>
       </Stack>
       <Item sx={{maxWidth:"30%"}}>
         <Typography variant="h4">Reviews</Typography>
@@ -167,9 +145,9 @@ function profileStack(props){
         numReviews={userInfo.numReviews}
         ratingAvg={userInfo.ratingAvg}
         /></Item>
-        <Stack direction="row" spacing={2} justifyContent="center">
-          <MyFriendList activitySize="small" userId={props.userId} updateUserFriends={props.updateUserFriends} allFriends={props.allFriends}/>
-        </Stack>
+        <Item >
+          <MyFriendList activitySize="medium" userId={props.userId} updateUserFriends={props.updateUserFriends} allFriends={props.allFriends}/>
+        </Item>
         <Item sx={{maxWidth:"100%"}}><ListsHighlight listSize="small"/></Item>
       </Stack>
       <Item sx={{maxWidth:"40%"}}>

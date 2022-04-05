@@ -96,7 +96,7 @@ class MyFriendList extends React.Component {
       {this.state.showSuccess ? (<React.Fragment></React.Fragment>) : (null)}
         <List>
           {this.props.allFriends.map((item) => (
-            <ActivityCard key={item.id} activityInfo={item.activityInfo} activityType={item.activityType} userName={item.username} userId={this.props.userId} activitySize={this.props.activitySize}/>
+            <ActivityCard key={item.id} activityInfo={item.activityInfo} activityType={item.activityType} userName={item.username} userId={this.props.userId} activitySize="medium"/>
           ))}
         </List>
         <Box component="form" onSubmit={this.addFriend}>

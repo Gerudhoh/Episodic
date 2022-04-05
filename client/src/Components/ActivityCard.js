@@ -54,15 +54,14 @@ function MoveListPreview(props) {
 
 function AddEpisodePreview(props) {
   return (
-    <Stack alignItems="flex-start" spacing={2}>
-      
-      <Box sx={{ position: 'relative' }} replace>
+    <Stack alignItems="flex-start" spacing={1}>
+      <Box sx={{ position: 'relative', display: "flex", justifyContent: "center", paddingBottom: "10px" }} replace>
             < img width="100" height="auto"
               src={props.image}
               alt={`${props.reviewText}`}
               loading="lazy"
             />
-        <Typography fontSize={props.fontSize}>{props.reviewText}</Typography><br/>
+        <Typography fontSize={props.fontSize} style={{padding: "10px", paddingTop: "10px"}}>{props.reviewText}</Typography><br/>
       </Box>
     </Stack>
   );
@@ -71,7 +70,6 @@ function AddEpisodePreview(props) {
 
 export default function ActivityCard(props) {
   const size = activityCardStyles[props.activitySize];
-  console.log(props);
 
   const ActivityPreview = (activityType) => {
     if (activityType === 'newList'){
@@ -96,8 +94,8 @@ export default function ActivityCard(props) {
 
   return (
     <Stack spacing={2} alignItems="center" justifyContent="space-between" direction="row">
-      <Stack spacing={2} alignItems="space-evenly" justifyContent="space-around">
-        <UserInfo userName={props.userName} fontSize={size.fontSize} avatarSize={size.avSize} />
+      <Stack spacing={2} alignItems="space-evenly" justifyContent="space-around"  style={{marginBottom: "5px"}}>
+        <UserInfo userName={props.userName} fontSize={size.fontSize} avatarSize={size.avSize}/>
         {ActivityPreview(props.activityType)}
       </Stack>
       {props.location ? (
