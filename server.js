@@ -482,26 +482,34 @@ app.get('/api/v1/user/get/all', async function (req, res) {
 });
 
 app.post('/api/v1/user/update', async function (req, res) {
-  users.getUserById(req.body.id).then(fetchedUser => {
-    let user = fetchedUser[0];
-    let username = user.username;
-    if(req.body.username !== user.username) {
-      username = req.body.username;
-    }
+  let fetchedUser = await users.getUserById(req.body.id);
+  let user = fetchedUser[0];
+  let doUpdate = false;
+  let username = user.username;
+  let email = user.email;
+  let password = user.password;
 
-    let email = user.email;
-    if(req.body.email !== user.email){
-      email = req.body.email;
-    }
+  if(req.body.username !== user.username) {
+    username = req.body.username;
+    doUpdate = true;
+  }
 
-    let password = user.password;
-    if(req.body.password !== user.password && req.body.password !== "") {
-      password = req.body.password;
-    }
+  if(req.body.email !== user.email){
+    email = req.body.email;
+    doUpdate = true;
+  }
+
+  if(req.body.password !== user.password && req.body.password !== "") {
+    password = req.body.password;
+    doUpdate = true;
+  }
+
+  if(!doUpdate) {
+    res.send({info: "Don't need to do this", warning: true });
+  } else {
     let result = await users.updateUser(username, email, password, req.body.id);
-    console.log(result);
-    res.send({data: fetchedUser});
-  });
+    res.send({info: result.info, success: result.changedRows == 1});
+  }
 });
 
 app.post('/api/v1/searchPodcast', async function (req, res) {
