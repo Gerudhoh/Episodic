@@ -89,29 +89,74 @@ class App extends React.Component {
       auth: false,
       username: "",
       email: "",
+      userId: null,
       id: null,
+      myActivity: [],
+      allFriends: [],
+      friendActivity: [],
     };
 
     this.updateAuth = this.updateAuth.bind(this);
     this.removeAuth = this.removeAuth.bind(this);
     this.checkAuthData = this.checkAuthData.bind(this);
+    this.getUserActivity = this.getUserActivity.bind(this);
+    this.getUserFriends = this.getUserFriends.bind(this);
+    this.getUserFriendActivity = this.getUserFriendActivity.bind(this);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     window.scrollTo(0, 0);
-    this.checkAuthData();
+    await this.checkAuthData();
+    await this.getUserActivity();
+    await this.getUserFriends();
+    await this.getUserFriendActivity();
   }
+
+  async getUserActivity() {
+    let response = await fetch('/api/v1/user_activity/get', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: this.state.userId }),
+    });
+    let body = await response.json();
+
+    this.setState({ myActivity: body });
+  };
+
+  async getUserFriends() {
+    let response = await fetch('/api/v1/user/get/friends', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: this.state.userId }),
+    });
+    let body = await response.json();
+
+    this.setState({ allFriends: body });
+  };
+
+  async getUserFriendActivity() {
+    let response = await fetch('/api/v1/user_activity/get/friends', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: this.state.userId }),
+    });
+    let body = await response.json();
+    this.setState({ friendActivity: body });
+  };
 
   async checkAuthData() {
     let authData = getCookieData();
-    console.log(authData);
 
     if(authData.username && authData.token) {
       let authCheck = await checkAuth(authData.username, authData.token);
-      console.log(authCheck);
-      console.log(authCheck.length > 0)
 
-      this.setState({username: authData.username, email: authData.email, userId: authData.userId});
+      this.setState({username: authData.username, email: authData.email, userId: parseInt(authData.userId)});
 
       if(authCheck.length > 0) {
         this.setState({auth: true})
@@ -127,7 +172,6 @@ class App extends React.Component {
 
   async updateAuth() {
     let authData = getCookieData();
-    console.log(authData);
 
     if(authData.username && authData.token) {
       this.setState({
@@ -157,8 +201,8 @@ class App extends React.Component {
       <div>
         <ThemeProvider theme={theme}>
           <BrowserRouter history={history}>
-          <NavBar auth={this.state.auth}  checkAuthData={this.checkAuthData} updateAuth={this.updateAuth} removeAuth={this.removeAuth} username={this.state.username} email={this.state.email} userId={this.state.userId}/>
-          <RouteSwitch auth={this.state.auth} checkAuthData={this.checkAuthData}  updateAuth={this.updateAuth} removeAuth={this.removeAuth} username={this.state.username} email={this.state.email} userId={this.state.userId}/>
+          <NavBar auth={this.state.auth} checkAuthData={this.checkAuthData} getUserFriends={this.getUserFriends} getUserActivity={this.getUserActivity} updateAuth={this.updateAuth} removeAuth={this.removeAuth} username={this.state.username} email={this.state.email} userId={this.state.userId}/>
+          <RouteSwitch auth={this.state.auth} getUserFriends={this.getUserFriends} getUserActivity={this.getUserActivity} checkAuthData={this.checkAuthData}  updateAuth={this.updateAuth} removeAuth={this.removeAuth} friendActivity={this.state.friendActivity} allFriends={this.state.allFriends} myActivity={this.state.myActivity} username={this.state.username} email={this.state.email} userId={this.state.userId}/>
           </BrowserRouter>
         </ThemeProvider>
       </div>

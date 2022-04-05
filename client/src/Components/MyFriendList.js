@@ -14,88 +14,12 @@ import Autocomplete from '@mui/material/Autocomplete';
 //Custom Components
 import ActivityCard from "./ActivityCard.js";
 
-const friends = [
-    {
-      name: "name1",
-      activityType: "newReview",
-      activityInfo: {
-        rating: 5,
-        date: "Feb 22 2022",
-        reviewText: "",
-      }
-    },
 
-    {
-      name: "name2",
-      activityType: "newList",
-      activityInfo: {
-          friendName: "list1",
-          images: [
-            {
-              img: '/pepekingprawn.jpg',
-              title: 'Breakfast',
-            },
-            {
-              img: '/pepekingprawn.jpg',
-              title: 'Burger',
-            },
-            {
-              img: '/pepekingprawn.jpg',
-              title: 'Camera',
-            },
-          ]
-        }
-    },
-    {
-      name: "name3",
-      activityType: "newList",
-      activityInfo: {
-        friendName: "list1",
-        images: [
-          {
-            img: '/pepekingprawn.jpg',
-            title: 'Breakfast',
-          },
-          {
-            img: '/pepekingprawn.jpg',
-            title: 'Burger',
-          },
-          {
-            img: '/pepekingprawn.jpg',
-            title: 'Camera',
-          },
-        ]
-      }
-    },
-    {
-      name: "name4",
-      activityType: "listMove",
-      activityInfo: {
-        friendName: "list1",
-        images: [
-          {
-            img: '/pepekingprawn.jpg',
-            title: 'Breakfast',
-          },
-          {
-            img: '/pepekingprawn.jpg',
-            title: 'Burger',
-          },
-          {
-            img: '/pepekingprawn.jpg',
-            title: 'Camera',
-          },
-        ]
-      }
-    },
-]
-
-class FriendActivity extends React.Component {
+class MyFriendList extends React.Component {
   constructor(props) {
     super(props);
     let success = JSON.parse(localStorage.getItem('showSuccess')) || false;
     this.state = {
-      allFriends: [],
       allUsers: [],
       friendName: "",
       list: {},
@@ -109,29 +33,13 @@ class FriendActivity extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.userId) {
       this.setState({ userId: nextProps.userId })
-      this.getUserFriends();
     }
   }
 
   componentDidMount() {
-    this.getUserFriends();
     this.getUsers();
     localStorage.setItem( 'showSuccess', false );
   }
-
-  getUserFriends = async e => {
-    if (!this.state.userId) return;
-    let response = await fetch('/api/v1/user_activity/get/friend', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ id: this.state.userId }),
-    });
-    let body = await response.json();
-
-    this.setState({ allFriends: body });
-  };
 
   getUsers = async e => {
     let response = await fetch('/api/v1/user/get/all', {
@@ -149,6 +57,8 @@ class FriendActivity extends React.Component {
     e.preventDefault();
     this.setState({ showError: false });
     this.setState({ showSuccess: false });
+    console.log(this.state.friendName);
+    console.log(this.state);
     const response = await fetch('/api/v1/user/add/friend', {
       method: 'POST',
       headers: {
@@ -167,6 +77,16 @@ class FriendActivity extends React.Component {
     window.location.reload(false); // refreshing here because i can't figure out how to reload the listhighlights from here
   };
 
+  onNameChange = (event, value) => {
+    this.setState({
+      friendName: value
+    }, () => {
+      // This will output an array of objects
+      // given by Autocompelte options property.
+      console.log(this.state.friendName);
+    });
+  }
+
   render() {
     return (
       <Box container>
@@ -175,8 +95,8 @@ class FriendActivity extends React.Component {
       </Alert>) : (null)}
       {this.state.showSuccess ? (<React.Fragment></React.Fragment>) : (null)}
         <List>
-          {this.state.allFriends.map((item) => (
-            <ActivityCard key={item.username} activityInfo={item.activityInfo} activityType={item.activityType} userName={item.username} userId={this.state.userId} activitySize={this.props.activitySize}/>
+          {this.props.allFriends.map((item) => (
+            <ActivityCard key={item.id} activityInfo={item.activityInfo} activityType={item.activityType} userName={item.username} userId={this.props.userId} activitySize={this.props.activitySize}/>
           ))}
         </List>
         <Box component="form" onSubmit={this.addFriend}>
@@ -187,13 +107,13 @@ class FriendActivity extends React.Component {
               id="autofill-add-friend"
               disableClearable
               options={this.state.allUsers.map((option) => option.username)}
+              onChange={this.onNameChange}
               renderInput={(params) => (
                 <TextField
                   {...params}
                   type="text"
                   value={this.state.friendName}
                   label="Friend Username/Email"
-                  onChange={e => this.setState({ friendName: e.target.value })}
                   InputProps={{
                     ...params.InputProps,
                     type: 'search',
@@ -209,4 +129,4 @@ class FriendActivity extends React.Component {
   }
 }
 
-export default FriendActivity
+export default MyFriendList

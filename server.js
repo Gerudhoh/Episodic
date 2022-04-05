@@ -46,7 +46,6 @@ app.post('/api/v1/lists/create', async function (req, res) {
 
   if (userId != null) {
     let sql = "insert into lists (name, userId) values ('" + escape(name) + "', " + userId + ")";
-    await user_activity.addUserActivity("", "", "newList", "", userId, escape(name));
 
     //throw it into the database
     await new Promise(async (rem, rej) => {
@@ -54,6 +53,8 @@ app.post('/api/v1/lists/create', async function (req, res) {
         let result = await promisePool.query(sql);
         let id = result[0].insertId;
         list = new lists(name, id);
+        await user_activity.addUserActivity("", "", "newList", "", userId, escape(name));
+        
         res.send({
           list: list
         });
@@ -89,7 +90,7 @@ async function addPodcast(podcast, userId, list) {
         list.addPodcast(podcast);
         let linkSql = "insert into lists_podcasts_link (listsId, podcastsId) values (" + list.id + ", " + podcast.databaseId + ")";
         await promisePool.query(linkSql);
-        await user_activity.addUserActivity(escape(podcast.title), "", "Add", podcast.website, userId, list.name);
+        await user_activity.addUserActivity(escape(podcast.title), "", "Add", podcast.image, userId, list.name);
       }
       else {
         //Created a review!
@@ -112,6 +113,7 @@ async function addEpisode(episode, userId, list) {
   let insertId = 0;
   return await new Promise(async (res, rej) => {
     try {
+      let link = episode.image;
       let sql = "insert ignore into episodes (name, description, image, podcastName) values ('" + escape(episode.title) + "','" + escape(episode.description) + "', '" + episode.image + "','" + escape(episode.podcast) + "')";
       let result = await promisePool.query(sql);
       insertId = result[0].insertId;
@@ -125,7 +127,7 @@ async function addEpisode(episode, userId, list) {
         list.addEpisode(episode);
         let linkSql = "insert into lists_episodes_link (listsId, episodesId) values (" + list.id + ", " + episode.databaseId + ")";
         await promisePool.query(linkSql);
-        await user_activity.addUserActivity(escape(episode.podcast.title), "", "Add", episode.podcast.link, userId, list.name);
+        await user_activity.addUserActivity(escape(episode.title), "", "Add", episode.image, userId, list.name);
       }
       else {
         //Created a review!
@@ -324,6 +326,7 @@ app.post("/api/v1/reviews/add/podcast", async function (req, res) {
       let resultId = await promisePool.query(sql);
 
       let insertId = resultId[0].insertId;
+        await user_activity.addUserActivity(escape(req.body.podcast.title), "", "newReview", req.body.podcast.image, req.body.id, req.body.newRating);
       if (insertId == "0") {
         let newSql = "select id from reviews where userId = " + req.body.id + " and podcastId = " + podcastId;
         let newResult = await promisePool.query(newSql);
@@ -356,6 +359,8 @@ app.post("/api/v1/reviews/add/episode", async function (req, res) {
       let resultId = await promisePool.query(sql);
 
       let insertId = resultId[0].insertId;
+        await user_activity.addUserActivity(escape(episodejson.podcast.title), "", "newReview", episodejson.podcast.image, req.body.id, req.body.newRating);
+
       if (insertId == "0") {
         let newSql = "select id from reviews where userId = " + req.body.id + " and episodeId = " + episodeId;
         let newResult = await promisePool.query(newSql);
@@ -631,7 +636,7 @@ app.post('/api/v1/user/get/friends', async function (req, res) {
 
   let myResult = [];
 
-  if (result !== undefined) {
+  if (result !== undefined && result.length > 0 && result[0].friends != undefined) {
     let friends = JSON.parse(result[0].friends);
 
     for (let i = 0; i < friends?.length; i++) {
@@ -653,34 +658,96 @@ app.post('/api/v1/user/get/friends', async function (req, res) {
   res.send(myResult);
 });
 
+// Check if a username and password is correct and generate a token
+app.post('/api/v1/user_activity/get/friends', async function (req, res) {
+  let all_activity = await user_activity.getUserFriendActivity(req.body.id);
+  let user_friend = await users.getUserFriends(req.body.id);
+  let result = [];
+  let index = 0;
+
+  if(user_friend.length > 0 && user_friend[0].friends !== undefined) {
+    let friends = JSON.parse(user_friend[0].friends);
+
+    for(let i = 0; i < all_activity.length; i++) {
+      for(let j = 0; j < friends.length; j++) {
+        if(parseInt(friends[j]) === parseInt(all_activity[i].user_id)) {
+          result[index] = {};
+          result[index].username = all_activity[i].username;
+          result[index].email = all_activity[i].email;
+          result[index].id = all_activity[i].user_id;
+            if(all_activity[i].action_description === "newList") {
+              result[index].activityInfo = {};
+              result[index].activityInfo.listName = all_activity[i].list_name;
+              result[index].activityInfo.reviewText = "Created list " + all_activity[i].list_name;
+              result[index].activityType = "newList";
+            }
+            else if(all_activity[i].action_description === "listMove") {
+              result[index].activityInfo = {};
+              result[index].activityInfo.listName = all_activity[i].list_name;
+              result[index].activityInfo.reviewText =  "Moved list " + all_activity[i].list_name;
+              result[index].activityType = "listMove";
+            }
+            else if(all_activity[i].action_description === "newReview") {
+              result[index].activityInfo = {};
+              result[index].activityInfo.listName = all_activity[i].list_name;
+              result[index].activityInfo.reviewText =  "Reviewed podcast " + unescape(all_activity[i].podcast_name);
+              result[index].activityInfo.podcastName = unescape(all_activity[i].podcast_name);
+              result[index].activityType = "newReview";
+              result[index].image = all_activity[i].link;
+            }
+            else if(all_activity[i].action_description === "Add") {
+              result[index].activityInfo = {};
+              result[index].activityInfo.listName = "";
+      
+              if(all_activity[i].episode_name !== "" && all_activity[i].episode_name !== null) {
+                result[index].activityInfo.reviewText = "Added podcast \"" + unescape(all_activity[i].podcast_name) + "\" episode \"" + unescape(all_activity[i].episode_name) + "\"  to list " + all_activity[i].list_name ;
+                result[index].activityType = "add";
+                result[index].image = all_activity[i].link;
+              }
+              else {
+                result[index].activityInfo.reviewText = "Added podcast \"" + unescape(all_activity[i].podcast_name) + "\"  to list " + all_activity[i].list_name;
+                result[index].activityType = "add";
+                result[index].image = all_activity[i].link;
+              }
+            }
+          index++;
+        }
+      }
+    }
+  }
+
+  res.send(result);
+});
+
+
+
 app.post('/api/v1/user/add/friend', async function (req, res) {
   let search_term = req.body.search_term;
   let result = await users.getUser(search_term);
 
-  try {
-    if (result !== undefined && result[0] !== undefined && result[0].friends !== undefined) {
-      let user_info = await users.getUserFriends(req.body.id);
-      let newFriends = JSON.parse(user_info[0].friends);
+  if (result !== undefined && result[0] !== undefined) {
+    let user_info = await users.getUserFriends(req.body.id);
+    let newFriends = JSON.parse(user_info[0].friends);
+    let friendsFriends = JSON.parse(result[0].friends);
 
-      for (let i = 0; i < newFriends.length; i++) {
-        if (newFriends[i] === result[0].id) {
-          res.send({ success: false });
-          return;
-        }
+    for(let i = 0; i < newFriends.length; i++) {
+      if(newFriends[i] === result[0].id) {
+        res.send({ success: false });
+        return;
       }
-
-      newFriends = newFriends.concat(result[0].id);
-
-      let addFriendResult = await user_activity.addFriendToUser(JSON.stringify(newFriends), req.body.id);
-      res.send({ success: true });
-      return;
     }
-    else res.send({ success: false });
-  } catch (err) {
-    console.log(err);
-    res.send({ success: false });
+
+    newFriends = newFriends.concat(result[0].id);
+    friendsFriends = friendsFriends.concat(parseInt(req.body.id));
+
+    let addFriendResult = await user_activity.addFriendToUser(JSON.stringify(newFriends), req.body.id);
+    let addUserAsFriendResult = await user_activity.addFriendToUser(JSON.stringify(friendsFriends), result[0].id);
+    res.send({ success: true });
+    return;
   }
 
+  res.send({ success: false });
+  return;
 });
 
 
@@ -709,39 +776,48 @@ app.post('/api/v1/user_activity/get', async function (req, res) {
 
   for (let i = 0; i < user_friend_activity.length; i++) {
     myResult[i] = {};
-
     if (result !== [] && result !== undefined && result[0] !== undefined) {
       myResult[i].username = result[0].username;
       myResult[i].email = result[0].email;
       myResult[i].id = result[0].id;
-      if (user_friend_activity[0].action_description === "newList" && myResult[i].activityInfo !== undefined) {
-        myResult[i].activityInfo.listName = user_friend_activity[0]?.list_name;
-        myResult[i].activityInfo.reviewText = "Created list " + user_friend_activity[0].list_name;
+      if(user_friend_activity[i].action_description === "newList") {
+        myResult[i].activityInfo = {};
+        myResult[i].activityInfo.listName = user_friend_activity[i].list_name;
+        myResult[i].activityInfo.reviewText = "Created list " + user_friend_activity[i].list_name;
         myResult[i].activityType = "newList";
       }
-      else if (user_friend_activity[0].action_description === "listMove") {
-        myResult[i].activityInfo.listName = user_friend_activity[0].list_name;
-        myResult[i].activityInfo.reviewText = "Moved list " + user_friend_activity[0].list_name;
+      else if(user_friend_activity[i].action_description === "listMove") {
+        myResult[i].activityInfo = {};
+        myResult[i].activityInfo.listName = user_friend_activity[i].list_name;
+        myResult[i].activityInfo.reviewText =  "Moved list " + user_friend_activity[i].list_name;
         myResult[i].activityType = "listMove";
       }
-      else if (user_friend_activity[0].action_description === "newReview") {
-        myResult[i].activityInfo.listName = user_friend_activity[0].list_name;
-        myResult[i].activityInfo.reviewText = "Created review: " + user_friend_activity[0].list_name;
+      else if(user_friend_activity[i].action_description === "newReview") {
+        myResult[i].activityInfo = {};
+        myResult[i].activityInfo.listName = user_friend_activity[i].list_name;
+        myResult[i].activityInfo.reviewText =  "Reviewed podcast " + unescape(user_friend_activity[i].podcast_name);
+        myResult[i].activityInfo.podcastName = unescape(user_friend_activity[i].podcast_name);
+        myResult[i].image = user_friend_activity[i].link;
         myResult[i].activityType = "newReview";
       }
-      else if (user_friend_activity[0].action_description === "Add") {
-        if (user_friend_activity[0].episode_name !== "" && user_friend_activity[0].episode_name !== null) {
-          myResult[i].activityInfo = "Added podcast \"" + user_friend_activity[0].podcast_name + "\" episode \"" + user_friend_activity[0].episode_name + "\"  to " + user_friend_activity[0].list_name;
+      else if(user_friend_activity[i].action_description === "Add") {
+        myResult[i].activityInfo = {};
+        myResult[i].activityInfo.listName = "";
+
+        if(user_friend_activity[i].episode_name !== "" && user_friend_activity[i].episode_name !== null) {
+          myResult[i].activityInfo.reviewText = "Added podcast \"" + unescape(user_friend_activity[i].podcast_name) + "\" episode \"" + unescape(user_friend_activity[i].episode_name) + "\"  to list " + user_friend_activity[i].list_name ;
           myResult[i].activityType = "add";
+          myResult[i].image = user_friend_activity[i].link;
         }
         else {
-          myResult[i].activityInfo = "Added podcast \"" + user_friend_activity[0].podcast_name + "\"  to " + user_friend_activity[0].list_name;
+          myResult[i].activityInfo.reviewText = "Added podcast \"" + unescape(user_friend_activity[i].podcast_name) + "\"  to list " + user_friend_activity[i].list_name ;
           myResult[i].activityType = "add";
+          myResult[i].image = user_friend_activity[i].link;
         }
       }
     }
   }
-
+  
   res.send(myResult);
 });
 

@@ -70,7 +70,7 @@ class AddEpisodeToList extends React.Component {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ list: this.state.lists[e.target.value], episode: this.episode, image: this.image, id: this.userId }),
+      body: JSON.stringify({ list: this.state.lists[e.target.value], episode: this.episode, image: this.image, id: this.props.userId }),
     });
     const body = await response.json();
     this.setState({ showSuccess: body.success });
