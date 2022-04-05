@@ -1,6 +1,6 @@
 import * as React from 'react';
 import MediaQuery  from 'react-responsive';
-import {Link} from 'react-router-dom';
+import {Link, useLocation} from 'react-router-dom';
 //Material UI Components
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
@@ -28,7 +28,7 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const userInfo={
-  name: "userName",
+  name: null,
   profilePic: "/pepekingprawn.jpg",
   numPodsListened: 23,
   numEpisListened: 187,
@@ -83,7 +83,6 @@ const flag = "ownProfile";
 
 //Inner Components
 function UserProfileButton(props){
-  console.log(props);
   if(flag === "ownProfile"){
     return(<Button variant="contained" component={Link} to="/editprofile" props={props} style={{height: "35px"}}>Edit</Button>);
   }
@@ -145,7 +144,7 @@ function profileNormal(props){
     <Stack direction="row" spacing={2} padding="10px" alignItems="flex-start" justifyContent="space-evenly">
       <Stack spacing={2} sx={{maxWidth:"30%"}}>
         <Item ><UserDescription
-        userName={props.username}
+        userName={userInfo.name}
         userId={props.userId}
         userEmail={props.email}
         profilePic={userInfo.profilePic}
@@ -201,6 +200,10 @@ function profileStack(props){
 };
 
 export default function ProfilePage(props){
+  const location = useLocation();
+  userInfo.name = location.state
+    ? location.state.username 
+    : props.username;
   return (
     <React.Fragment>
         {props.auth === true &&
