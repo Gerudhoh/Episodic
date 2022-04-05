@@ -12,7 +12,7 @@ import SearchPage from './SearchPage';
 import PodcastInfoPage from './PodcastInfoPage';
 import EpisodeInfoPage from './EpisodeInfoPage';
 import TrendingPage from './TrendingPage';
-import SingleListView from './SingleListView';
+import EditProfilePage from './EditProfilePage';
 import ProfileListView from './ProfileListView';
 import RandomEpPage from './RandomEpPage';
 
@@ -63,6 +63,7 @@ class RouteSwitch extends React.Component {
                 {/* Logged In routes */}
                 <Route exact path="/" element={<HomePage changeAuth={this.changeAuth} updateUserFriends={this.updateUserFriends} updateUserActivity={this.updateUserActivity} changeRemoveAuth={this.changeRemoveAuth} className="tabContent" auth={this.props.auth} friendActivity={this.props.friendActivity} allFriends={this.props.allFriends} myActivity={this.props.myActivity} email={this.props.email} username={this.props.username} userId={this.props.userId}/>}/>
                 <Route exact path="/searchresults" element={<SearchPage changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent" auth={this.props.auth} email={this.props.email} username={this.props.username} userId={this.props.userId}/>}/>
+                <Route exact path="/editprofile" element={<EditProfilePage changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent" auth={this.props.auth} email={this.props.email} username={this.props.username} userId={this.props.userId}/>}/>
                 <Route exact path="/profile" element={<ProfilePage changeAuth={this.changeAuth} updateUserFriends={this.updateUserFriends} changeRemoveAuth={this.changeRemoveAuth} className="tabContent" auth={this.props.auth} allFriends={this.props.allFriends} myActivity={this.props.myActivity} email={this.props.email} username={this.props.username} userId={this.props.userId}/>}/>
                 <Route path="/userlist/*" element={<ProfileListView changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent" auth={this.props.auth} email={this.props.email} username={this.props.username} userId={this.props.userId}/>}/>
                 <Route path="/alluserlists/*" element={<ProfileListView changeAuth={this.changeAuth} changeRemoveAuth={this.changeRemoveAuth} className="tabContent" auth={this.props.auth} email={this.props.email} username={this.props.username} userId={this.props.userId}/>}/>

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import MediaQuery  from 'react-responsive';
-import {Link} from 'react-router-dom';
+import {Link, useLocation} from 'react-router-dom';
 //Material UI Components
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
@@ -15,6 +15,8 @@ import { styled } from '@mui/material/styles';
 //Custom Components
 import ListsHighlight from "./ListsHighlight.js";
 import Achievement from "./Achievement.js"
+import FriendList from "./FriendList";
+import EditProfile from "./EditProfilePage.js";
 import MyFriendList from "./MyFriendList";
 import Reviews from "./ReviewsUser.js"
 
@@ -26,7 +28,7 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const userInfo={
-  name: "userName",
+  name: null,
   profilePic: "/pepekingprawn.jpg",
   numPodsListened: 23,
   numEpisListened: 187,
@@ -62,7 +64,7 @@ const flag = "ownProfile";
 //Inner Components
 function UserProfileButton(props){
   if(flag === "ownProfile"){
-    return(<Button variant="contained" style={{height: "35px"}}>Edit</Button>);
+    return(<Button variant="contained" component={Link} to="/editprofile" props={props} style={{height: "35px"}}>Edit</Button>);
   }
   else {
     return(<Button variant="contained" style={{height: "35px"}}>Follow</Button>);
@@ -94,7 +96,7 @@ function UserDescription(props){
       <Stack justifyContent="flex-start" alignItems="flex-start">
         <Typography variant="h6" > {props.userName} </Typography>
       </Stack>
-      <UserProfileButton />
+      <UserProfileButton props={props} />
     </Stack>
   );
 }
@@ -122,7 +124,9 @@ function profileNormal(props){
     <Stack direction="row" spacing={2} padding="10px" alignItems="flex-start" justifyContent="space-evenly">
       <Stack spacing={2} sx={{maxWidth:"30%"}}>
         <Item ><UserDescription
-        userName={props.username}
+        userName={userInfo.name}
+        userId={props.userId}
+        userEmail={props.email}
         profilePic={userInfo.profilePic}
         numPodsListened={userInfo.numPodsListened}
         numEpisListened={userInfo.numEpisListened}
@@ -154,6 +158,8 @@ function profileStack(props){
       <Stack spacing={2} sx={{maxWidth:"50%"}}>
         <Item ><UserDescription
         userName={userInfo.name}
+        userId={props.userId}
+        userEmail={props.email}
         profilePic={userInfo.profilePic}
         numPodsListened={userInfo.numPodsListened}
         numEpisListened={userInfo.numEpisListened}
@@ -176,6 +182,10 @@ function profileStack(props){
 };
 
 export default function ProfilePage(props){
+  const location = useLocation();
+  userInfo.name = location.state
+    ? location.state.username 
+    : props.username;
   return (
     <React.Fragment>
         {props.auth === true &&

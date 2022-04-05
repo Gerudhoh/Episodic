@@ -111,6 +111,11 @@ class LoginForm extends React.Component {
                 type="password"
                 onChange={this.updatePassword}
                 value={this.state.password}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    this.submitLogin();
+                  }
+                }}
                 />
                 </Grid>
                 <Grid item lg={12} >
