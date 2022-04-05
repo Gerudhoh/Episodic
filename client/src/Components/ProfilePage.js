@@ -14,9 +14,9 @@ import { styled } from '@mui/material/styles';
 
 //Custom Components
 import ListsHighlight from "./ListsHighlight.js";
-import Reviews from "./Reviews.js"
 import Achievement from "./Achievement.js"
 import MyFriendList from "./MyFriendList";
+import Reviews from "./ReviewsUser.js"
 
 //Styling
 const Item = styled(Paper)(({ theme }) => ({

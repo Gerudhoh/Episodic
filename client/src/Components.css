@@ -96,3 +96,10 @@ a:hover{
 .EpisodeCard :hover >img{
   opacity: 0.2;
 }
+
+.MuiMenuItem-root{
+  opacity: 1;
+}
+.MuiMenuItem-disabled{
+  opacity: 1;
+}
