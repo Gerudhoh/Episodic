@@ -97,6 +97,19 @@ module.exports = {
         });
     },
 
+    getUserById: function (search_term) {
+        return new Promise(async (res, rej) => {
+            let sql = 'SELECT id, username, email, password FROM users WHERE id = (?);'
+            
+            const [rows, fields] = await promisePool.query(sql, [search_term]);
+
+            //console.log(`Rows in getUserFriends: ${JSON.stringify(rows)}`);
+
+            res(rows);
+        });
+    },
+
+
     getAllUsers: function () {
         return new Promise(async (res, rej) => {
             let sql = 'SELECT username, email FROM users;';
@@ -107,5 +120,19 @@ module.exports = {
 
             res(rows);
         });
+    },
+
+    updateUser: function (username, email, password, id) {
+        // console.log(username);
+        // console.log(email);
+        // console.log(password);
+        // console.log(id);
+        return new Promise(async (res, rej) => {
+            let sql = 'UPDATE users SET username = (?), email = (?), password = (?) WHERE id = (?);'
+            
+            const [rows, fields] = await promisePool.query(sql, [username, email, password, id]);
+
+            res(rows);
+        });        
     },
 };
