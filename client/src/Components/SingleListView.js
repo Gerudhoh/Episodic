@@ -109,7 +109,7 @@ class SingleListViewClass extends React.Component {
   render() {
     return (
       <Stack>
-        {this.state.redirect ? (<Navigate to="/" />) : null}
+        {this.state.redirect ? (<Navigate to="/alluserlists" />) : null}
         {this.state.isLoading ? (
           <CircularProgress />
         ) : (

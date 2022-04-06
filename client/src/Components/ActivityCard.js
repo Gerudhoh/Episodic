@@ -39,7 +39,7 @@ const activityCardStyles = {
 function NewListPreview(props) {
   return (
     <Stack alignItems="flex-start" spacing={2}>
-      <Typography fontSize={props.fontSize}>{props.reviewText}</Typography><br/>
+      <Typography fontSize={props.fontSize}>{props.reviewText}</Typography><br />
     </Stack>
   );
 }
@@ -56,12 +56,12 @@ function AddEpisodePreview(props) {
   return (
     <Stack alignItems="flex-start" spacing={1}>
       <Box sx={{ position: 'relative', display: "flex", justifyContent: "center", paddingBottom: "10px" }} replace>
-            < img width="100" height="auto"
-              src={props.image}
-              alt={`${props.reviewText}`}
-              loading="lazy"
-            />
-        <Typography fontSize={props.fontSize} style={{padding: "10px", paddingTop: "10px"}}>{props.reviewText}</Typography><br/>
+        < img width="100" height="auto"
+          src={props.image}
+          alt={`${props.reviewText}`}
+          loading="lazy"
+        />
+        <Typography fontSize={props.fontSize} style={{ padding: "10px", paddingTop: "10px" }}>{props.reviewText}</Typography><br />
       </Box>
     </Stack>
   );
@@ -72,7 +72,7 @@ export default function ActivityCard(props) {
   const size = activityCardStyles[props.activitySize];
 
   const ActivityPreview = (activityType) => {
-    if (activityType === 'newList'){
+    if (activityType === 'newList') {
       return (<NewListPreview fontSize={size.fontSize} listName={props.activityInfo.listName} image={props.activityInfo.image} reviewText={props.activityInfo.reviewText} />);
     }
     else if (activityType === 'listMove') {
@@ -87,15 +87,25 @@ export default function ActivityCard(props) {
         title={props.activityInfo.podcastName}
       />);
     }
+    else if (activityType === "review") {
+      return (<ReviewPreview
+        reviewText={props.activityInfo.reviewText}
+        date={props.activityInfo.date}
+        rating={props.activityInfo.rating}
+        image={props.activityInfo.image}
+        title={props.activityInfo.title}
+      />);
+
+    }
     else if (activityType === 'add') {
-      return (<AddEpisodePreview fontSize={size.fontSize} listName={props.activityInfo.listName} image={props.image} reviewText={props.activityInfo.reviewText} size={size}/>);
+      return (<AddEpisodePreview fontSize={size.fontSize} listName={props.activityInfo.listName} image={props.image} reviewText={props.activityInfo.reviewText} size={size} />);
     }
   };
 
   return (
     <Stack spacing={2} alignItems="center" justifyContent="space-between" direction="row">
-      <Stack spacing={2} alignItems="space-evenly" justifyContent="space-around"  style={{marginBottom: "5px"}}>
-        <UserInfo userName={props.userName} fontSize={size.fontSize} avatarSize={size.avSize}/>
+      <Stack spacing={2} alignItems="space-evenly" justifyContent="space-around" style={{ marginBottom: "5px" }}>
+        <UserInfo userName={props.userName} fontSize={size.fontSize} avatarSize={size.avSize} />
         {ActivityPreview(props.activityType)}
       </Stack>
       {props.location ? (
@@ -103,7 +113,7 @@ export default function ActivityCard(props) {
           <ArrowForward />
         </IconButton>
       ) : (null)}
-     
+
     </Stack>
   );
 }

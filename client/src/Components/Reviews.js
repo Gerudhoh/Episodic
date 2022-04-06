@@ -76,7 +76,32 @@ class ReviewsClass extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.userId = nextProps.userId;
+    if (!this.userId) this.userId = nextProps.userId;
+    if (nextProps.podcast || nextProps.episode) {
+      this.currentRating = nextProps.currentRating;
+      this.podcast = nextProps.podcast;
+      this.episode = nextProps.episode;
+
+      if (this.podcast) {
+        this.podcastName = this.podcast?.title;
+        this.isEpisode = false;
+      }
+      if (this.episode) {
+        this.episodeName = this.episode?.title;
+        this.podcastName = this.episode?.podcast.title;
+        this.isEpisode = true;
+      }
+
+      this.image = "";
+      if (this.isEpisode) {
+        this.image = this.episode.podcast.image;
+      }
+      else {
+        this.image = this.podcast?.image;
+      }
+
+      this.getReviews();
+    }
   }
 
   getReviews = async e => {
@@ -94,7 +119,7 @@ class ReviewsClass extends React.Component {
         tmpArray.push(({
           location: this.fullLocation,
           name: item.username,
-          activityType: "newReview",
+          activityType: "review",
           activityInfo: {
             image: this.image,
             rating: item.rating,
@@ -120,7 +145,7 @@ class ReviewsClass extends React.Component {
       body.results.reverse().map((item, index) =>
         tmpArray.push(({
           name: item.username,
-          activityType: "newReview",
+          activityType: "review",
           activityInfo: {
             image: this.image,
             rating: item.rating,
@@ -187,20 +212,20 @@ class ReviewsClass extends React.Component {
           <Box component="form" onSubmit={this.createReview}>
 
             {this.state.showSuccess ? (
-              <Alert icon={<CheckIcon fontSize="inherit" sx={{bgcolor:"secondary.main", color:"primary.main"}} />}
-                sx={{bgcolor:"secondary.main", color:"primary.main"}}
+              <Alert icon={<CheckIcon fontSize="inherit" sx={{ bgcolor: "secondary.main", color: "primary.main" }} />}
+                sx={{ bgcolor: "secondary.main", color: "primary.main" }}
                 severity="success"
               >
-              {this.state.successMessage}
-            </Alert>
+                {this.state.successMessage}
+              </Alert>
             ) : (null)}
             {this.state.showError ? (
-              <Alert icon={<ErrorOutline fontSize="inherit" sx={{bgcolor:"primary.main", color:"secondary.main"}} />}
-                sx={{bgcolor:"secondary.main", color:"primary.main"}}
+              <Alert icon={<ErrorOutline fontSize="inherit" sx={{ bgcolor: "primary.main", color: "secondary.main" }} />}
+                sx={{ bgcolor: "secondary.main", color: "primary.main" }}
                 severity="error"
               >
-              Error: Could not leave review.
-            </Alert>
+                Error: Could not leave review.
+              </Alert>
             ) : (null)}
 
             <br></br>
@@ -224,7 +249,7 @@ class ReviewsClass extends React.Component {
                 inputProps={{ maxLength: 200 }}
                 onChange={e => this.setState({ newReviewText: e.target.value })}
               />
-              <Button variant="contained" disabled={this.state.newReviewRating == 0} type="submit">Submit Review</Button>
+              <Button variant="contained" disabled={this.state.newReviewRating === 0} type="submit">Submit Review</Button>
             </Stack>
           </Box>
         ) : (null)}

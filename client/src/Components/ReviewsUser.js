@@ -110,7 +110,7 @@ class ReviewsUserClass extends React.Component {
       tmpArray.push(({
         location: tmpLocation,
         name: item.username,
-        activityType: "newReview",
+        activityType: "review",
         activityInfo: {
           image: tmpImage,
           rating: item.rating,
