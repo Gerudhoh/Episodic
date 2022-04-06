@@ -130,6 +130,8 @@ const ResponsiveAppBar = (props) => {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
+        <img className="logo" src={"/logo192.png"} padding={100} width="90px" height="90px" alt="logo"/>
+        &nbsp;&nbsp;
           <Typography
             variant="h4"
             noWrap
