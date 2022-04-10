@@ -460,6 +460,9 @@ app.post('/api/v1/get_episode_from_podcast', async function (req, res) {
     let podcast = response.feeds.find(pod => pod.title === podcastName);
     episodes = await apiClient.episodesByFeedId(podcast?.id);
     let episode = episodes.items.find(ep => ep.title === episodeName);
+    if (!episode) {
+      return;
+    }
     apiClient.episodeById(episode.id).then(async (response) => {
       res.send({ pod: podcast, episode: response.episode, eps: episodes });
     });
