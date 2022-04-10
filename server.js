@@ -887,6 +887,10 @@ app.post('/api/v1/user_activity/get/friend', async function (req, res) {
   res.send(myResult);
 });
 
+process.on('uncaughtException', function (err) {
+  console.error(err);
+});
+
 // Listen to the specified port for api requests
 app.listen(port);
 console.log('Running app at localhost: ' + port);
