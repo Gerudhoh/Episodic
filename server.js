@@ -48,27 +48,28 @@ app.post('/api/v1/lists/create', async function (req, res) {
     let sql = "insert into lists (name, userId) values ('" + escape(name) + "', " + userId + ")";
 
     //throw it into the database
-    await new Promise(async (rem, rej) => {
-      try {
-        let result = await promisePool.query(sql);
-        let id = result[0].insertId;
-        list = new lists(name, id);
-        await user_activity.addUserActivity("", "", "newList", "", userId, escape(name));
-        
-        res.send({
-          list: list
-        });
-        return;
-      } catch (err) {
-        res.send(err);
-        return;
-      }
-    });
-  }
+    try {
+      await new Promise(async (rem, rej) => {
+        try {
+          let result = await promisePool.query(sql);
+          let id = result[0].insertId;
+          list = new lists(name, id);
+          await user_activity.addUserActivity("", "", "newList", "", userId, escape(name));
 
-  res.send({
-    list: list
-  });
+          res.send({
+            list: list
+          });
+          return;
+        } catch (err) {
+          res.send(err);
+          return;
+        }
+      });
+    }
+    catch (err) {
+      console.log(err);
+    }
+  }
   return;
 
 });
@@ -236,28 +237,32 @@ app.post("/api/v1/lists/get/all", async function (req, res) {
     let userList = await users.getUserLists(userId);
     let i = 0;
 
-    for (const element of userList) {
-      let list = new lists(unescape(element.name), element.id);
-      let sql = "select * from lists_podcasts_link where listsId = " + list.id + "";
-      let newResult = await promisePool.query(sql);
-      for (const pod of newResult[0]) {
-        let linkSql = "select * from podcasts where id = " + pod.podcastsId + "";
-        let linkResult = await promisePool.query(linkSql);
-        let temp = new podcasts(unescape(linkResult[0][0].name), linkResult[0][0].description, linkResult[0][0].rss, linkResult[0][0].image, linkResult[0][0].website, linkResult[0][0].publisher, linkResult[0][0].language, linkResult[0][0].totalEpisodes);
-        list.addPodcast(temp);
-      }
+    try {
+      for (const element of userList) {
+        let list = new lists(unescape(element.name), element.id);
+        let sql = "select * from lists_podcasts_link where listsId = " + list.id + "";
+        let newResult = await promisePool.query(sql);
+        for (const pod of newResult[0]) {
+          let linkSql = "select * from podcasts where id = " + pod.podcastsId + "";
+          let linkResult = await promisePool.query(linkSql);
+          let temp = new podcasts(unescape(linkResult[0][0].name), linkResult[0][0].description, linkResult[0][0].rss, linkResult[0][0].image, linkResult[0][0].website, linkResult[0][0].publisher, linkResult[0][0].language, linkResult[0][0].totalEpisodes);
+          list.addPodcast(temp);
+        }
 
-      sql = "select * from lists_episodes_link where listsId = " + list.id + "";
-      newResult = await promisePool.query(sql);
-      for (const ep of newResult[0]) {
-        let linkSql = "select * from episodes where id = " + ep.episodesId + "";
-        let linkResult = await promisePool.query(linkSql);
-        let temp = new episodes(unescape(linkResult[0][0].name), linkResult[0][0].image, linkResult[0][0].description, unescape(linkResult[0][0].podcastName), linkResult[0][0].id);
-        list.addEpisode(temp);
-      }
+        sql = "select * from lists_episodes_link where listsId = " + list.id + "";
+        newResult = await promisePool.query(sql);
+        for (const ep of newResult[0]) {
+          let linkSql = "select * from episodes where id = " + ep.episodesId + "";
+          let linkResult = await promisePool.query(linkSql);
+          let temp = new episodes(unescape(linkResult[0][0].name), linkResult[0][0].image, linkResult[0][0].description, unescape(linkResult[0][0].podcastName), linkResult[0][0].id);
+          list.addEpisode(temp);
+        }
 
-      userList[i] = list;
-      i++;
+        userList[i] = list;
+        i++;
+      }
+    } catch (err) {
+      console.log(err);
     }
 
     res.send({ lists: userList, noUser: false });
@@ -277,27 +282,32 @@ app.post("/api/v1/lists/get/one", async function (req, res) {
 
     let element = userList.find(element => element?.name == escape(name));
 
-    let list = new lists(unescape(element?.name), element.id);
-    let sql = "select * from lists_podcasts_link where listsId = " + list.id + "";
-    let newResult = await promisePool.query(sql);
-    for (const pod of newResult[0]) {
-      let linkSql = "select * from podcasts where id = " + pod.podcastsId + "";
-      let linkResult = await promisePool.query(linkSql);
-      let temp = new podcasts(unescape(linkResult[0][0].name), linkResult[0][0].description, linkResult[0][0].rss, linkResult[0][0].image, linkResult[0][0].website, linkResult[0][0].publisher, linkResult[0][0].language, linkResult[0][0].totalEpisodes);
-      list.addPodcast(temp);
-    }
+    try {
+      let list = new lists(unescape(element?.name), element.id);
+      let sql = "select * from lists_podcasts_link where listsId = " + list.id + "";
+      let newResult = await promisePool.query(sql);
+      for (const pod of newResult[0]) {
+        let linkSql = "select * from podcasts where id = " + pod.podcastsId + "";
+        let linkResult = await promisePool.query(linkSql);
+        let temp = new podcasts(unescape(linkResult[0][0].name), linkResult[0][0].description, linkResult[0][0].rss, linkResult[0][0].image, linkResult[0][0].website, linkResult[0][0].publisher, linkResult[0][0].language, linkResult[0][0].totalEpisodes);
+        list.addPodcast(temp);
+      }
 
-    sql = "select * from lists_episodes_link where listsId = " + list.id + "";
-    newResult = await promisePool.query(sql);
-    for (const ep of newResult[0]) {
-      let linkSql = "select * from episodes where id = " + ep.episodesId + "";
-      let linkResult = await promisePool.query(linkSql);
-      let temp = new episodes(unescape(linkResult[0][0].name), linkResult[0][0].image, linkResult[0][0].description, unescape(linkResult[0][0].podcastName), linkResult[0][0].id);
-      list.addEpisode(temp);
-    }
+      sql = "select * from lists_episodes_link where listsId = " + list.id + "";
+      newResult = await promisePool.query(sql);
+      for (const ep of newResult[0]) {
+        let linkSql = "select * from episodes where id = " + ep.episodesId + "";
+        let linkResult = await promisePool.query(linkSql);
+        let temp = new episodes(unescape(linkResult[0][0].name), linkResult[0][0].image, linkResult[0][0].description, unescape(linkResult[0][0].podcastName), linkResult[0][0].id);
+        list.addEpisode(temp);
+      }
 
-    res.send({ list: list, success: true });
-    return;
+      res.send({ list: list, success: true });
+      return;
+    } catch (err) {
+      res.send({ list: {}, success: false });
+      return;
+    }
   }
   res.send({ list: {}, success: false });
 
@@ -329,7 +339,7 @@ app.post("/api/v1/reviews/add/podcast", async function (req, res) {
       let resultId = await promisePool.query(sql);
 
       let insertId = resultId[0].insertId;
-        await user_activity.addUserActivity(escape(req.body.podcast.title), "", "newReview", req.body.podcast.image, req.body.id, req.body.newRating);
+      await user_activity.addUserActivity(escape(req.body.podcast.title), "", "newReview", req.body.podcast.image, req.body.id, req.body.newRating);
       if (insertId == "0") {
         let newSql = "select id from reviews where userId = " + req.body.id + " and podcastId = " + podcastId;
         let newResult = await promisePool.query(newSql);
@@ -362,7 +372,7 @@ app.post("/api/v1/reviews/add/episode", async function (req, res) {
       let resultId = await promisePool.query(sql);
 
       let insertId = resultId[0].insertId;
-        await user_activity.addUserActivity(escape(episodejson.podcast.title), "", "newReview", episodejson.podcast.image, req.body.id, req.body.newRating);
+      await user_activity.addUserActivity(escape(episodejson.podcast.title), "", "newReview", episodejson.podcast.image, req.body.id, req.body.newRating);
 
       if (insertId == "0") {
         let newSql = "select id from reviews where userId = " + req.body.id + " and episodeId = " + episodeId;
@@ -438,17 +448,23 @@ app.post("/api/v1/reviews/get/user", async function (req, res) {
 app.post('/api/v1/search', async function (req, res) {
   let name = req.body.name;
   let apiClient = fetcher.getListenNotesApi();
-  let podcasts = await apiClient.search({
-    q: name,
-    type: 'podcast',
-    only_in: 'title,description',
-  });
-  let episodes = await apiClient.search({
-    q: name,
-    only_in: 'title,description',
-  });
-  let data = podcasts.data.results.concat(episodes.data.results);
-  res.send({ data: data });
+  try {
+    let podcasts = await apiClient.search({
+      q: name,
+      type: 'podcast',
+      only_in: 'title,description',
+    });
+    let episodes = await apiClient.search({
+      q: name,
+      only_in: 'title,description',
+    });
+    let data = podcasts.data.results.concat(episodes.data.results);
+    res.send({ data: data });
+  } catch (err) {
+    //can't access API
+    console.log(err);
+    res.send({ data: [] });
+  }
 });
 
 app.post('/api/v1/get_episode_from_podcast', async function (req, res) {
@@ -456,26 +472,33 @@ app.post('/api/v1/get_episode_from_podcast', async function (req, res) {
   let episodeName = req.body.epName;
   let apiClient = fetcher.getPodcastIndexApi();
   let episodes = [];
-  apiClient.search(podcastName).then(async (response) => {
-    let podcast = response.feeds.find(pod => pod.title === podcastName);
-    episodes = await apiClient.episodesByFeedId(podcast?.id);
-    let episode = episodes.items.find(ep => ep.title === episodeName);
-    if (!episode) {
-      return;
-    }
-    apiClient.episodeById(episode.id).then(async (response) => {
-      res.send({ pod: podcast, episode: response.episode, eps: episodes });
+  try {
+    apiClient.search(podcastName).then(async (response) => {
+      let podcast = response.feeds.find(pod => pod.title === podcastName);
+      episodes = await apiClient.episodesByFeedId(podcast?.id);
+      let episode = episodes.items.find(ep => ep.title === episodeName);
+      if (!episode) {
+        return;
+      }
+      apiClient.episodeById(episode.id).then(async (response) => {
+        res.send({ pod: podcast, episode: response.episode, eps: episodes });
+      });
     });
-  });
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 app.get('/api/v1/trending', async function (req, res) {
   let apiClient = fetcher.getPodcastIndexApi();
-  apiClient.raw("/podcasts/trending")
-    .then((response) => {
-      res.send({ data: response.feeds });
-    });
-
+  try {
+    apiClient.raw("/podcasts/trending")
+      .then((response) => {
+        res.send({ data: response.feeds });
+      });
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 app.get('/api/v1/randomep', async function (req, res) {
@@ -495,31 +518,33 @@ app.get('/api/v1/user/get/all', async function (req, res) {
 app.post('/api/v1/user/update', async function (req, res) {
   let fetchedUser = await users.getUserById(req.body.id);
   let user = fetchedUser[0];
+  if (!user) return;
+
   let doUpdate = false;
   let username = user.username;
   let email = user.email;
   let password = user.password;
 
-  if(req.body.username !== user.username) {
+  if (req.body.username !== user.username) {
     username = req.body.username;
     doUpdate = true;
   }
 
-  if(req.body.email !== user.email){
+  if (req.body.email !== user.email) {
     email = req.body.email;
     doUpdate = true;
   }
 
-  if(req.body.password !== user.password && req.body.password !== "") {
+  if (req.body.password !== user.password && req.body.password !== "") {
     password = req.body.password;
     doUpdate = true;
   }
 
-  if(!doUpdate) {
-    res.send({info: "Don't need to do this", warning: true });
+  if (!doUpdate) {
+    res.send({ info: "Don't need to do this", warning: true });
   } else {
     let result = await users.updateUser(username, email, password, req.body.id);
-    res.send({info: result.info, success: result.changedRows == 1});
+    res.send({ info: result.info, success: result.changedRows == 1 });
   }
 });
 
@@ -527,17 +552,22 @@ app.post('/api/v1/searchPodcast', async function (req, res) {
   let podcastName = req.body.name;
   let apiClient = fetcher.getPodcastIndexApi();
   let episodes = [];
-  apiClient.search(podcastName).then(async (response) => {
-    let length = response.feeds.length
-    for (let i = 0; i < length; i++) {
-      let podcast = response.feeds[i];
-      if (podcast.title.trim() === podcastName.trim()) {
-        episodes = await apiClient.episodesByFeedId(podcast?.id);
-        res.send({ pod: podcast, eps: episodes });
-        return;
+  try {
+    apiClient.search(podcastName).then(async (response) => {
+      let length = response.feeds.length
+      for (let i = 0; i < length; i++) {
+        let podcast = response.feeds[i];
+        if (podcast.title.trim() === podcastName.trim()) {
+          episodes = await apiClient.episodesByFeedId(podcast?.id);
+          res.send({ pod: podcast, eps: episodes });
+          return;
+        }
       }
-    }
-  });
+    });
+  }
+  catch (err) {
+    console.log(err);
+  }
 });
 
 app.post('/api/v1/rating/get/podcast', async function (req, res) {
@@ -702,51 +732,51 @@ app.post('/api/v1/user_activity/get/friends', async function (req, res) {
   let result = [];
   let index = 0;
 
-  if(user_friend.length > 0 && user_friend[0].friends !== undefined) {
+  if (user_friend.length > 0 && user_friend[0].friends !== undefined) {
     let friends = JSON.parse(user_friend[0].friends);
 
-    for(let i = 0; i < all_activity.length; i++) {
-      for(let j = 0; j < friends.length; j++) {
-        if(parseInt(friends[j]) === parseInt(all_activity[i].user_id)) {
+    for (let i = 0; i < all_activity.length; i++) {
+      for (let j = 0; j < friends.length; j++) {
+        if (parseInt(friends[j]) === parseInt(all_activity[i].user_id)) {
           result[index] = {};
           result[index].username = all_activity[i].username;
           result[index].email = all_activity[i].email;
           result[index].id = all_activity[i].user_id;
-            if(all_activity[i].action_description === "newList") {
-              result[index].activityInfo = {};
-              result[index].activityInfo.listName = all_activity[i].list_name;
-              result[index].activityInfo.reviewText = "Created list " + unescape(all_activity[i].list_name);
-              result[index].activityType = "newList";
-            }
-            else if(all_activity[i].action_description === "listMove") {
-              result[index].activityInfo = {};
-              result[index].activityInfo.listName = all_activity[i].list_name;
-              result[index].activityInfo.reviewText =  "Moved list " + unescape(all_activity[i].list_name);
-              result[index].activityType = "listMove";
-            }
-            else if(all_activity[i].action_description === "newReview") {
-              result[index].activityInfo = {};
-              result[index].activityInfo.listName = all_activity[i].list_name;
-              result[index].activityInfo.reviewText =  "Reviewed podcast " + unescape(all_activity[i].podcast_name);
-              result[index].activityInfo.podcastName = unescape(all_activity[i].podcast_name);
-              result[index].activityType = "newReview";
+          if (all_activity[i].action_description === "newList") {
+            result[index].activityInfo = {};
+            result[index].activityInfo.listName = all_activity[i].list_name;
+            result[index].activityInfo.reviewText = "Created list " + unescape(all_activity[i].list_name);
+            result[index].activityType = "newList";
+          }
+          else if (all_activity[i].action_description === "listMove") {
+            result[index].activityInfo = {};
+            result[index].activityInfo.listName = all_activity[i].list_name;
+            result[index].activityInfo.reviewText = "Moved list " + unescape(all_activity[i].list_name);
+            result[index].activityType = "listMove";
+          }
+          else if (all_activity[i].action_description === "newReview") {
+            result[index].activityInfo = {};
+            result[index].activityInfo.listName = all_activity[i].list_name;
+            result[index].activityInfo.reviewText = "Reviewed podcast " + unescape(all_activity[i].podcast_name);
+            result[index].activityInfo.podcastName = unescape(all_activity[i].podcast_name);
+            result[index].activityType = "newReview";
+            result[index].image = all_activity[i].link;
+          }
+          else if (all_activity[i].action_description === "Add") {
+            result[index].activityInfo = {};
+            result[index].activityInfo.listName = "";
+
+            if (all_activity[i].episode_name !== "" && all_activity[i].episode_name !== null) {
+              result[index].activityInfo.reviewText = "Added podcast \"" + unescape(all_activity[i].podcast_name) + "\" episode \"" + unescape(all_activity[i].episode_name) + "\"  to list " + all_activity[i].list_name;
+              result[index].activityType = "add";
               result[index].image = all_activity[i].link;
             }
-            else if(all_activity[i].action_description === "Add") {
-              result[index].activityInfo = {};
-              result[index].activityInfo.listName = "";
-      
-              if(all_activity[i].episode_name !== "" && all_activity[i].episode_name !== null) {
-                result[index].activityInfo.reviewText = "Added podcast \"" + unescape(all_activity[i].podcast_name) + "\" episode \"" + unescape(all_activity[i].episode_name) + "\"  to list " + all_activity[i].list_name ;
-                result[index].activityType = "add";
-                result[index].image = all_activity[i].link;
-              }
-              else {
-                result[index].activityInfo.reviewText = "Added podcast \"" + unescape(all_activity[i].podcast_name) + "\"  to list " + all_activity[i].list_name;
-                result[index].activityType = "add";
-                result[index].image = all_activity[i].link;
-              }
+            else {
+              result[index].activityInfo.reviewText = "Added podcast \"" + unescape(all_activity[i].podcast_name) + "\"  to list " + all_activity[i].list_name;
+              result[index].activityType = "add";
+              result[index].image = all_activity[i].link;
             }
+          }
           index++;
         }
       }
@@ -762,25 +792,29 @@ app.post('/api/v1/user/add/friend', async function (req, res) {
   let search_term = req.body.search_term;
   let result = await users.getUser(search_term);
 
-  if (result !== undefined && result[0] !== undefined) {
-    let user_info = await users.getUserFriends(req.body.id);
-    let newFriends = JSON.parse(user_info[0].friends);
-    let friendsFriends = JSON.parse(result[0].friends);
+  try {
+    if (result !== undefined && result[0] !== undefined) {
+      let user_info = await users.getUserFriends(req.body.id);
+      let newFriends = JSON.parse(user_info[0].friends);
+      let friendsFriends = JSON.parse(result[0].friends);
 
-    for(let i = 0; i < newFriends.length; i++) {
-      if(newFriends[i] === result[0].id) {
-        res.send({ success: false });
-        return;
+      for (let i = 0; i < newFriends.length; i++) {
+        if (newFriends[i] === result[0].id) {
+          res.send({ success: false });
+          return;
+        }
       }
+
+      newFriends = newFriends.concat(result[0].id);
+      friendsFriends = friendsFriends.concat(parseInt(req.body.id));
+
+      let addFriendResult = await user_activity.addFriendToUser(JSON.stringify(newFriends), req.body.id);
+      let addUserAsFriendResult = await user_activity.addFriendToUser(JSON.stringify(friendsFriends), result[0].id);
+      res.send({ success: true });
+      return;
     }
-
-    newFriends = newFriends.concat(result[0].id);
-    friendsFriends = friendsFriends.concat(parseInt(req.body.id));
-
-    let addFriendResult = await user_activity.addFriendToUser(JSON.stringify(newFriends), req.body.id);
-    let addUserAsFriendResult = await user_activity.addFriendToUser(JSON.stringify(friendsFriends), result[0].id);
-    res.send({ success: true });
-    return;
+  } catch (err) {
+    console.log(err);
   }
 
   res.send({ success: false });
@@ -817,44 +851,44 @@ app.post('/api/v1/user_activity/get', async function (req, res) {
       myResult[i].username = result[0].username;
       myResult[i].email = result[0].email;
       myResult[i].id = result[0].id;
-      if(user_friend_activity[i].action_description === "newList") {
+      if (user_friend_activity[i].action_description === "newList") {
         myResult[i].activityInfo = {};
         myResult[i].activityInfo.listName = unescape(user_friend_activity[i].list_name);
         myResult[i].activityInfo.reviewText = "Created list " + unescape(user_friend_activity[i].list_name);
         myResult[i].activityType = "newList";
       }
-      else if(user_friend_activity[i].action_description === "listMove") {
+      else if (user_friend_activity[i].action_description === "listMove") {
         myResult[i].activityInfo = {};
         myResult[i].activityInfo.listName = unescape(user_friend_activity[i].list_name);
-        myResult[i].activityInfo.reviewText =  "Moved list " + unescape(user_friend_activity[i].list_name);
+        myResult[i].activityInfo.reviewText = "Moved list " + unescape(user_friend_activity[i].list_name);
         myResult[i].activityType = "listMove";
       }
-      else if(user_friend_activity[i].action_description === "newReview") {
+      else if (user_friend_activity[i].action_description === "newReview") {
         myResult[i].activityInfo = {};
         myResult[i].activityInfo.listName = unescape(user_friend_activity[i].list_name);
-        myResult[i].activityInfo.reviewText =  "Reviewed podcast " + unescape(user_friend_activity[i].podcast_name);
+        myResult[i].activityInfo.reviewText = "Reviewed podcast " + unescape(user_friend_activity[i].podcast_name);
         myResult[i].activityInfo.podcastName = unescape(user_friend_activity[i].podcast_name);
         myResult[i].image = user_friend_activity[i].link;
         myResult[i].activityType = "newReview";
       }
-      else if(user_friend_activity[i].action_description === "Add") {
+      else if (user_friend_activity[i].action_description === "Add") {
         myResult[i].activityInfo = {};
         myResult[i].activityInfo.listName = "";
 
-        if(user_friend_activity[i].episode_name !== "" && user_friend_activity[i].episode_name !== null) {
-          myResult[i].activityInfo.reviewText = "Added podcast \"" + unescape(user_friend_activity[i].podcast_name) + "\" episode \"" + unescape(user_friend_activity[i].episode_name) + "\"  to list " + unescape(user_friend_activity[i].list_name) ;
+        if (user_friend_activity[i].episode_name !== "" && user_friend_activity[i].episode_name !== null) {
+          myResult[i].activityInfo.reviewText = "Added podcast \"" + unescape(user_friend_activity[i].podcast_name) + "\" episode \"" + unescape(user_friend_activity[i].episode_name) + "\"  to list " + unescape(user_friend_activity[i].list_name);
           myResult[i].activityType = "add";
           myResult[i].image = user_friend_activity[i].link;
         }
         else {
-          myResult[i].activityInfo.reviewText = "Added podcast \"" + unescape(user_friend_activity[i].podcast_name) + "\"  to list " + unescape(user_friend_activity[i].list_name) ;
+          myResult[i].activityInfo.reviewText = "Added podcast \"" + unescape(user_friend_activity[i].podcast_name) + "\"  to list " + unescape(user_friend_activity[i].list_name);
           myResult[i].activityType = "add";
           myResult[i].image = user_friend_activity[i].link;
         }
       }
     }
   }
-  
+
   res.send(myResult);
 });
 
@@ -888,10 +922,6 @@ app.post('/api/v1/user_activity/get/friend', async function (req, res) {
   }
 
   res.send(myResult);
-});
-
-process.on('uncaughtException', function (err) {
-  console.error(err);
 });
 
 // Listen to the specified port for api requests
