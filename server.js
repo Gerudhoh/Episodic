@@ -275,7 +275,7 @@ app.post("/api/v1/lists/get/one", async function (req, res) {
 
     let userList = await users.getUserLists(userId);
 
-    let element = userList.find(element => element?.name == name);
+    let element = userList.find(element => element?.name == escape(name));
 
     let list = new lists(unescape(element?.name), element.id);
     let sql = "select * from lists_podcasts_link where listsId = " + list.id + "";
@@ -307,7 +307,7 @@ app.post("/api/v1/lists/delete", async function (req, res) {
   let name = req.body.name;
   let userId = req.body.id;
 
-  let sql = "delete from lists where name = '" + name + "' and userId = " + userId;
+  let sql = "delete from lists where name = '" + escape(name) + "' and userId = " + userId;
 
   try {
     await promisePool.query(sql);
@@ -715,13 +715,13 @@ app.post('/api/v1/user_activity/get/friends', async function (req, res) {
             if(all_activity[i].action_description === "newList") {
               result[index].activityInfo = {};
               result[index].activityInfo.listName = all_activity[i].list_name;
-              result[index].activityInfo.reviewText = "Created list " + all_activity[i].list_name;
+              result[index].activityInfo.reviewText = "Created list " + unescape(all_activity[i].list_name);
               result[index].activityType = "newList";
             }
             else if(all_activity[i].action_description === "listMove") {
               result[index].activityInfo = {};
               result[index].activityInfo.listName = all_activity[i].list_name;
-              result[index].activityInfo.reviewText =  "Moved list " + all_activity[i].list_name;
+              result[index].activityInfo.reviewText =  "Moved list " + unescape(all_activity[i].list_name);
               result[index].activityType = "listMove";
             }
             else if(all_activity[i].action_description === "newReview") {
