@@ -10,10 +10,15 @@ import ListItem from '@mui/material/ListItem';
 import Alert from '@mui/material/Alert';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
+import Paper from '@mui/material/Paper';
 
 //Custom Components
 import ActivityCard from "./ActivityCard.js";
 
+
+const CustomPaper = (props) => {
+  return <Paper elevation={0} style={{backgroundColor: '#774c47', opacity: "1"}} {...props} />;
+};
 
 class MyFriendList extends React.Component {
   constructor(props) {
@@ -108,6 +113,7 @@ class MyFriendList extends React.Component {
               disableClearable
               options={this.state.allUsers.map((option) => option.username)}
               onChange={this.onNameChange}
+              PaperComponent={CustomPaper}
               renderInput={(params) => (
                 <TextField
                   {...params}

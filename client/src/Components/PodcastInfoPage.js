@@ -143,6 +143,13 @@ class AddPodcastToList extends React.Component {
             labelId="demo-simple-select-label"
             id="demo-simple-select"
             label="Age"
+            MenuProps={{
+              PaperProps: {
+                sx: {
+                  bgcolor: '#774c47'
+                },
+              },
+            }}
             onChange={this.addPodcastToList}
           >
             {this.state.listMenuItems}

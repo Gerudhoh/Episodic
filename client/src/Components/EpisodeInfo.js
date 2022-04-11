@@ -92,7 +92,7 @@ class AddEpisodeToList extends React.Component {
     if (body.noUser === true) return;
     let listNames = [];
     body.lists.map((list, index) =>
-      listNames.push((<MenuItem sx={{bgcolor:'primary.main', opacity:1}}key={index} value={index}>{list.name}</MenuItem>))
+      listNames.push((<MenuItem sx={{ bgcolor: 'primary.main', opacity: 1 }} key={index} value={index}>{list.name}</MenuItem>))
     );
     this.setState({ listMenuItems: listNames });
     this.setState({ lists: body.lists });
@@ -120,6 +120,13 @@ class AddEpisodeToList extends React.Component {
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 label="Age"
+                MenuProps={{
+                  PaperProps: {
+                    sx: {
+                      bgcolor: '#774c47'
+                    },
+                  },
+                }}
                 onChange={this.addEpisodeToList}
               >
                 {this.state.listMenuItems}
