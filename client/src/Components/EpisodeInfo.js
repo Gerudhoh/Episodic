@@ -48,7 +48,8 @@ class AddEpisodeToList extends React.Component {
       showSuccess: false,
       showError: false,
       msg: "",
-      userId: props.userId
+      userId: props.userId,
+      value: ""
     };
   }
 
@@ -59,6 +60,9 @@ class AddEpisodeToList extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.userId) {
       this.setState({ userId: nextProps.userId })
+      this.setState({ showSuccess: false })
+      this.setState({ showError: false })
+      this.setState({ value: "" })
       this.episode = nextProps.episode;
       this.image = nextProps.image;
       this.getUserLists();
@@ -67,6 +71,8 @@ class AddEpisodeToList extends React.Component {
 
   addEpisodeToList = async e => {
     e.preventDefault();
+    this.setState({ value: e.target.value })
+    
     const response = await fetch('/api/v1/lists/add/episode', {
       method: 'POST',
       headers: {
@@ -94,7 +100,7 @@ class AddEpisodeToList extends React.Component {
     if (body.noUser === true) return;
     let listNames = [];
     body.lists.map((list, index) =>
-      listNames.push((<MenuItem sx={{ bgcolor: 'primary.main', opacity: 1 }} key={index} value={index}>{list.name}</MenuItem>))
+      listNames.push((<MenuItem sx={{ bgcolor: 'primary.main', opacity: 1 }} key={index} value={index} name={list.name}>{list.name}</MenuItem>))
     );
     this.setState({ listMenuItems: listNames });
     this.setState({ lists: body.lists });
@@ -122,6 +128,7 @@ class AddEpisodeToList extends React.Component {
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 label="Age"
+                value={this.state.value}
                 MenuProps={{
                   PaperProps: {
                     sx: {
