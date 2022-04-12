@@ -128,7 +128,7 @@ async function addEpisode(episode, userId, list) {
         list.addEpisode(episode);
         let linkSql = "insert into lists_episodes_link (listsId, episodesId) values (" + list.id + ", " + episode.databaseId + ")";
         await promisePool.query(linkSql);
-        await user_activity.addUserActivity(escape(episode.title), "", "Add", episode.image, userId, escape(list.name));
+        await user_activity.addUserActivity(escape(episode.podcast), escape(episode.title), "Add", episode.image, userId, escape(list.name));
       }
       else {
         //Created a review!
@@ -773,7 +773,7 @@ app.post('/api/v1/user_activity/get/friends', async function (req, res) {
             result[index].activityInfo.listName = "";
 
             if (all_activity[i].episode_name !== "" && all_activity[i].episode_name !== null) {
-              result[index].activityInfo.reviewText = "Added episode \"" + unescape(all_activity[i].podcast_name) + "\" episode \"" + unescape(all_activity[i].episode_name) + "\"  to list " + all_activity[i].list_name;
+              result[index].activityInfo.reviewText = "Added podcast \"" + unescape(all_activity[i].podcast_name) + "\" episode \"" + unescape(all_activity[i].episode_name) + "\"  to list " + all_activity[i].list_name;
               result[index].activityType = "add";
               result[index].image = all_activity[i].link;
             }
@@ -888,7 +888,7 @@ app.post('/api/v1/user_activity/get', async function (req, res) {
         myResult[i].activityInfo.listName = "";
 
         if (user_friend_activity[i].episode_name !== "" && user_friend_activity[i].episode_name !== null) {
-          myResult[i].activityInfo.reviewText = "Added episode \"" + unescape(user_friend_activity[i].podcast_name) + "\" episode \"" + unescape(user_friend_activity[i].episode_name) + "\"  to list " + unescape(user_friend_activity[i].list_name);
+          myResult[i].activityInfo.reviewText = "Added podcast \"" + unescape(user_friend_activity[i].podcast_name) + "\" episode \"" + unescape(user_friend_activity[i].episode_name) + "\"  to list " + unescape(user_friend_activity[i].list_name);
           myResult[i].activityType = "add";
           myResult[i].image = user_friend_activity[i].link;
         }
