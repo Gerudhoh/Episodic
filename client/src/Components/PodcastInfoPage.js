@@ -72,6 +72,7 @@ class AddPodcastToList extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log(this.podcast);
     if (nextProps.userId) {
       this.setState({ userId: nextProps.userId })
       this.getUserLists();

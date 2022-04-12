@@ -17,7 +17,7 @@ import ActivityCard from "./ActivityCard.js";
 
 
 const CustomPaper = (props) => {
-  return <Paper elevation={0} style={{backgroundColor: '#774c47', opacity: "1"}} {...props} />;
+  return <Paper elevation={0} style={{backgroundColor: '#774c47', opacity: "1", overflowX: "scroll"}} {...props} />;
 };
 
 class MyFriendList extends React.Component {
