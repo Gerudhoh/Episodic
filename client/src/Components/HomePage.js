@@ -66,7 +66,7 @@ function homePageNormal(props){
         <ListsHighlight listSize="medium" userId={props.userId}/>
       </Item>
       {props.userId &&
-        <Stack sx={{maxWidth:"30%"}} spacing={2}>
+        <Stack sx={{maxWidth:"30%", minWidth:"20%"}} spacing={2}>
           <Item>
             <Typography variant="h4">My Friends</Typography>
             <MyFriendList activitySize="small" userId={props.userId} updateUserFriends={props.updateUserFriends} allFriends={props.allFriends}/>

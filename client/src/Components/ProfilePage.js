@@ -102,7 +102,7 @@ function Achievements(){
 function profileNormal(props){
   return(
     <Stack direction="row" spacing={2} padding="10px" alignItems="flex-start" justifyContent="space-evenly">
-      <Stack spacing={2} sx={{maxWidth:"30%"}}>
+      <Stack spacing={2} sx={{maxWidth:"30%", minWidth:"20%"}}>
         <Item ><UserDescription
         userName={userInfo.name}
         userId={props.userId}

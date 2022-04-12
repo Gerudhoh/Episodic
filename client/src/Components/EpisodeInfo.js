@@ -59,6 +59,8 @@ class AddEpisodeToList extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.userId) {
       this.setState({ userId: nextProps.userId })
+      this.episode = nextProps.episode;
+      this.image = nextProps.image;
       this.getUserLists();
     }
   }
