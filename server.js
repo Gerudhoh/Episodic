@@ -128,7 +128,7 @@ async function addEpisode(episode, userId, list) {
         list.addEpisode(episode);
         let linkSql = "insert into lists_episodes_link (listsId, episodesId) values (" + list.id + ", " + episode.databaseId + ")";
         await promisePool.query(linkSql);
-        await user_activity.addUserActivity(escape(episode.title), "", "Add", episode.image, userId, escape(list.name));
+        await user_activity.addUserActivity(escape(episode.podcast), escape(episode.title), "Add", episode.image, userId, escape(list.name));
       }
       else {
         //Created a review!
@@ -372,7 +372,7 @@ app.post("/api/v1/reviews/add/episode", async function (req, res) {
       let resultId = await promisePool.query(sql);
 
       let insertId = resultId[0].insertId;
-      await user_activity.addUserActivity(escape(episodejson.podcast.title), "", "newReview", episodejson.podcast.image, req.body.id, req.body.newRating);
+      await user_activity.addUserActivity(escape(episodejson.podcast.title), escape(episodejson.title), "newReview", episodejson.podcast.image, req.body.id, req.body.newRating);
 
       if (insertId == "0") {
         let newSql = "select id from reviews where userId = " + req.body.id + " and episodeId = " + episodeId;
@@ -757,8 +757,14 @@ app.post('/api/v1/user_activity/get/friends', async function (req, res) {
           else if (all_activity[i].action_description === "newReview") {
             result[index].activityInfo = {};
             result[index].activityInfo.listName = all_activity[i].list_name;
-            result[index].activityInfo.reviewText = "Reviewed podcast " + unescape(all_activity[i].podcast_name);
             result[index].activityInfo.podcastName = unescape(all_activity[i].podcast_name);
+            result[index].activityInfo.episodeName = unescape(all_activity[i].episode_name);
+            if (result[index].activityInfo.episodeName) {
+              result[index].activityInfo.reviewText = "Reviewed episode " + unescape(all_activity[i].episode_name) + " (" + unescape(all_activity[i].podcast_name) + ")";
+            }
+            else {
+              result[index].activityInfo.reviewText = "Reviewed podcast " + unescape(all_activity[i].podcast_name);
+            }
             result[index].activityType = "newReview";
             result[index].image = all_activity[i].link;
           }
@@ -866,8 +872,14 @@ app.post('/api/v1/user_activity/get', async function (req, res) {
       else if (user_friend_activity[i].action_description === "newReview") {
         myResult[i].activityInfo = {};
         myResult[i].activityInfo.listName = unescape(user_friend_activity[i].list_name);
-        myResult[i].activityInfo.reviewText = "Reviewed podcast " + unescape(user_friend_activity[i].podcast_name);
         myResult[i].activityInfo.podcastName = unescape(user_friend_activity[i].podcast_name);
+        myResult[i].activityInfo.episodeName = unescape(user_friend_activity[i].episode_name);
+        if (myResult[i].activityInfo.episodeName) {
+          myResult[i].activityInfo.reviewText = "Reviewed episode " + unescape(user_friend_activity[i].episode_name) + " (" + unescape(user_friend_activity[i].podcast_name) + ")";
+        }
+        else {
+          myResult[i].activityInfo.reviewText = "Reviewed podcast " + unescape(user_friend_activity[i].podcast_name);
+        }
         myResult[i].image = user_friend_activity[i].link;
         myResult[i].activityType = "newReview";
       }
